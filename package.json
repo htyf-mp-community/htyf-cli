@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/cli",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "红糖云服app小程序模板-cli",
   "type": "module",
   "bin": {
@@ -30,8 +30,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/htyf-mp-community/htyf-mp.git",
-    "directory": "apps-cli"
+    "url": "https://github.com/htyf-mp-community/htyf-cli.git",
+    "directory": "htyf-cli"
   },
   "engines": {
     "node": ">=18.0.0",
