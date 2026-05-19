@@ -21,8 +21,8 @@ export const CONSTANTS = {
   MAX_RETRY_COUNT: 3,
   DEFAULT_TIMEOUT: 30000,
   TEMPLATE_REPOS: {
-    GITHUB: 'https://github.com/htyf-mp-community/htyf-mp.git',
-    CODING: 'https://e.coding.net/dagouzhi/hongtangyun_mobile/htyf-mp.git'
+    GITHUB: 'https://github.com/htyf-mp-community/htyf-cli.git',
+    CODING: 'https://e.coding.net/dagouzhi/hongtangyun_mobile/htyf-cli.git'
   },
   TEMPLATE_TYPES: {
     APP_TEMPLATE: 'app-template',
