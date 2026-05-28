@@ -152,13 +152,14 @@ export function App() {
         <BtnRow>
           <DemoButton
             label="showToast 成功"
-            onPress={() =>
+            onPress={() => {
+              console.log('showToast 成功');
               void jssdk.showToast({
                 type: 'success',
-                title: '操作成功',
+                title: '操作成功1',
                 description: '可选副标题',
               })
-            }
+            }}
           />
           <DemoButton
             label="showToast 错误"

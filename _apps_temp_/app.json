@@ -4,7 +4,7 @@
   "htyf": {
     "type": "app",
     "entry": "./src/index.tsx",
-    "version": "1.0.15",
+    "version": "1.0.18",
     "name": "app_demo",
     "appid": "app_demo_sdk",
     "rotate": "portrait",
