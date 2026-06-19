@@ -122,7 +122,7 @@ export class ProjectInitializer {
       default: '小程序',
       validate: (input) => {
         if (!this.config.validateDisplayName(input)) {
-          return '只能中文、字母和数字, 不能包含特殊字符, 限2-4个字符';
+          return '只能中文、字母和数字, 不能包含特殊字符, 限6个字以内';
         }
         return true;
       }

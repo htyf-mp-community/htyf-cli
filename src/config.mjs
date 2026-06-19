@@ -9,7 +9,7 @@ export class ProjectConfig {
   constructor() {
     this.validators = {
       appName: /^([a-z]+)(-[a-z0-9]+)*$/,
-      displayName: /^[\u4e00-\u9fa5a-zA-Z0-9]{2,4}$/
+      displayName: /^[\u4e00-\u9fa5a-zA-Z0-9]{2,10}$/
     };
 
     this.templates = {
