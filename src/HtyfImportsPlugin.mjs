@@ -40,59 +40,64 @@ function getSharedConfig() {
 // ==================== 工具函数 ====================
 
 /**
- * 从模块路径中提取包名
+ * 从 module.context 中提取包名与真实包根目录
  * @param {string} moduleContext - 模块上下文路径
- * @returns {string|null} 包名，如果无法提取则返回 null
+ * @returns {{ packageName: string, packageRoot: string }|null}
  */
-function extractPackageName(moduleContext) {
+function extractPackageInfo(moduleContext) {
   if (!moduleContext?.includes('node_modules')) {
     return null;
   }
 
   const match = moduleContext.match(PNPM_PACKAGE_REGEX);
-  return match?.[1] || null;
+  if (!match?.[1]) {
+    return null;
+  }
+
+  return {
+    packageName: match[1],
+    packageRoot: moduleContext.slice(0, match.index + match[0].length),
+  };
 }
 
 /**
  * 检查包是否包含 native 代码（带缓存）
- * @param {string} packageName - 包名
+ * @param {string} packageRoot - 包在 node_modules 中的真实根目录
  * @returns {boolean} 是否包含 native 代码
  */
-function hasNativeCode(packageName) {
-  if (!packageName) {
+function hasNativeCode(packageRoot) {
+  if (!packageRoot) {
     return false;
   }
 
-  // 使用缓存避免重复的文件系统访问
-  if (nativeCodeCache.has(packageName)) {
-    return nativeCodeCache.get(packageName);
+  if (nativeCodeCache.has(packageRoot)) {
+    return nativeCodeCache.get(packageRoot);
   }
 
-  const packagePath = path.join(nodeModulesPath, packageName);
-  const iosPath = path.join(packagePath, 'ios');
-  const androidPath = path.join(packagePath, 'android');
-  
+  const iosPath = path.join(packageRoot, 'ios');
+  const androidPath = path.join(packageRoot, 'android');
+
   const hasNative = fse.pathExistsSync(iosPath) || fse.pathExistsSync(androidPath);
-  nativeCodeCache.set(packageName, hasNative);
-  
+  nativeCodeCache.set(packageRoot, hasNative);
+
   return hasNative;
 }
 
 /**
  * 获取包版本（带缓存）
- * @param {string} packageName - 包名
+ * @param {string} packageRoot - 包在 node_modules 中的真实根目录
  * @returns {string|null} 包版本，如果无法获取则返回 null
  */
-function getPackageVersion(packageName) {
-  if (!packageName) {
+function getPackageVersion(packageRoot) {
+  if (!packageRoot) {
     return null;
   }
 
-  if (versionCache.has(packageName)) {
-    return versionCache.get(packageName);
+  if (versionCache.has(packageRoot)) {
+    return versionCache.get(packageRoot);
   }
 
-  const pkgJsonPath = path.join(nodeModulesPath, packageName, 'package.json');
+  const pkgJsonPath = path.join(packageRoot, 'package.json');
   let version = null;
 
   try {
@@ -101,11 +106,10 @@ function getPackageVersion(packageName) {
       version = pkgJson.version || null;
     }
   } catch (error) {
-    // 静默失败，返回 null
     version = null;
   }
 
-  versionCache.set(packageName, version);
+  versionCache.set(packageRoot, version);
   return version;
 }
 
@@ -290,29 +294,31 @@ export class HtyfModulesPlugin {
         continue;
       }
 
-      const packageName = extractPackageName(module.context);
-      if (!packageName) {
+      const packageInfo = extractPackageInfo(module.context);
+      if (!packageInfo) {
         continue;
       }
+
+      const { packageName, packageRoot } = packageInfo;
 
       // 如果已经处理过该包，跳过
       if (dependencyMap.has(packageName)) {
         const existing = dependencyMap.get(packageName);
-        // 如果之前不是 native 模块，再次检查（可能之前检查失败）
-        if (!existing.nativeModule && hasNativeCode(packageName)) {
+        // 如果之前不是 native 模块，基于当前 module 的真实路径再次检查
+        if (!existing.nativeModule && hasNativeCode(packageRoot)) {
           existing.nativeModule = true;
           nativeModules.add(packageName);
         }
         continue;
       }
 
-      // 首次处理该包
+      // 首次处理该包，version / nativeModule 均基于 module.context 解析出的真实路径
       // react-native 必须视为原生依赖，无论是否检测到 ios/android 目录
       const nativeModule =
-        packageName === "react-native" ? true : hasNativeCode(packageName);
+        packageName === "react-native" ? true : hasNativeCode(packageRoot);
       const dependencyInfo = {
         name: packageName,
-        version: getPackageVersion(packageName),
+        version: getPackageVersion(packageRoot),
         nativeModule,
       };
 
