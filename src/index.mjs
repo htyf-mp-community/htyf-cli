@@ -33,6 +33,7 @@ import { ProjectInitializer } from './project-initializer.mjs';
 import { mpBuildShell } from './build.mjs';
 import { mpDebugShell } from './debug.mjs';
 import { cleanShell } from './clean.mjs';
+import { syncDepsShell } from './sync-deps.mjs';
 import { incrementVersion, updateAppConfig } from './utils-functions.mjs';
 
 const projectPath = getProjectRoot();
@@ -101,6 +102,7 @@ async function Start(action) {
   const actionNames = {
     [ACTION_TYPES.MP_BUILD]: '小程序构建',
     [ACTION_TYPES.MP_DEBUG]: '小程序调试',
+    [ACTION_TYPES.SYNC_DEPS]: '同步依赖版本',
     [ACTION_TYPES.CLEAN]: '清理模式',
     [ACTION_TYPES.QUIT]: '退出'
   };
@@ -110,6 +112,12 @@ async function Start(action) {
   // ========== 退出操作 ==========
   if (action === ACTION_TYPES.QUIT) {
     Logger.info('再见!');
+    return;
+  }
+
+  // ========== 同步依赖版本 ==========
+  if (action === ACTION_TYPES.SYNC_DEPS) {
+    await syncDepsShell();
     return;
   }
 
@@ -267,6 +275,12 @@ if (process.argv.includes('--debug')) {
 // 记录启动日志
 Logger.writeToFile('CLI 工具启动', 'INFO');
 
+// 处理依赖同步参数（命令行直接同步，不进入交互界面）
+if (process.argv.includes('--sync-deps')) {
+  await syncDepsShell({ skipConfirm: true });
+  process.exit(0);
+}
+
 // 处理清理参数（命令行直接清理，不进入交互界面）
 if (process.argv.includes('--clean')) {
   const cleanIndex = process.argv.indexOf('--clean');
@@ -297,10 +311,12 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
     chalk.gray('  node index.mjs --clean temp      # 清理临时目录') + '\n' +
     chalk.gray('  node index.mjs --clean logs      # 清理日志文件') + '\n' +
     chalk.gray('  node index.mjs --clean cache     # 清理缓存文件') + '\n\n' +
+    chalk.gray('  node index.mjs --sync-deps       # 同步依赖版本') + '\n\n' +
     chalk.white('功能说明:') + '\n' +
     chalk.gray('  🆕 初始化新小程序项目 - 创建新的小程序项目') + '\n' +
     chalk.gray('  🔍 小程序打包 - 构建小程序包') + '\n' +
     chalk.gray('  📦 小程序调试 - 启动真机调试服务') + '\n' +
+    chalk.gray('  🔄 同步依赖版本 - 将 package.json 依赖对齐 shared-output.json') + '\n' +
     chalk.gray('  🧹 清理模式 - 清理临时文件') + '\n',
     {
       padding: 1,
@@ -322,6 +338,7 @@ inquirer
         { name: '🆕 初始化新小程序项目', value: ACTION_TYPES.INIT },
         { name: '🔍 小程序 - 打包小程序', value: ACTION_TYPES.MP_BUILD },
         { name: '📦 小程序 - 真机调试', value: ACTION_TYPES.MP_DEBUG },
+        { name: '🔄 同步依赖版本 - 对齐 shared-output.json', value: ACTION_TYPES.SYNC_DEPS },
         { name: '🧹 清理模式 - 清理临时文件', value: ACTION_TYPES.CLEAN },
         { name: '👋 退出', value: ACTION_TYPES.QUIT },
       ],

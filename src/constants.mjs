@@ -39,6 +39,7 @@ export const ACTION_TYPES = {
   INIT: 'init',
   MP_BUILD: 'mp-build',
   MP_DEBUG: 'mp-debug',
+  SYNC_DEPS: 'sync-deps',
   CLEAN: 'clean',
   QUIT: 'quit'
 };
