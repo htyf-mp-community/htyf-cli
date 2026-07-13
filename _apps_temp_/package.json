@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@callstack/repack": "5.2.5",
-    "@htyf-mp/cli": "0.3.6",
+    "@htyf-mp/cli": "0.3.7",
     "@htyf-mp/js-sdk": "0.2.20",
     "@react-native-async-storage/async-storage": "3.1.1",
     "@react-native-masked-view/masked-view": "0.3.2",
