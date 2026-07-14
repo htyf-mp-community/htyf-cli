@@ -4,6 +4,7 @@
   "@callstack/repack": "5.2.5",
   "@d11/react-native-fast-image": "8.13.0",
   "@dr.pogodin/react-native-fs": "2.39.2",
+  "@htyf-mp/rn-sdk": "*",
   "@kesha-antonov/react-native-background-downloader": "4.5.6",
   "@lodev09/react-native-true-sheet": "3.11.3",
   "@react-native-async-storage/async-storage": "3.1.1",

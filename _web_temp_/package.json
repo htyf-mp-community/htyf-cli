@@ -39,7 +39,7 @@
   "author": "",
   "dependencies": {
     "@babel/runtime": "7.24.4",
-    "@htyf-mp/cli": "0.3.7",
+    "@htyf-mp/cli": "0.3.8",
     "@htyf-mp/js-sdk": "0.2.20",
     "@tarojs/components": "4.2.0",
     "@tarojs/helper": "4.2.0",
