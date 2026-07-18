@@ -69,7 +69,7 @@ function handleFile (context: CustomResolutionContext, moduleName, platform, con
   // 处理 alias
   moduleName = resolvePathFromAlias(moduleName, config)
 
-  // 处理后缀 .rn.ts
+  // 处理后缀 .htyf.ts
   moduleName = resolveExtFile(context, moduleName, platform, config)
   return (resolveRequest || context.resolveRequest)(context, moduleName, platform)
 }

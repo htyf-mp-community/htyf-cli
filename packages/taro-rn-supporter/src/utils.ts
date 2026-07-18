@@ -110,7 +110,7 @@ function lookup (modulePath, platform, isDirectory = false) {
   const ext = path.extname(modulePath).toLowerCase()
   const extMatched = !!extensions.find(e => e === ext)
   // when platformExt is empty string('') it means find modulePath itself
-  const platformExts = [`.${platform}`, '.rn', '']
+  const platformExts = [`.${platform}`, '.htyf', '']
   // include ext
   if (extMatched) {
     for (const plat of platformExts) {
@@ -175,7 +175,7 @@ function resolveExtFile ({ originModulePath }, moduleName, platform, config: IPr
 }
 
 function includes (filePath: string, config: IProjectConfig): boolean {
-  const include = config?.rn?.resolve?.include || []
+  const include = config?.htyf?.resolve?.include || []
   if (!include.length) return false
 
   filePath = filePath.replace(/\\/g, '/')
@@ -192,7 +192,7 @@ function getBlockList (config: IProjectConfig) {
   const path = `${process.cwd()}/${srcDir}/app.config`
   const configPath = helper.resolveMainFilePath(path)
   const appConfig = helper.readConfig(configPath, config)
-  if (appConfig?.pages?.length === 1 && !!appConfig?.rn?.singleMode) {
+  if (appConfig?.pages?.length === 1 && !!appConfig?.htyf?.singleMode) {
     regExp.push(/@tarojs\/router-rn/)
   }
   return regExp

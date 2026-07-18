@@ -54,7 +54,7 @@ function getDefineConstants (config: IProjectConfig) {
 }
 
 export function getBabelConfig (config: IProjectConfig, isConfigFile = false) {
-  const rnConfig = config?.rn || {}
+  const rnConfig = config?.htyf || {}
   const plugins: any[] = []
   const { enableMultipleClassName = false, enableMergeStyle = false } = rnConfig
   plugins.push([

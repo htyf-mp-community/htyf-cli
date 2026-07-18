@@ -132,7 +132,7 @@ export function getCommonStyle (appPath: string, basePath: string) {
   let codeStr = ''
   // 先读带rn后缀的
   for (let i = 0; i < jsExt.length; i++) {
-    const rnfilePath = `${appPath}.rn.${jsExt[i]}`
+    const rnfilePath = `${appPath}.htyf.${jsExt[i]}`
     const rnFileContent: string = getFileContent(rnfilePath)
     if (!rnFileContent) {
       codeStr = rnFileContent

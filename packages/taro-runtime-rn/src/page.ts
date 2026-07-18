@@ -163,7 +163,7 @@ export function createPageConfig (Page: any, pageConfig: PageConfig): any {
           this.unSubscribleFocus = navigation.addListener('focus', () => this.onFocusChange())
           this.unSubscribleBlur = navigation.addListener('blur', () => this.onBlurChange())
           // 如果是tabbar页面，因为tabbar是懒加载的，第一次点击事件还未监听，不会触发，初始化触发一下
-          const lazy = globalAny.__taroAppConfig?.appConfig?.rn?.tabOptions?.lazy ?? true
+          const lazy = globalAny.__taroAppConfig?.appConfig?.htyf?.tabOptions?.lazy ?? true
           if (isTabPage() && lazy) {
             this.onTabItemTap()
           }
@@ -462,7 +462,7 @@ export function createPageConfig (Page: any, pageConfig: PageConfig): any {
       createScrollPage () {
         let bgColor = pageConfig.backgroundColor ? pageConfig.backgroundColor : ''
         const windowOptions = globalAny.__taroAppConfig?.appConfig?.window || {}
-        const useNativeStack = globalAny.__taroAppConfig?.appConfig?.rn?.useNativeStack
+        const useNativeStack = globalAny.__taroAppConfig?.appConfig?.htyf?.useNativeStack
         if (!bgColor && windowOptions?.backgroundColor) {
           bgColor = windowOptions?.backgroundColor
         }

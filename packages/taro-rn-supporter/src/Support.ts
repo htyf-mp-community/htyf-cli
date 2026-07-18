@@ -55,7 +55,7 @@ export function getResolver (opt: Options = {}, config: IProjectConfig, resolveR
     },
     resolverMainFields: ['react-native', 'browser', 'main'],
   }
-  if (config?.rn?.enableSvgTransform) {
+  if (config?.htyf?.enableSvgTransform) {
     resolver.assetExts = assetExts.filter(ext => ext !== 'svg')
     resolver.sourceExts.push('svg')
   }

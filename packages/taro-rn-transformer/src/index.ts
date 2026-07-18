@@ -32,7 +32,7 @@ export function transform ({ src, filename, options }: TransformType) {
         828: 1.81 / 2
       }
     })
-  } else if (isPageFile(filename, sourceDir) || isSourceComponent(filename, code, sourceDir) || isNPMComponent(filename, code, options?.rn)) {
+  } else if (isPageFile(filename, sourceDir) || isSourceComponent(filename, code, sourceDir) || isNPMComponent(filename, code, options?.htyf)) {
     code = componentLoader({
       projectRoot: options.projectRoot,
       sourceCode: src,

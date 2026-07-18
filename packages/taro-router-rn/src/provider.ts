@@ -68,7 +68,7 @@ export class PageProvider extends React.Component<any> {
         showHeader = pageConfig.navigationStyle !== 'custom'
       }
 
-      const rnConfig = pageConfig?.rn || {}
+      const rnConfig = pageConfig?.htyf || {}
       const screenOptions = rnConfig.screenOptions || {}
       const screenHeaderStyle = screenOptions?.headerStyle || {}
 

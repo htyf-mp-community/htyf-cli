@@ -19,7 +19,7 @@ const getTransformer = (pkgName) => {
     // @ts-ignore
 const transform = async ({ src, filename, options }) => {
   const config = await getProjectConfig()
-  const rnConfig = config?.rn || {}
+  const rnConfig = config?.htyf || {}
   const entry = rnConfig?.entry || 'app'
   const isConfigFile = /\.config\.(t|j)sx?$/.test(filename)
   const { plugins } = getBabelConfig(config, isConfigFile)

@@ -29,8 +29,8 @@ describe('style transform in cross platform', () => {
       .test {
         color: red;
       }
-      /*  #ifdef  rn  */
-      .rn { width: 100px }
+      /*  #ifdef  htyf  */
+      .htyf { width: 100px }
       /*  #endif  */
       /*  #ifndef  rn  */
       .h5 { errSet: 100px }

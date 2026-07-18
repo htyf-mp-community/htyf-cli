@@ -111,7 +111,7 @@ export function resolveStyle (id: string, opts: ResolveStyleOptions) {
 
   const extensions = [
     '.' + platform + ext,
-    '.rn' + ext,
+    '.htyf' + ext,
     ext
   ]
 
