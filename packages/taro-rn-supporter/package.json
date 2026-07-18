@@ -54,11 +54,11 @@
     "@babel/core": "^7.24.4",
     "@babel/preset-env": "^7.24.4",
     "@types/lodash": "^4.17.0",
-    "react-native": "^0.73.1",
-    "react-native-svg": "~14.1.0"
+    "react-native": "0.86.0",
+    "react-native-svg": "15.15.5"
   },
   "peerDependencies": {
     "react": ">= 19",
-    "react-native": ">= 0.86.0"
+    "react-native": "0.86.0"
   }
 }

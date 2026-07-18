@@ -38,8 +38,8 @@
     "pnpm": ">=9.0.0"
   },
   "peerDependencies": {
-    "react-native-reanimated": "*",
-    "react-native-worklets": "*"
+    "react-native-reanimated": "4.5.1",
+    "react-native-worklets": "0.10.2"
   },
   "dependencies": {
     "@babel/core": "7.29.0",
@@ -67,8 +67,8 @@
     "ora": "9.3.0",
     "portfinder": "1.0.38",
     "qrcode": "1.5.4",
-    "react-native-reanimated": "*",
-    "react-native-worklets": "*",
+    "react-native-reanimated": "4.5.1",
+    "react-native-worklets": "0.10.2",
     "shelljs": "0.10.0",
     "superstatic": "10.0.0",
     "systeminformation": "5.31.5",
@@ -78,6 +78,5 @@
     "webpack": "5.105.4",
     "webpack-cli": "7.0.2"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

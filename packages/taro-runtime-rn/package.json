@@ -44,8 +44,8 @@
   },
   "peerDependencies": {
     "react": ">= 18",
-    "react-native": ">= 0.86.0",
-    "react-native-device-info": ">= 15.0.0",
+    "react-native": "0.86.0",
+    "react-native-device-info": "15.0.2",
     "react-native-root-siblings": ">= 5"
   }
 }

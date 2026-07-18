@@ -11,7 +11,10 @@
   "scripts": {
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
-    "clean": "pnpm -r run clean"
+    "clean": "pnpm -r run clean",
+    "sync-deps": "node scripts/index.mjs",
+    "sync-deps:write": "node scripts/index.mjs --write",
+    "sync-deps:watch": "node scripts/index.mjs --watch"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
