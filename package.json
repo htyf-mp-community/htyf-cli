@@ -20,7 +20,7 @@
     "version:minor": "lerna version minor --no-private",
     "version:major": "lerna version major --no-private",
     "publish:packages": "pnpm build && lerna publish from-package --no-private -y",
-    "publish:dev": "pnpm build && lerna publish --no-private -y --dist-tag dev",
+    "publish:dev": "pnpm build && lerna publish --no-private -y --dist-tag alpha",
     "publish:changed": "lerna changed"
   },
   "devDependencies": {
