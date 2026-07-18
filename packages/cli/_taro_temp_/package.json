@@ -12,6 +12,8 @@
   "scripts": {
     "prepare": "husky",
     "new": "taro new",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
@@ -74,6 +76,7 @@
     "expo-image-picker": "57.0.4",
     "expo-keep-awake": "57.0.1",
     "expo-location": "57.0.4",
+    "expo-modules-autolinking": "57.0.8",
     "expo-sensors": "57.0.2",
     "expo-video": "57.0.1",
     "jest-expo": "57.0.2",

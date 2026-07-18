@@ -13,6 +13,10 @@ export class ProjectConfig {
     };
 
     this.templates = {
+      [CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE]: {
+        name: 'taro-template',
+        tempPath: '_taro_temp_'
+      },
       [CONSTANTS.TEMPLATE_TYPES.APP_TEMPLATE]: {
         name: 'app-template',
         tempPath: '_apps_temp_'
@@ -21,14 +25,6 @@ export class ProjectConfig {
         name: 'game-template',
         tempPath: '_game_temp_'
       },
-      [CONSTANTS.TEMPLATE_TYPES.WEB_TEMPLATE]: {
-        name: 'web-template',
-        tempPath: '_web_temp_'
-      },
-      [CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE]: {
-        name: 'taro-template',
-        tempPath: '_taro_temp_'
-      }
     };
   }
 

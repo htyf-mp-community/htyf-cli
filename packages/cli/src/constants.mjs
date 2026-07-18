@@ -25,10 +25,9 @@ export const CONSTANTS = {
     CODING: 'https://e.coding.net/dagouzhi/hongtangyun_mobile/htyf-cli.git'
   },
   TEMPLATE_TYPES: {
+    TARO_TEMPLATE: 'taro-template',
     APP_TEMPLATE: 'app-template',
     GAME_TEMPLATE: 'game-template',
-    WEB_TEMPLATE: 'web-template',
-    TARO_TEMPLATE: 'taro-template',
   }
 };
 

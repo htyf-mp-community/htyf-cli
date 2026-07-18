@@ -198,8 +198,6 @@ export class ProjectInitializer {
       let appType = 'app';
       if (templateType === CONSTANTS.TEMPLATE_TYPES.GAME_TEMPLATE) {
         appType = 'game';
-      } else if (templateType === CONSTANTS.TEMPLATE_TYPES.WEB_TEMPLATE) {
-        appType = 'web';
       } else if (templateType === CONSTANTS.TEMPLATE_TYPES.APP_TEMPLATE) {
         appType = 'app';
       } else if (templateType === CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE) {
