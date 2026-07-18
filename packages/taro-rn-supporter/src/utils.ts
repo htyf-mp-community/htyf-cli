@@ -66,7 +66,7 @@ function getAlias (config: IProjectConfig) {
     ...config.alias,
     ...config.htyf?.alias,
     '@tarojs/components': '@htyf-mp/taro-components-rn',
-    '@tarojs/taro': '@htyf-mp/taro-taro-rn'
+    '@tarojs/taro': '@htyf-mp/taro-rn'
   }
 }
 

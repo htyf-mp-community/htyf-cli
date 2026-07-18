@@ -12,7 +12,7 @@ interface ResolverOption {
 }
 
 const DEFAULT_ALIAS = {
-  '@tarojs/taro': '@htyf-mp/taro-taro-rn',
+  '@tarojs/taro': '@htyf-mp/taro-rn',
   '@tarojs/components': '@htyf-mp/taro-components-rn'
 }
 

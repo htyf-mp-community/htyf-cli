@@ -1,5 +1,5 @@
 {
-  "extends": "stylelint-config-taro-rn",
+  "extends": "@htyf-mp/stylelint-config-taro-rn",
   "rules": {
   }
 }
