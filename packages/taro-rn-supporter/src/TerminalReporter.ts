@@ -1,15 +1,14 @@
-    // @ts-ignore
-import * as TerminalReporter from 'metro/src/lib/TerminalReporter'
+import type { TerminalReportableEvent } from 'metro/src/lib/TerminalReporter'
 import * as readline from 'readline'
 
 import { entryFilePath } from './defaults'
 import { previewDev } from './preview'
 import { shareObject } from './Support'
 
-    // @ts-ignore
-import type { TerminalReportableEvent } from 'metro/src/lib/TerminalReporter'
+// Metro 不同版本导出方式不同：0.80 为 module.exports = class，较新版本为 { default: class }
+const metroTerminalReporterModule = require('metro/src/lib/TerminalReporter')
+const MetroTerminalReporter = metroTerminalReporterModule.default || metroTerminalReporterModule
 
-// 将 stdin 设置为 raw 模式来监听按键事件
 readline.emitKeypressEvents(process.stdin)
 process.stdin.setRawMode(true)
 process.stdin.on('keypress', (_key, data) => {
@@ -21,8 +20,7 @@ process.stdin.on('keypress', (_key, data) => {
   }
 })
 
-// @ts-ignore
-export default class TaroTerminalReporter extends TerminalReporter {
+export default class TaroTerminalReporter extends MetroTerminalReporter {
   _initialized: boolean
   constructor (terminal: any) {
     super(terminal)
@@ -30,7 +28,6 @@ export default class TaroTerminalReporter extends TerminalReporter {
   }
 
   async update (event: TerminalReportableEvent) {
-    // 当依赖图加载之后，检测app和页面配置文件的变化
     switch (event.type) {
       case 'initialize_started':
         console.log('To print qrcode press "q"')
@@ -42,7 +39,6 @@ export default class TaroTerminalReporter extends TerminalReporter {
         super.update(event)
         const realEntryPath = require.resolve(entryFilePath)
         if (this._initialized) {
-          // 恢复入口页面的缓存
           shareObject.cacheStore.ignoreEntryFileCache = false
           return
         }
@@ -53,34 +49,30 @@ export default class TaroTerminalReporter extends TerminalReporter {
         const incrementalBundler = shareObject.metroServerInstance.getBundler()
         const deltaBundler = incrementalBundler.getDeltaBundler()
         const bundler = incrementalBundler.getBundler()
-    // @ts-ignore
+        // @ts-ignore
         const findEntryGraphId = keys => {
           for (const k of keys) {
             return k
           }
           return null
         }
-        // 获取入口文件的graph
         const entryGraphId = findEntryGraphId(incrementalBundler._revisionsByGraphId.keys())
         const entryGraphVersion = await incrementalBundler.getRevisionByGraphId(entryGraphId)
 
-        // 监听DeltaCalculator的change事件，把入口文件也加入到_modifiedFiles集合中
-    // @ts-ignore
+        // @ts-ignore
         bundler.getDependencyGraph().then(dependencyGraph => {
-    // @ts-ignore
+          // @ts-ignore
           dependencyGraph.getWatcher().on('change', ({ eventsQueue }) => {
-    // @ts-ignore
+            // @ts-ignore
             const changedFiles = eventsQueue.filter(item => {
-              // APP配置文件变更和页面配置文件新增或删除时，重新编译入口文件
               if (item.filePath.includes(`${shareObject.entry}.config`)) {
                 return true
               }
               return item.type !== 'change'
-    // @ts-ignore
+              // @ts-ignore
             }).map(item => item.filePath)
-            // 如果配置文件修改之后，把入口文件添加到修改列表中
             const deltaCalculator = deltaBundler._deltaCalculators.get(entryGraphVersion.graph)
-    // @ts-ignore
+            // @ts-ignore
             const isConfigurationModified = keys => {
               for (const k of keys) {
                 if (k.includes('.config') && k.includes(shareObject.sourceRoot)) {
@@ -90,7 +82,6 @@ export default class TaroTerminalReporter extends TerminalReporter {
               return false
             }
             if (isConfigurationModified(changedFiles)) {
-              // 忽略入口文件的转译结果缓存
               shareObject.cacheStore.ignoreEntryFileCache = true
               deltaCalculator._modifiedFiles.add(realEntryPath)
               for (const value of deltaCalculator._modifiedFiles) {

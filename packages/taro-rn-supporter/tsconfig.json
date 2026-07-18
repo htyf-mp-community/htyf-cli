@@ -5,7 +5,9 @@
     "noEmitOnError": false,
     "skipLibCheck": true,
     "checkJs": false,
-    
+    "target": "ES2017",
+    "esModuleInterop": true,
+
     "rootDir": "./src",
     "outDir": "dist",
     "sourceMap": true,
