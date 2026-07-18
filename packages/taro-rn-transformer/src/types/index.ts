@@ -11,7 +11,7 @@ export interface TransformType {
     isEntryFile: (filename: string) => boolean
     designWidth?: number | ((size?: string | number) => number)
     deviceRatio?: Record<string, number>
-    rn?: Record<string, any>
+    htyf?: Record<string, any>
     plugins?: any[]
   }
 }
