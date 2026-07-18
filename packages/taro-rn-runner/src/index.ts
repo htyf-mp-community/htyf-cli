@@ -65,8 +65,8 @@ export default async function build (_appPath: string, config: any): Promise<any
       spawn(npxCmd, [
         'react-native',
         'start',
-        '--custom-log-reporter-path',
-        '@htyf-mp/taro-rn-supporter/TerminalReporter'
+        // '--custom-log-reporter-path',
+        // '@htyf-mp/taro-rn-supporter/TerminalReporter'
       ].concat(cliParams), {
         stdio: 'inherit', shell: true
       })

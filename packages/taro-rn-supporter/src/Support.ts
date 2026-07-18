@@ -9,6 +9,8 @@ import { ConditionalFileStore } from './conditional-file-store'
 import { assetExts } from './defaults'
 import { getReactNativeVersion, handleFile, handleTaroFile, searchReactNativeModule } from './taroResolver'
 import { getBlockList, getProjectConfig } from './utils'
+import { TaroWebpackPlugin } from './webpackPlugin'
+import { TaroWebpackResolverPlugin } from './webpackResolverPlugin'
 
 import type { IProjectConfig } from '@tarojs/taro/types/compile'
 
@@ -17,6 +19,19 @@ const reactNativePath: string = resolveReactNativePath(findProjectRoot())
 interface Options {
   fromRunner?: boolean // taro rn-runner内部调用，默认为 true
   qr?: boolean // 是否展示二维码，默认为 true
+}
+
+export interface WebpackOptions extends Options {
+  platform?: string
+}
+
+export interface WebpackConfig {
+  plugins?: unknown[]
+  resolve?: {
+    plugins?: unknown[]
+    [key: string]: unknown
+  }
+  [key: string]: unknown
 }
 
 process.env.TARO_ENV = 'htyf'
@@ -152,4 +167,41 @@ export async function getMetroConfig (opt: Options = {}, toMergeConfig?: MetroCo
     }
   })
   return finalConfig
+}
+
+/**
+ * 将 Taro RN 的模块解析规则注入现有 Webpack 配置。
+ *
+ * Webpack 配置优先保留调用方内容，仅在 resolve.plugins 前置注入解析插件。
+ */
+export async function getWebpackConfig (
+  opt: WebpackOptions = {},
+  toMergeConfig: WebpackConfig = {}
+): Promise<WebpackConfig> {
+  const config = await getProjectConfig()
+  const platform = opt.platform || process.env.PLATFORM || 'ios'
+  const projectRoot = typeof toMergeConfig.context === 'string'
+    ? toMergeConfig.context
+    : process.cwd()
+  const webpackPlugin = new TaroWebpackPlugin({ config, platform })
+  const resolverPlugin = new TaroWebpackResolverPlugin({
+    config,
+    platform,
+    projectRoot
+  })
+
+  return {
+    ...toMergeConfig,
+    plugins: [
+      webpackPlugin,
+      ...(toMergeConfig.plugins || [])
+    ],
+    resolve: {
+      ...toMergeConfig.resolve,
+      plugins: [
+        resolverPlugin,
+        ...(toMergeConfig.resolve?.plugins || [])
+      ]
+    }
+  }
 }
