@@ -2,6 +2,7 @@
   "name": "htyf-cli",
   "version": "0.3.10",
   "private": true,
+  "packageManager": "pnpm@10.29.3",
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=9.0.0"
