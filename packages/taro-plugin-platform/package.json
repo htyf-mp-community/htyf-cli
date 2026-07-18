@@ -1,0 +1,38 @@
+{
+  "name": "@htyf-mp/taro-plugin-platform",
+  "version": "0.0.1",
+  "description": "红糖云服端小程序平台插件",
+  "author": "dgz",
+  "homepage": "",
+  "license": "MIT",
+  "main": "index.js",
+  "keywords": [
+    "taro"
+  ],
+  "files": [
+    "index.js",
+    "dist",
+    "types"
+  ],
+  "types": "types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
+  "bugs": {
+    "url": ""
+  },
+  "dependencies": {
+    "@tarojs/service": "4.2.0",
+    "@tarojs/shared": "4.2.0"
+  },
+  "devDependencies": {
+    "rollup": "4.62.2",
+    "rollup-plugin-typescript2": "0.37.0",
+    "typescript": "5.7.3"
+  }
+}

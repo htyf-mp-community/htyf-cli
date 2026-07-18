@@ -1,0 +1,51 @@
+{
+  "name": "@htyf-mp/taro-runtime-rn",
+  "version": "0.0.1",
+  "description": "taro-runtime-rn",
+  "author": "dgz",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "prod": "pnpm run build",
+    "prebuild": "pnpm run clean",
+    "clean": "rimraf ./dist",
+    "dev": "tsc -w",
+    "build": "tsc",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "keywords": [
+    "taro",
+    "runtime-rn"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "dependencies": {
+    "@htyf-mp/taro-components-rn": "workspace:*",
+    "@htyf-mp/taro-router-rn": "workspace:*",
+    "@tarojs/shared": "4.2.0"
+  },
+  "devDependencies": {
+    "react-native": "0.86.0",
+    "react-native-device-info": "15.0.2",
+    "react-native-root-siblings": "5.0.1"
+  },
+  "peerDependencies": {
+    "react": ">= 18",
+    "react-native": ">= 0.86.0",
+    "react-native-device-info": ">= 15.0.0",
+    "react-native-root-siblings": ">= 5"
+  }
+}

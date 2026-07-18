@@ -1,12 +1,6 @@
 node_modules
-yarn.lock
-rn-ai
+.pnpm-store
 .DS_Store
-my-htyf-mp/
-my-htyf-mp-expo/
-my-htyf-mp-taro/
-my-htyf-mp-game/
-
-./src/.logs
-.htyf/
-test/
+*.log
+dist
+coverage

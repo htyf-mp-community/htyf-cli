@@ -1,0 +1,70 @@
+{
+  "name": "@htyf-mp/taro-rn-runner",
+  "version": "0.0.2",
+  "description": "ReactNative build tool for taro",
+  "author": "O2Team",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "prod": "pnpm run build",
+    "prebuild": "pnpm run clean",
+    "clean": "rimraf ./dist",
+    "build": "tsc",
+    "dev": "tsc -w",
+    "lint": "eslint src templates __tests__ --ext .js,.ts",
+    "test": "vitest run",
+    "test:ci": "vitest run --coverage",
+    "test:dev": "vitest",
+    "test:update": "vitest --update"
+  },
+  "keywords": [
+    "taro"
+  ],
+  "bugs": {
+    "url": "https://github.com/NervJS/taro/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NervJS/taro.git"
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "dependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@tarojs/helper": "4.2.0",
+    "@htyf-mp/taro-rn-style-transformer": "workspace:*",
+    "@htyf-mp/taro-rn-supporter": "workspace:*",
+    "@htyf-mp/taro-rn-transformer": "workspace:*",
+    "acorn": "^8.11.3",
+    "acorn-jsx": "^5.3.2",
+    "fs-extra": "^11.2.0",
+    "lodash": "^4.17.21",
+    "rollup-plugin-image-file": "^1.0.2",
+    "@htyf-mp/stylelint-config-taro-rn": "workspace:*"
+  },
+  "devDependencies": {
+    "babel-preset-taro": "4.2.0",
+    "@rnx-kit/metro-resolver-symlinks": "^0.1.36",
+    "@tarojs/components": "4.2.0",
+    "@tarojs/taro": "4.2.0",
+    "babel-plugin-transform-react-jsx-to-rn-stylesheet": "4.2.0",
+    "expo": "57.0.6",
+    "expo-file-system": "57.0.1",
+    "query-string": "^9.0.0",
+    "react-is": "^18.3.1",
+    "react-native": "0.86.0",
+    "react-native-root-siblings": "5.0.1",
+    "rollup": "^4.16.4"
+  },
+  "peerDependencies": {
+    "babel-preset-taro": "4.2.0",
+    "expo": "57.0.6",
+    "react": "19.2.3",
+    "react-native": "0.86.0"
+  }
+}

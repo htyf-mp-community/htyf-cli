@@ -1,0 +1,54 @@
+{
+  "name": "@htyf-mp/taro-router-rn",
+  "version": "0.0.1",
+  "description": "Taro-router-rn",
+  "author": "dgz",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "prod": "pnpm run build",
+    "prebuild": "pnpm run clean",
+    "clean": "rimraf ./dist",
+    "dev": "tsc -w",
+    "build": "tsc",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "taro",
+    "router-rn"
+  ],
+  "engines": {
+    "node": ">= 18"
+  },
+  "dependencies": {
+    "@react-navigation/bottom-tabs": "7.18.8",
+    "@react-navigation/native": "7.3.8",
+    "@react-navigation/native-stack": "7.17.10",
+    "@react-navigation/routers": "7.6.2",
+    "@react-navigation/stack": "7.10.11",
+    "lodash": "4.17.21",
+    "query-string": "9.0.0"
+  },
+  "devDependencies": {
+    "react-native": "0.86.0",
+    "react-native-gesture-handler": "3.0.2",  
+    "react-native-safe-area-context": "5.3.0",
+    "react-native-screens": "4.9.2"
+  },
+  "peerDependencies": {
+    "react": "19.2.3",
+    "react-native": "0.86.0",
+    "react-native-gesture-handler": "3.0.2",
+    "react-native-safe-area-context": "5.3.0",
+    "react-native-screens": "4.9.2"
+  }
+}

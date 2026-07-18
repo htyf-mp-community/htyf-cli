@@ -1,0 +1,21 @@
+{
+  // "extends": "../../tsconfig.root.json",
+  "compilerOptions": {
+    // 临时
+    "noEmitOnError": false,
+    "skipLibCheck": true,
+    "checkJs": false,
+    
+    "outDir": "dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "declaration": true,
+    "jsx": "react",
+    "lib": ["ESNEXT"],
+    "types": ["react-native", "node"],
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  },
+  "include": ["src"]
+}

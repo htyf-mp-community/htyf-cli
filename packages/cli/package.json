@@ -1,0 +1,83 @@
+{
+  "name": "@htyf-mp/cli",
+  "version": "0.3.9",
+  "description": "红糖云服app小程序模板-cli",
+  "type": "module",
+  "bin": {
+    "htyf": "src/index.mjs",
+    "htyf-mp": "src/index.mjs"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node src/index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "keywords": [
+    "hongtangyun",
+    "htyf",
+    "mp",
+    "miniprogram",
+    "taro",
+    "react-native",
+    "expo",
+    "cli",
+    "template"
+  ],
+  "author": "dgz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/htyf-mp-community/htyf-cli.git",
+    "directory": "htyf-cli"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "peerDependencies": {
+    "react-native-reanimated": "*",
+    "react-native-worklets": "*"
+  },
+  "dependencies": {
+    "@babel/core": "7.29.0",
+    "@babel/plugin-proposal-decorators": "7.29.0",
+    "@babel/plugin-transform-class-static-block": "7.28.6",
+    "@babel/preset-env": "7.29.2",
+    "@babel/runtime": "7.29.2",
+    "@callstack/repack-plugin-expo-modules": "5.2.5",
+    "@callstack/repack-plugin-reanimated": "5.2.5",
+    "@module-federation/enhanced": "0.19.1",
+    "@callstack/repack": "5.2.5",
+    "@inquirer/prompts": "7.8.0",
+    "@inquirer/select": "4.3.1",
+    "@module-federation/dts-plugin": "0.21.6",
+    "adm-zip": "0.5.17",
+    "boxen": "8.0.1",
+    "chalk": "5.6.2",
+    "execa": "9.6.0",
+    "fs-extra": "11.3.0",
+    "gradient-string": "3.0.0",
+    "inquirer": "12.9.0",
+    "loader-utils": "3.3.1",
+    "lodash": "4.18.1",
+    "md5": "2.3.0",
+    "ora": "9.3.0",
+    "portfinder": "1.0.38",
+    "qrcode": "1.5.4",
+    "react-native-reanimated": "*",
+    "react-native-worklets": "*",
+    "shelljs": "0.10.0",
+    "superstatic": "10.0.0",
+    "systeminformation": "5.31.5",
+    "terser-webpack-plugin": "5.4.0",
+    "typescript": "6.0.2",
+    "uuid": "9.0.1",
+    "webpack": "5.105.4",
+    "webpack-cli": "7.0.2"
+  },
+  "devDependencies": {
+  }
+}

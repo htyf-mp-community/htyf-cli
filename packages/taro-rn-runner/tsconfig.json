@@ -1,0 +1,17 @@
+{
+  // "extends": "../../tsconfig.root.json",
+  "compilerOptions": {
+    // 临时
+    "noEmitOnError": false,
+    "skipLibCheck": true,
+    "checkJs": false,
+
+    "jsx": "react",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "noUnusedLocals": false,
+    "module": "commonjs"
+  },
+  "include": ["./src"]
+}

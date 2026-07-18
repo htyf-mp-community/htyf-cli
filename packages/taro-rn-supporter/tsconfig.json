@@ -1,0 +1,16 @@
+{
+  // "extends": "../../tsconfig.root.json",
+  "compilerOptions": {
+    // 临时
+    "noEmitOnError": false,
+    "skipLibCheck": true,
+    "checkJs": false,
+    
+    "rootDir": "./src",
+    "outDir": "dist",
+    "sourceMap": true,
+    "types": ["node"],
+    "module": "commonjs"
+  },
+  "include": ["./src"]
+}
