@@ -40,5 +40,8 @@
   },
   "devDependencies": {
     "@babel/cli": "^8.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

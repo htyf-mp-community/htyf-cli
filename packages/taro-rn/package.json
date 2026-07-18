@@ -99,5 +99,8 @@
     "react-native-nitro-modules": "0.36.1",
     "react-native-root-siblings": "5.0.1",
     "react-native-safe-area-context": "5.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

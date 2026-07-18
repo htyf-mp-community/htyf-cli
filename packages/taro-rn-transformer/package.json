@@ -44,5 +44,8 @@
   "devDependencies": {
     "@types/lodash": "^4.17.0",
     "@types/mime-types": "^2.1.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -69,5 +69,8 @@
     "react-native-pager-view": "8.0.4",
     "react-native-svg": "15.15.5",
     "react-native-webview": "14.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -34,5 +34,8 @@
   "peerDependencies": {
     "@htyf-mp/stylelint-taro-rn": "workspace:*",
     "stylelint": "^16"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
