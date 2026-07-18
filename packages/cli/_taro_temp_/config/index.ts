@@ -87,7 +87,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       }
     },
     htyf: {
-      appName: 'apps_v2',
+      appName: 'apps',
       entry: 'app',
       output: {},
       postcss: {
