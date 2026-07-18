@@ -294,13 +294,14 @@ function createTabStack (config: RouterConfig, parentProps: any, screenOptions) 
   const tabProps = config.htyfConfig?.tabProps || {}
 
   const tabInitRouteName = getTabInitRoute() || getInitTabRoute(config) || tabNames[0]
-  // @ts-check
   return <Tab.Navigator
+    id="tabNavigator"
     {...tabProps}
     tabBar={(props) => createTabBar(props, tabOptions, tabBarOptions)}
     initialRouteName={tabInitRouteName}
     screenOptions={screenOptions}
-  >{tabList}</Tab.Navigator>
+    children={tabList}
+  />
 }
 
 function createTabBar (props, tabOptions: TabOptions, tabBarOptions) {
@@ -414,7 +415,6 @@ function createTabNavigate (config: RouterConfig, options: RouterOption) {
     >
       <Stack.Screen
         name='tabNav'
-        key='tabScreen'
         options={{
           headerShown: false
         }}
@@ -422,7 +422,6 @@ function createTabNavigate (config: RouterConfig, options: RouterOption) {
       {pageList.map(item => {
         const initParams = getInitParams(config, item.name)
         return <Stack.Screen
-          key={item.name}
           name={item.name}
           component={item.component}
           initialParams={initParams}
@@ -454,7 +453,7 @@ function createStackNavigate (config: RouterConfig, options:RouterOption) {
       initialRouteName={getInitRouteName(config)}
     >{pageList.map(item => {
         const initParams = getInitParams(config, item.name)
-        return <Stack.Screen key={item.name} name={item.name} component={item.component} initialParams={initParams} />
+        return <Stack.Screen name={item.name} component={item.component} initialParams={initParams} />
       })}</Stack.Navigator>
   </NavigationContainer>
 }

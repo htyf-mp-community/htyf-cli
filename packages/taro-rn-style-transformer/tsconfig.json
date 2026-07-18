@@ -13,6 +13,7 @@
     "declaration": true,
     "sourceMap": true,
     "noUnusedLocals": false,
+    "resolveJsonModule": true,
     "rootDir": "./src"
   },
   "include": ["./src"]

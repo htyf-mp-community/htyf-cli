@@ -162,8 +162,8 @@ function scanFromPhoto (
     sourceType: ['album'],
     maxDuration: 60,
     camera: 'back',
-    success: function (res: { tempFilePaths: string[] }) {
-      const imageUrl = res.tempFilePaths[0]
+    success: function (res) {
+      const imageUrl = res.tempFilePaths?.[0]
       if (imageUrl) {
         // @ts-ignore
         scanFromURLAsync(imageUrl, barcodeTypes).then((results) => {

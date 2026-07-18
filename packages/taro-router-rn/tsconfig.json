@@ -1,11 +1,11 @@
 {
-  // "extends": "../../tsconfig.root.json",
+  "extends": "../../tsconfig.root.json",
   "compilerOptions": {
     // 临时
     "noEmitOnError": false,
-    "skipLibCheck": true,
     "checkJs": false,
-    
+    "esModuleInterop": true,
+
     "outDir": "dist",
     "rootDir": "./src",
     "sourceMap": true,

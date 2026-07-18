@@ -4,10 +4,9 @@ import { errorHandler, successHandler } from '../../utils'
 
 async function getStorageCurrentSize() {
   const keys = await AsyncStorage.getAllKeys()
-  const mults = await AsyncStorage.multiGet(keys)
-  const size = mults.reduce((prev, current) => {
-    const sum = prev + (current && current[1] ? current[1].length : 0)
-    return sum
+  const entries = await AsyncStorage.getMany(keys)
+  const size = Object.values(entries).reduce((prev, current) => {
+    return prev + (current ? current.length : 0)
   }, 0)
   return Number((size / 1024).toFixed(2))
 }

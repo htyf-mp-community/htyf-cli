@@ -31,5 +31,10 @@
     "rollup": "^4.62.2",
     "typescript": "^5.7.3",
     "vitest": "^3.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/minimatch": "5.1.2"
+    }
   }
 }

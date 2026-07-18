@@ -19,22 +19,28 @@ function styleTransformIns () {
   }
 }
 
-export async function transform (src: string, filename: string, options: TransformOptions) {
-  if (typeof src === 'object') {
-    // handle RN >= 0.46
-    ({ src, filename, options } = src)
-  }
-  const ext = path.extname(filename)
+type TransformInput = { src: string; filename: string; options: TransformOptions }
+
+export async function transform (
+  src: string | TransformInput,
+  filename?: string,
+  options?: TransformOptions
+) {
+  const input: TransformInput = typeof src === 'string'
+    ? { src, filename: filename!, options: options! }
+    : src
+  const { src: source, filename: file, options: opts } = input
+  const ext = path.extname(file)
   if (RN_CSS_EXT.includes(ext)) {
-    const styleTransform = getSingleStyleTransform(options.config || {})
-    const styles = await styleTransform.transform(src, filename, options)
+    const styleTransform = getSingleStyleTransform(opts.config || {})
+    const styles = await styleTransform.transform(source, file, opts)
     return upstreamTransformer.transform({
       src: styles,
-      filename,
-      options
+      filename: file,
+      options: opts
     })
   }
-  return upstreamTransformer.transform({ src, filename, options })
+  return upstreamTransformer.transform({ src: source, filename: file, options: opts })
 }
 
 export function rollupTransform (options: TransformOptions) {

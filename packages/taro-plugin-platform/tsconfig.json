@@ -14,7 +14,8 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "declaration": true,
-    "declarationDir": "types"
+    "declarationDir": "types",
+    "skipLibCheck": true
   },
   "include": [
     "./src"
