@@ -23,7 +23,7 @@ export function transform ({ src, filename, options }: TransformType) {
       filename: filename,
       projectRoot: options.projectRoot,
       sourceDir: sourceDir,
-      appName: options.appName || 'taroDemo',
+      appName: options.appName || 'apps',
       entryName: entryName,
       designWidth: options?.designWidth || 750,
       deviceRatio: options?.deviceRatio || {

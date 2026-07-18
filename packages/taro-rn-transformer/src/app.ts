@@ -129,6 +129,8 @@ export default function generateEntry ({
   const firstPage = getPageComponent(routeList[0])
 
   const code = `
+  import 'react-native-gesture-handler'
+  import { AppRegistry } from 'react-native'
   import { createReactNativeApp, createPageConfig } from '@htyf-mp/taro-runtime-rn'
   import Component from '${appComponentPath}'
   ${importPageList}
@@ -141,7 +143,8 @@ export default function generateEntry ({
   const config = { appConfig: { ...buildConfig, ...AppComponentConfig } }
   global.__taroAppConfig = config
   config['pageList'] = [${routeList.map(pageItem => getPageScreen(pageItem))}]
-  export default () => createReactNativeApp(Component,config,${firstPage})
+  const Root = () => createReactNativeApp(Component,config,${firstPage})
+  AppRegistry.registerComponent('${appName}', Root)
   `
   console.log('code', code)
   return code
