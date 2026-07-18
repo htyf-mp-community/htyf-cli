@@ -24,6 +24,10 @@ export class ProjectConfig {
       [CONSTANTS.TEMPLATE_TYPES.WEB_TEMPLATE]: {
         name: 'web-template',
         tempPath: '_web_temp_'
+      },
+      [CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE]: {
+        name: 'taro-template',
+        tempPath: '_taro_temp_'
       }
     };
   }

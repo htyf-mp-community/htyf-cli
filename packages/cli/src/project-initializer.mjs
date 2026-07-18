@@ -202,6 +202,8 @@ export class ProjectInitializer {
         appType = 'web';
       } else if (templateType === CONSTANTS.TEMPLATE_TYPES.APP_TEMPLATE) {
         appType = 'app';
+      } else if (templateType === CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE) {
+        appType = 'app';
       }
       projectConfig.type = appType;
       // 写入配置文件
@@ -281,6 +283,11 @@ export class ProjectInitializer {
 
         if (templateType === CONSTANTS.TEMPLATE_TYPES.GAME_TEMPLATE) {
           commands.push(chalk.white('  npm install'));
+        } else if (templateType === CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE) {
+          commands.push(
+            chalk.white('  npm install'),
+            chalk.white('  npm run dev:htyf')
+          );
         } else {
           commands.push(
             chalk.white('  npm install'),

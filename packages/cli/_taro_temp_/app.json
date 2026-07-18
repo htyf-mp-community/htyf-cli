@@ -1,0 +1,8 @@
+{
+  "name": "taro",
+  "displayName": "taro",
+  "htyf": {
+    "type": "app",
+    "entry": "./src/app.ts"
+  }
+}

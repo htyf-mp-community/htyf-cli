@@ -28,6 +28,7 @@ export const CONSTANTS = {
     APP_TEMPLATE: 'app-template',
     GAME_TEMPLATE: 'game-template',
     WEB_TEMPLATE: 'web-template',
+    TARO_TEMPLATE: 'taro-template',
   }
 };
 

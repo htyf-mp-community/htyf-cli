@@ -1,6 +1,7 @@
 # 模板目录 - 这些模板会从GitHub动态拉取，不需要包含在npm包中
 _apps_temp_/
 _game_temp_/
+_taro_temp_/
 
 # 开发相关文件
 node_modules/

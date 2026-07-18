@@ -3,7 +3,6 @@ import path from 'path';
 import fse from 'fs-extra';
 import { execa } from 'execa';
 import { Logger } from './logger.mjs';
-import { CONSTANTS } from './constants.mjs';
 
 /**
  * 模板处理器类
@@ -46,18 +45,17 @@ export class TemplateProcessor {
       path.join(tmpdir, 'README.md')
     ];
 
-    // 根据模板类型移除不需要的模板
-    if (templateType === CONSTANTS.TEMPLATE_TYPES.GAME_TEMPLATE) {
-      pathsToRemove.push(path.join(tmpdir, 'mini-game-template'));
-    } 
-    if (templateType === CONSTANTS.TEMPLATE_TYPES.APP_TEMPLATE) {
-      pathsToRemove.push(path.join(tmpdir, 'mini-apps-template'));
-    }
-    if (templateType === CONSTANTS.TEMPLATE_TYPES.WEB_TEMPLATE) {
-      pathsToRemove.push(
-        path.join(tmpdir, 'mini-apps-template'),
-        path.join(tmpdir, 'mini-game-template')
-      );
+    const cliTemplatesDir = path.join(tmpdir, 'packages/cli');
+    const selectedTemplate = this.config.templates[templateType];
+    if (selectedTemplate) {
+      const selectedPath = path.join(cliTemplatesDir, selectedTemplate.tempPath);
+      Object.values(this.config.templates).forEach((template) => {
+        const templatePath = path.join(cliTemplatesDir, template.tempPath);
+        if (templatePath !== selectedPath) {
+          pathsToRemove.push(templatePath);
+        }
+      });
+      pathsToRemove.push(path.join(selectedPath, '.git'));
     }
 
     pathsToRemove.forEach(pathToRemove => {
