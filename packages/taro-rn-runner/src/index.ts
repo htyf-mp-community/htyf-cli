@@ -34,9 +34,9 @@ export default async function build (_appPath: string, config: any): Promise<any
   const cliParams:string[] = []
   config.output = config.output || {}
   // cli & config 参数透传
-  if (config.resetCache) {
+  // if (config.resetCache) {
     cliParams.push('--reset-cache')
-  }
+  // }
   if (config.publicPath) {
     process.env.PUBLIC_PATH = config.publicPath
   }
