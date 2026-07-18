@@ -1,6 +1,6 @@
 {
   "name": "htyf-cli",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "private": true,
   "description": "红糖云服小程序 CLI monorepo",
   "packageManager": "pnpm@10.29.3",
@@ -20,6 +20,7 @@
     "version:minor": "lerna version minor --no-private",
     "version:major": "lerna version major --no-private",
     "publish:packages": "pnpm build && lerna publish from-package --no-private -y",
+    "publish:dev": "pnpm build && lerna publish --no-private -y --dist-tag dev",
     "publish:changed": "lerna changed"
   },
   "devDependencies": {
