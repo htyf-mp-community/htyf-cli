@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/taro-rn-style-transformer",
-  "version": "0.3.12-alpha.3",
+  "version": "0.3.12-alpha.4",
   "description": "提供 Taro RN 统一处理样式文件能力",
   "author": "O2Team",
   "license": "MIT",
