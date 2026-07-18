@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/stylelint-config-taro-rn",
-  "version": "0.0.1",
+  "version": "0.3.9",
   "description": "Shareable stylelint config for React Native CSS modules",
   "author": "O2Team",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "stylelint": "^16.4.0"
   },
   "peerDependencies": {
-    "stylelint": "^16",
-    "@htyf-mp/stylelint-taro-rn": "workspace:*"
+    "@htyf-mp/stylelint-taro-rn": "workspace:*",
+    "stylelint": "^16"
   }
 }

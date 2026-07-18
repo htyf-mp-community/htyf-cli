@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/taro-rn-supporter",
-  "version": "0.0.1",
+  "version": "0.3.9",
   "description": "Taro rn supporter",
   "author": "O2Team",
   "license": "MIT",
@@ -29,12 +29,12 @@
     "node": ">= 18"
   },
   "dependencies": {
+    "@htyf-mp/taro-rn-style-transformer": "workspace:*",
+    "@htyf-mp/taro-rn-transformer": "workspace:*",
     "@react-native-community/cli-config": "^12.3.6",
     "@react-native-community/cli-tools": "^12.3.6",
     "@react-native/metro-babel-transformer": "^0.73.2",
     "@tarojs/helper": "4.2.0",
-    "@htyf-mp/taro-rn-style-transformer": "workspace:*",
-    "@htyf-mp/taro-rn-transformer": "workspace:*",
     "@tarojs/service": "4.2.0",
     "@tarojs/shared": "4.2.0",
     "@tarojs/taro": "4.2.0",

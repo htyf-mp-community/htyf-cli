@@ -1,6 +1,6 @@
 {
   "name": "htyf-cli",
-  "version": "0.0.0",
+  "version": "0.3.9",
   "private": true,
   "description": "红糖云服小程序 CLI monorepo",
   "packageManager": "pnpm@10.29.3",
@@ -14,12 +14,19 @@
     "clean": "pnpm -r run clean",
     "sync-deps": "node scripts/index.mjs",
     "sync-deps:write": "node scripts/index.mjs --write",
-    "sync-deps:watch": "node scripts/index.mjs --watch"
+    "sync-deps:watch": "node scripts/index.mjs --watch",
+    "lerna": "lerna",
+    "version:patch": "lerna version patch --no-private",
+    "version:minor": "lerna version minor --no-private",
+    "version:major": "lerna version major --no-private",
+    "publish:packages": "pnpm build && lerna publish from-package --no-private -y",
+    "publish:changed": "lerna changed"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^9.0.0",
     "jest": "^29.7.0",
+    "lerna": "^9.0.7",
     "rimraf": "^6.0.1",
     "rollup": "^4.62.2",
     "typescript": "^5.7.3",

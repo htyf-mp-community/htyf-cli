@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "0.3.9",
+  "npmClient": "pnpm",
+  "command": {
+    "version": {
+      "allowBranch": [
+        "main",
+        "master"
+      ],
+      "message": "chore(release): publish v%s",
+      "syncWorkspaceLock": true
+    },
+    "publish": {
+      "message": "chore(release): publish v%s",
+      "registry": "https://registry.npmjs.org"
+    }
+  }
+}

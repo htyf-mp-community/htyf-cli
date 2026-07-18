@@ -177,7 +177,7 @@ export class ProjectInitializer {
 
       // 确定应用根路径
       const template = this.config.templates[templateType];
-      const appRootPath = path.join(tmpdir, template.tempPath);
+      const appRootPath = path.join(tmpdir, 'packages/cli', template.tempPath);
 
       // 清理不需要的文件
       spinner.text = '正在清理模板文件...';
