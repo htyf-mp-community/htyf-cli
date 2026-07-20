@@ -1,13 +1,16 @@
 import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
+import * as inquirer from 'inquirer'
 
 import { chalk } from '@tarojs/helper'
 import * as child_process from 'child_process'
 
 import { printDevelopmentTip } from './util'
+import { syncDepsShell } from './sync-deps'
 
 import type { IPluginContext } from '@tarojs/service'
+import { getAppExposesOptions, mpBuildShell } from './htyf-build'
 
 function checkReactNativeDependencies (packageInfo: any): boolean {
   const packageNames = ['react', 'react-native', '@htyf-mp/taro-rn', '@htyf-mp/taro-rn-runner']
@@ -20,12 +23,31 @@ function checkReactNativeDependencies (packageInfo: any): boolean {
   return true
 }
 
+function checkWebpackConfig (workspaceRoot: string): boolean {
+  const  exists = fs.existsSync(path.join(workspaceRoot, 'webpack.config.mjs'))
+  if (!exists) {
+    fs.copyFileSync(path.join(__dirname, '../webpack.config.mjs'), path.join(workspaceRoot, 'webpack.config.mjs'))
+    return false
+  } 
+  return true
+}
+
+function checkHtyfConfig (workspaceRoot: string): boolean {
+  const  exists = fs.existsSync(path.join(workspaceRoot, 'htyf.config.json'))
+  if (!exists) {
+    fs.copyFileSync(path.join(__dirname, '../htyf.config.json'), path.join(workspaceRoot, 'htyf.config.json'))
+    return false
+  } 
+  return true
+}
+
 function makeSureReactNativeInstalled (workspaceRoot: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const packageInfo = JSON.parse(fs.readFileSync(path.join(workspaceRoot, 'package.json'), {
       encoding: 'utf8'
     }))
-
+    checkWebpackConfig(workspaceRoot);
+    checkHtyfConfig(workspaceRoot)
     if (checkReactNativeDependencies(packageInfo)) {
       resolve()
     } else {
@@ -33,7 +55,7 @@ function makeSureReactNativeInstalled (workspaceRoot: string): Promise<void> {
       const devTag = process.env.DEVTAG || 'latest'
       console.log('Installing HTYF-MP related packages:')
       const pkg = {
-        "react": "19.2.3",
+        "react-19": "npm:react@19.2.3",
         "react-native": "0.86.0",
         "@react-native/metro-config": "0.86.0",
         "expo": "57.0.6",
@@ -87,7 +109,7 @@ export default (ctx: IPluginContext) => {
         qr
       } = ctx.runOpts.options
 
-      printDevelopmentTip('htyf')
+      printDevelopmentTip('htyf', appPath)
 
       // 准备 rnRunner 参数
       const rnRunnerOpts = {
@@ -110,10 +132,84 @@ export default (ctx: IPluginContext) => {
         rnRunnerOpts.entry = 'app'
       }
 
+      /**
+       * 用inquirer 添加一些额外的命令 
+       * [ACTION_TYPES.MP_DEV]: 'htyf小程序本地开发',
+       * [ACTION_TYPES.MP_BUILD]: 'htyf小程序打包',
+       * [ACTION_TYPES.MP_DEBUG]: 'htyf小程序真机调试',
+       * [ACTION_TYPES.SYNC_DEPS]: 'htyf同步依赖版本',
+       * [ACTION_TYPES.QUIT]: '退出',
+       *  */ 
+      const ACTION_TYPES = {
+        MP_DEV: 'mp_dev',
+        MP_BUILD: 'mp_build',
+        MP_DEBUG: 'mp_debug',
+        SYNC_DEPS: 'sync_deps',
+        QUIT: 'quit',
+      }
+      const result = await inquirer
+      // @ts-ignore
+      .prompt([
+        {
+          type: 'rawlist',
+          name: 'index',
+          message: '请选择你想要执行的操作：',
+          choices: [
+            { name: '红糖小程序 - 本地开发', value: ACTION_TYPES.MP_DEV },
+            { name: '红糖小程序 - 真机调试', value: ACTION_TYPES.MP_DEBUG },
+            { name: '红糖小程序 - 打包小程序', value: ACTION_TYPES.MP_BUILD },
+            { name: '同步依赖版本', value: ACTION_TYPES.SYNC_DEPS },
+            { name: '👋 退出', value: ACTION_TYPES.QUIT },
+          ],
+        },
+      ])
+
+      // 默认不开启watch
+      rnRunnerOpts.isWatch = false;
+
+      if (result.index === ACTION_TYPES.QUIT) {
+        process.exit(0)
+      }
+
+      if (result.index === ACTION_TYPES.SYNC_DEPS) {
+        console.log('sync_deps')
+        await syncDepsShell(appPath)
+        return
+      }
+
+      if (result.index === ACTION_TYPES.MP_DEV) {
+        console.log('mp_dev')
+        rnRunnerOpts.isWatch = true;
+      }
+      
+      console.log(JSON.stringify(rnRunnerOpts, null, 2))
+
       makeSureReactNativeInstalled(appPath).then(async () => {
         // build with metro
         const rnRunner = await npm.getNpmPkg('@htyf-mp/taro-rn-runner', appPath)
-        await rnRunner(appPath, rnRunnerOpts)
+        process.env.APP_EXPOSES_OPTIONS = '';
+        process.env.APP_ROOT_INDEX_PATH = '';
+        if (result.index !== ACTION_TYPES.MP_DEV) {
+          process.env.APP_EXPOSES_OPTIONS = JSON.stringify((await getAppExposesOptions(appPath)).APP_EXPOSES_OPTIONS);
+          process.env.APP_ROOT_INDEX_PATH = (await getAppExposesOptions(appPath)).APP_ROOT_INDEX_PATH;
+        }
+        
+        await rnRunner(appPath, rnRunnerOpts,
+        (code) => {
+          if (code === 0) {
+            if (result.index === ACTION_TYPES.MP_DEBUG) {
+              mpBuildShell(appPath, 'debug')
+            }
+            
+            if (result.index === ACTION_TYPES.MP_BUILD) {
+              mpBuildShell(appPath, 'build')
+            }
+          } else {
+            console.error('build failed')
+            process.exit(1)
+          }
+        })
+
       }, error => {
         console.log(chalk.red('Error when detecting HTYF-MP packages:'))
         console.log(error)

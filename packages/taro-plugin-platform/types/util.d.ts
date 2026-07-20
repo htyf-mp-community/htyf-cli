@@ -1,1 +1,1 @@
-export declare function printDevelopmentTip(platform: string): void;
+export declare function printDevelopmentTip(platform: string, workspaceRoot: string): void;

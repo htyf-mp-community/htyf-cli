@@ -15,6 +15,8 @@ const LEADING_WHITESPACE_REGEX = /^[ \t]+/gm;
 // 白名单：这些包即使有 native 代码也不需要检查（系统级或已特殊处理）
 const WHITELIST = new Set();
 
+WHITELIST.add('@expo/log-box')
+
 // 错误消息分隔线
 const ERROR_SEPARATOR = '═══════════════════════════════════════';
 

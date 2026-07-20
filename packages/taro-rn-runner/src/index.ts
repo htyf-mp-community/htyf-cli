@@ -28,7 +28,7 @@ function confirmFiles () {
 const isWin = /^win/.test(process.platform)
 const npxCmd = isWin ? 'npx.cmd' : 'npx'
 
-export default async function build (_appPath: string, config: any): Promise<any> {
+export default async function build (_appPath: string, config: any, onSpawnRunOk: (code: number) => void): Promise<any> {
   process.env.TARO_ENV = 'htyf'
   const isIos = config.deviceType === 'ios'
   const cliParams:string[] = []
@@ -106,7 +106,7 @@ export default async function build (_appPath: string, config: any): Promise<any
     fse.ensureDirSync(assetsDest)
 
     try {
-      spawn(npxCmd, [
+      const child = spawn(npxCmd, [
         'react-native',
         'bundle',
         '--platform',
@@ -116,8 +116,17 @@ export default async function build (_appPath: string, config: any): Promise<any
         '--entry-file',
         'index.js'
       ].concat(cliParams), {
+        env: {
+          ...process.env,
+          APP_EXPOSES_OPTIONS: process.env.APP_EXPOSES_OPTIONS || '',
+          APP_ROOT_INDEX_PATH: process.env.APP_ROOT_INDEX_PATH || '',
+        },
         stdio: 'inherit', shell: true
       })
+      child.on('close', (code) => {
+        onSpawnRunOk?.(code)
+        console.log(`进程结束，退出码：${code}`);
+      });
       if (config.qr) {
         process.on('beforeExit', () => {
           previewProd({

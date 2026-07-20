@@ -12,7 +12,10 @@
   "files": [
     "index.js",
     "dist",
-    "types"
+    "types",
+    "shared-output.json",
+    "webpack.config.mjs",
+    "htyf.config.json"
   ],
   "types": "types/index.d.ts",
   "repository": {
@@ -27,8 +30,20 @@
     "url": ""
   },
   "dependencies": {
+    "@htyf-mp/cli": "workspace:*",
+    "@inquirer/prompts": "7.8.0",
     "@tarojs/service": "4.2.0",
-    "@tarojs/shared": "4.2.0"
+    "@tarojs/shared": "4.2.0",
+    "adm-zip": "0.5.17",
+    "boxen": "8.0.1",
+    "chalk": "5.6.2",
+    "fs-extra": "11.3.6",
+    "gradient-string": "3.0.0",
+    "inquirer": "12.9.0",
+    "portfinder": "1.0.38",
+    "qrcode": "1.5.4",
+    "superstatic": "10.0.0",
+    "systeminformation": "5.31.5"
   },
   "devDependencies": {
     "rollup": "4.62.2",

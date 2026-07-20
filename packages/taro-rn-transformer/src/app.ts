@@ -146,6 +146,5 @@ export default function generateEntry ({
   const Root = () => createReactNativeApp(Component,config,${firstPage})
   AppRegistry.registerComponent('${appName}', Root)
   `
-  console.log('code', code)
   return code
 }
