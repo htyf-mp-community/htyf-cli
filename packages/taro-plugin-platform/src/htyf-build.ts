@@ -82,7 +82,7 @@ export async function mpBuildShell(workspaceRoot: string, mode: 'debug' | 'build
 
     if (mode === 'debug') {
       // ========== 启动调试服务器 ==========
-      const host = `192.168.1.63`;
+      const host = (await validateNetworkConfig())?.host;
       const port = await portfinder.getPortPromise();  // 自动查找可用端口
 
       const hostUrl = `http://${host}:${port}`;
@@ -130,13 +130,15 @@ export async function mpBuildShell(workspaceRoot: string, mode: 'debug' | 'build
         // ========== 显示调试信息 ==========
         console.log('\n');
         // @ts-ignore
-        const log = typeof boxen === 'function' ? boxen : boxen.default;
-        console.log(log(
+        const _boxen = typeof boxen === 'function' ? boxen : boxen.default;
+        // @ts-ignore
+        const _chalk = typeof chalk.cyan === 'function' ? chalk : chalk.default;
+        console.log(_boxen(
           gradient.rainbow('小程序真机调试') + '\n\n' +
-          chalk.cyan('服务器地址: ') + chalk.white(`${hostUrl}`) + '\n' +
-          chalk.cyan('应用名称: ') + chalk.white(appJson.name) + '\n' +
-          chalk.cyan('应用ID: ') + chalk.white(appJson.appid) + '\n' +
-          chalk.cyan('版本: ') + chalk.white(appJson.version),
+          _chalk.cyan('服务器地址: ') + _chalk.white(`${hostUrl}`) + '\n' +
+          _chalk.cyan('应用名称: ') + _chalk.white(appJson.name) + '\n' +
+          _chalk.cyan('应用ID: ') + _chalk.white(appJson.appid) + '\n' +
+          _chalk.cyan('版本: ') + _chalk.white(appJson.version),
           {
             padding: 1,
             margin: 1,
@@ -146,15 +148,15 @@ export async function mpBuildShell(workspaceRoot: string, mode: 'debug' | 'build
         ));
 
         // 显示调试配置 JSON
-        console.log('\n' + chalk.yellow('调试配置:'));
+        console.log('\n' + _chalk.yellow('调试配置:'));
         console.log(JSON.stringify(args, undefined, 2));
 
         // 显示调试链接
-        console.log('\n' + chalk.green('调试链接:'));
+        console.log('\n' + _chalk.green('调试链接:'));
         console.log(qrcodeUrl);
 
         // 显示二维码
-        console.log('\n' + chalk.blue('二维码:'));
+        console.log('\n' + _chalk.blue('二维码:'));
         printQrcode(qrcodeUrl);
 
         console.info('调试服务器已启动，按 Ctrl+C 停止');

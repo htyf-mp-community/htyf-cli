@@ -127,10 +127,15 @@ export default function generateEntry ({
 
   const appTabBar = getFormatTabBar(appPath, basePath)
   const firstPage = getPageComponent(routeList[0])
+  let code = []
+  if (!process.env.APP_EXPOSES_OPTIONS) {
+    code.push(`
+      import 'react-native-gesture-handler'
+      import { AppRegistry } from 'react-native'
+    `)
+  }
 
-  const code = `
-  import 'react-native-gesture-handler'
-  import { AppRegistry } from 'react-native'
+  code.push(`
   import { createReactNativeApp, createPageConfig } from '@htyf-mp/taro-runtime-rn'
   import Component from '${appComponentPath}'
   ${importPageList}
@@ -144,7 +149,23 @@ export default function generateEntry ({
   global.__taroAppConfig = config
   config['pageList'] = [${routeList.map(pageItem => getPageScreen(pageItem))}]
   const Root = () => createReactNativeApp(Component,config,${firstPage})
-  AppRegistry.registerComponent('${appName}', Root)
-  `
-  return code
+  
+  `)
+
+  if (process.env.APP_EXPOSES_OPTIONS) {
+    code.push(`
+      export default Root();
+    `)
+  } else {
+    code.push(`
+      AppRegistry.registerComponent('${appName}', Root)
+    `)
+  }
+  const codeString =  code.join('\n')
+  console.log(`  `)
+  console.log(`  `)
+  console.log( codeString )
+  console.log(`  `)
+  console.log(`  `)
+  return codeString
 }
