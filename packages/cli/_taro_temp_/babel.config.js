@@ -13,7 +13,6 @@ module.exports = function (api) {
           {
             root: ['./'],
             alias: {
-              'react': './node_modules/react-19',
             },
           },
         ],
@@ -28,6 +27,16 @@ module.exports = function (api) {
         ts: true,
         compiler: 'webpack5',
       }]
-    ]
+    ],
+    plugins: [
+      [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+          },
+        },
+      ],
+    ],
   }
 }
