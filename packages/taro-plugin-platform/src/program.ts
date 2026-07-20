@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
-import * as inquirer from 'inquirer'
+import inquirer from 'inquirer'
 
 import { chalk } from '@tarojs/helper'
 import * as child_process from 'child_process'
@@ -147,7 +147,9 @@ export default (ctx: IPluginContext) => {
         SYNC_DEPS: 'sync_deps',
         QUIT: 'quit',
       }
-      const result = await inquirer
+      // @ts-ignore
+      const inquirerFun = typeof inquirer?.prompt === 'function' ? inquirer : inquirer.default;
+      const result = await inquirerFun
       // @ts-ignore
       .prompt([
         {
