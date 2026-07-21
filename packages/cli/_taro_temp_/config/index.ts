@@ -15,7 +15,9 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
   }
   // @ts-ignore
   if (process.env.TARO_ENV === 'rn' || process.env.TARO_ENV === 'htyf') {
-    alias = { }
+    alias = {
+    // 'react': path.resolve(__dirname, '../node_modules/react/'),
+    }
   }
   console.log(alias)
   const baseConfig: UserConfigExport<'webpack5'> = {

@@ -162,10 +162,5 @@ export default function generateEntry ({
     `)
   }
   const codeString =  code.join('\n')
-  console.log(`  `)
-  console.log(`  `)
-  console.log( codeString )
-  console.log(`  `)
-  console.log(`  `)
   return codeString
 }

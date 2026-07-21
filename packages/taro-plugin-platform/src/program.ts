@@ -98,7 +98,7 @@ export default (ctx: IPluginContext) => {
       const { appPath, nodeModulesPath } = ctx.paths
       const { npm } = ctx.helper
       const {
-        deviceType = 'android',
+        deviceType = 'ios',
         port,
         resetCache,
         publicPath,
@@ -184,7 +184,10 @@ export default (ctx: IPluginContext) => {
         console.log('mp_dev')
         rnRunnerOpts.isWatch = true;
       }
-      
+
+      if (result.index === ACTION_TYPES.MP_DEBUG && result.index === ACTION_TYPES.MP_BUILD) {
+        process.env.NODE_ENV = 'production'
+      }
       console.log(JSON.stringify(rnRunnerOpts, null, 2))
 
       makeSureReactNativeInstalled(appPath).then(async () => {

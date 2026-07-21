@@ -114,7 +114,7 @@ export default async function build (_appPath: string, config: any, onSpawnRunOk
         '--dev',
         'false',
         '--entry-file',
-        'index.js'
+        'index.js',
       ].concat(cliParams), {
         env: {
           ...process.env,

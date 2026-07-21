@@ -55,7 +55,6 @@ export default async (env = {}) => {
   const context = env.context || __dirname;
   // 获取Repack的resolve配置
   const _options = Repack.getResolveOptions();
-
   // 解析微前端相关配置
   let mpOptions = {};
   if (appExposesOptions) {
@@ -63,6 +62,7 @@ export default async (env = {}) => {
   }
   console.log('\n');
   console.log('=====mpOptions=====');
+  console.log('env:', env);
   console.log('\n');
   console.log('context:', context);
   console.log('\n');
