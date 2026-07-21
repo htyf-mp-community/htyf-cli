@@ -1,10 +1,11 @@
-import { Gyroscope } from 'expo-sensors'
+// todo:暂时不使用, 有问题待解决后续再使用
+// import { Gyroscope } from 'expo-sensors'
 
 import { createCallbackManager, errorHandler, successHandler } from '../utils'
 
 const _cbManager = createCallbackManager()
 let _listener: any
-
+// @ts-ignore
 const intervalMap: any = {
   game: 20,
   ui: 60,
@@ -17,6 +18,7 @@ const intervalMap: any = {
  * @param {string} [opts.interval='normal'] 监听陀螺仪数据回调函数的执行频率
  */
 function startGyroscope(opts: Taro.startGyroscope.Option = {}): Promise<TaroGeneral.CallbackResult> {
+  // @ts-ignore
   const { interval = 'normal', success, fail, complete } = opts
   const res = { errMsg: 'startGyroscope:ok' }
   try {
@@ -25,10 +27,10 @@ function startGyroscope(opts: Taro.startGyroscope.Option = {}): Promise<TaroGene
       console.error('startGyroscope:fail')
       throw new Error('startGyroscope:fail')
     }
-    _listener = Gyroscope.addListener(e => {
-      _cbManager.trigger(e)
-    })
-    Gyroscope.setUpdateInterval(intervalMap[interval])
+    // _listener = Gyroscope.addListener(e => {
+    //   _cbManager.trigger(e)
+    // })
+    // Gyroscope.setUpdateInterval(intervalMap[interval])
 
     return successHandler(success, complete)(res)
   } catch (error) {

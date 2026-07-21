@@ -1,11 +1,13 @@
 import Taro from '@tarojs/taro'
-import { DeviceMotion } from 'expo-sensors'
+// todo:暂时不使用, 有问题待解决后续再使用
+// import { DeviceMotion } from 'expo-sensors'
 
 import { createCallbackManager, errorHandler, successHandler } from '../utils'
 
 const _cbManager = createCallbackManager()
 let _listener: any
 
+// @ts-ignore
 const intervalMap: any = {
   game: 20,
   ui: 60,
@@ -32,6 +34,7 @@ function offDeviceMotionChange(fnc: Taro.onDeviceMotionChange.Callback): void {
  * @param {string} [object.interval='normal'] - 监听设备方向的变化回调函数的执行频率
  */
 function startDeviceMotionListening (object: Taro.startDeviceMotionListening.Option = {}): Promise<TaroGeneral.CallbackResult> {
+  // @ts-ignore
   const { interval = 'normal', success, fail, complete } = object
   const res = { errMsg: 'startDeviceMotionListening:ok' }
   try {
@@ -40,11 +43,11 @@ function startDeviceMotionListening (object: Taro.startDeviceMotionListening.Opt
       console.error('startDeviceMotionListening:fail')
       throw new Error('startDeviceMotionListening:fail')
     }
-    _listener = DeviceMotion.addListener((res) => {
-      const { rotation } = res
-      _cbManager.trigger(rotation)
-    })
-    DeviceMotion.setUpdateInterval(intervalMap[interval] || intervalMap.normal)
+    // _listener = DeviceMotion.addListener((res) => {
+    //   const { rotation } = res
+    //   _cbManager.trigger(rotation)
+    // })
+    // DeviceMotion.setUpdateInterval(intervalMap[interval] || intervalMap.normal)
 
     return successHandler(success, complete)(res)
   } catch (error) {

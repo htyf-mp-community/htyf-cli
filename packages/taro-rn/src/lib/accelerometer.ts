@@ -1,10 +1,11 @@
-import { Accelerometer } from 'expo-sensors'
+// todo:暂时不使用, 有问题待解决后续再使用
+// import { Accelerometer } from 'expo-sensors'
 
 import { createCallbackManager, errorHandler, successHandler } from '../utils'
 
 const _cbManager = createCallbackManager()
 let _listener: any
-
+// @ts-ignore
 const intervalMap: any = {
   game: 20,
   ui: 60,
@@ -31,6 +32,7 @@ function onAccelerometerChange(fnc: Taro.onAccelerometerChange.Callback): void {
  * @param {string} [opts.interval='normal'] 监听加速度数据回调函数的执行频率
  */
 function startAccelerometer(opts: Taro.startAccelerometer.Option = {}): Promise<TaroGeneral.CallbackResult> {
+  // @ts-ignore
   const { interval = 'normal', success, fail, complete } = opts
   const res = { errMsg: 'startAccelerometer:ok' }
   try {
@@ -39,10 +41,10 @@ function startAccelerometer(opts: Taro.startAccelerometer.Option = {}): Promise<
       console.error('startAccelerometer:fail')
       throw new Error('startAccelerometer:fail')
     }
-    _listener = Accelerometer.addListener((e: Taro.onAccelerometerChange.Result) => {
-      _cbManager.trigger(e)
-    })
-    Accelerometer.setUpdateInterval(intervalMap[interval])
+    // _listener = Accelerometer.addListener((e: Taro.onAccelerometerChange.Result) => {
+    //   _cbManager.trigger(e)
+    // })
+    // Accelerometer.setUpdateInterval(intervalMap[interval])
 
     return successHandler(success, complete)(res)
   } catch (error) {

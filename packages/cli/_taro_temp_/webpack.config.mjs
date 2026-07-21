@@ -80,8 +80,6 @@ export default async (env = {}) => {
       ..._options,
       alias: {
         ...(_options.alias || {}),
-        react: path.join(__dirname, 'node_modules/react-19'),
-        "react-native": path.join(__dirname, 'node_modules/react-native'),
       },
     },
     output: {
