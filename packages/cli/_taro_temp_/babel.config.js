@@ -12,8 +12,6 @@ module.exports = function (api) {
           'module-resolver',
           {
             root: ['./'],
-            alias: {
-            },
           },
         ],
       ],
@@ -33,8 +31,6 @@ module.exports = function (api) {
         'module-resolver',
         {
           root: ['./'],
-          alias: {
-          },
         },
       ],
     ],

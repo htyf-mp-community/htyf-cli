@@ -32,6 +32,7 @@ export default async function build (_appPath: string, config: any, onSpawnRunOk
   process.env.TARO_ENV = 'htyf'
   const isIos = config.deviceType === 'ios'
   const cliParams:string[] = []
+  const alias = config.alias || {}
   config.output = config.output || {}
   // cli & config 参数透传
   // if (config.resetCache) {
@@ -68,7 +69,13 @@ export default async function build (_appPath: string, config: any, onSpawnRunOk
         // '--custom-log-reporter-path',
         // '@htyf-mp/taro-rn-supporter/TerminalReporter'
       ].concat(cliParams), {
-        stdio: 'inherit', shell: true
+        stdio: 'inherit', shell: true,
+        env: {
+          ...process.env,
+          APP_ALIAS_OPTIONS: encodeURI(JSON.stringify(alias)),
+          APP_EXPOSES_OPTIONS: '',
+          APP_ROOT_INDEX_PATH: '',
+        },
       })
       if (config.qr) {
         previewDev({
@@ -118,13 +125,14 @@ export default async function build (_appPath: string, config: any, onSpawnRunOk
       ].concat(cliParams), {
         env: {
           ...process.env,
+          APP_ALIAS_OPTIONS: encodeURI(JSON.stringify(alias)),
           APP_EXPOSES_OPTIONS: process.env.APP_EXPOSES_OPTIONS || '',
           APP_ROOT_INDEX_PATH: process.env.APP_ROOT_INDEX_PATH || '',
         },
         stdio: 'inherit', shell: true
       })
       child.on('close', (code) => {
-        onSpawnRunOk?.(code)
+        onSpawnRunOk?.(code || 0)
         console.log(`进程结束，退出码：${code}`);
       });
       if (config.qr) {

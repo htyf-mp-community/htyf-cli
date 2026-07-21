@@ -10,13 +10,13 @@ import { ReanimatedPlugin } from '@callstack/repack-plugin-reanimated';
 import { HtyfModulesPlugin } from '@htyf-mp/cli/src/HtyfImportsPlugin.mjs';
 import { getWebpackConfig } from '@htyf-mp/taro-rn-supporter';
 
-
 // 获取当前文件和目录路径
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // 微前端暴露配置，通常为JSON字符串
 const appExposesOptions = process.env.APP_EXPOSES_OPTIONS;
+const appAliasOptions = process.env.APP_ALIAS_OPTIONS;
 
 // 读取package.json，获取应用基本信息
 const pkg = fse.readJsonSync(path.join(__dirname, './package.json'));
@@ -55,14 +55,18 @@ export default async (env = {}) => {
   const context = env.context || __dirname;
   // 获取Repack的resolve配置
   const _options = Repack.getResolveOptions();
-
   // 解析微前端相关配置
   let mpOptions = {};
+  let aliasOptions = {};
+  if (appAliasOptions) {
+    aliasOptions = JSON.parse(decodeURI(appAliasOptions));
+  }
   if (appExposesOptions) {
     mpOptions = JSON.parse(decodeURI(appExposesOptions));
   }
   console.log('\n');
   console.log('=====mpOptions=====');
+  console.log('env:', env);
   console.log('\n');
   console.log('context:', context);
   console.log('\n');
@@ -79,7 +83,9 @@ export default async (env = {}) => {
     resolve: {
       ..._options,
       alias: {
+        ...(aliasOptions || {}),
         ...(_options.alias || {}),
+        "react-native": path.join(__dirname, 'node_modules/react-native'),
       },
     },
     output: {
