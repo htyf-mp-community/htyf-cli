@@ -181,10 +181,10 @@ function trimTemplateStrings(strings, ...values) {
  */
 export default function injectAppInfoLoader(source) {
   this.cacheable?.();
-  
+
   // 将 Buffer 转换为字符串
   const originalSource = Buffer.isBuffer(source) ? source.toString('utf-8') : source;
-  
+
   // 注入依赖信息属性
   return `
     ${originalSource}
@@ -214,7 +214,7 @@ export class HtyfModulesPlugin {
   apply(compiler) {
     const config = this.config;
 
-    // 分析第三方依赖并生成报告
+    // 分析第三方依赖，校验并在 emit 阶段替换占位符
     compiler.hooks.emit.tapAsync('AnalyzeThirdPartyModulesPlugin', (compilation, callback) => {
       try {
         const { dependencies, nativeModules } = this.collectDependencyInfo(compilation);
@@ -223,9 +223,6 @@ export class HtyfModulesPlugin {
         const outputPath = compilation.outputOptions.path || compiler.options.output?.path;
         const manifestPath = this.config.manifest || (outputPath ? path.join(outputPath, 'manifest.json') : null);
 
-        // 持久化依赖报告
-        this.persistDependencyReport(dependencies, manifestPath);
-
         // 筛选出不支持的 native 包
         const unsupportedPackages = Array.from(nativeModules).filter(
           pkg => !isWhitelisted(pkg) && !isInSharedConfig(pkg)
@@ -233,9 +230,10 @@ export class HtyfModulesPlugin {
 
         // 如果存在不支持的包，抛出错误
         if (unsupportedPackages.length > 0) {
+          this._pendingDependencyReport = null;
           const errorMessage = formatErrorMessage(unsupportedPackages);
           console.error(errorMessage);
-          
+
           const error = new Error(
             `发现 ${unsupportedPackages.length} 个不支持的第三方 native 组件。\n${errorMessage}`
           );
@@ -246,9 +244,29 @@ export class HtyfModulesPlugin {
 
         // 替换依赖占位符
         this.replaceDependencyPlaceholders(compilation, dependencies);
+
+        // 暂存依赖报告，待所有 emit 任务完成后再持久化
+        this._pendingDependencyReport = { dependencies, manifestPath };
+        callback();
+      } catch (error) {
+        this._pendingDependencyReport = null;
+        callback(error);
+        process.exit(1);
+      }
+    });
+
+    // 所有 emit 钩子执行完毕且资源写入磁盘后，再持久化依赖报告
+    compiler.hooks.afterEmit.tapAsync('AnalyzeThirdPartyModulesPlugin', (_compilation, callback) => {
+      try {
+        const pending = this._pendingDependencyReport;
+        this._pendingDependencyReport = null;
+        if (pending) {
+          this.persistDependencyReport(pending.dependencies, pending.manifestPath);
+        }
         callback();
       } catch (error) {
         callback(error);
+        process.exit(1);
       }
     });
 
@@ -277,6 +295,7 @@ export class HtyfModulesPlugin {
           callback();
         } catch (error) {
           callback(error);
+          process.exit(1);
         }
       });
     }
@@ -325,7 +344,7 @@ export class HtyfModulesPlugin {
       };
 
       dependencyMap.set(packageName, dependencyInfo);
-      
+
       if (nativeModule) {
         nativeModules.add(packageName);
       }
@@ -359,7 +378,7 @@ export class HtyfModulesPlugin {
           const packageJsonPath = path.join(nodeModulesPath, '../package.json');
           if (fse.pathExistsSync(packageJsonPath)) {
             const packageJson = fse.readJsonSync(packageJsonPath);
-            const reactNativeVersion = packageJson.dependencies?.['react-native'] || 
+            const reactNativeVersion = packageJson.dependencies?.['react-native'] ||
                                      packageJson.devDependencies?.['react-native'];
             if (reactNativeVersion) {
               const cleanVersion = reactNativeVersion.replace(/^[~^]/, '');
@@ -374,7 +393,7 @@ export class HtyfModulesPlugin {
           // 静默失败
         }
       }
-      
+
       const reportDir = path.dirname(manifest);
       fse.ensureDirSync(reportDir);
       fse.writeJsonSync(
@@ -383,7 +402,7 @@ export class HtyfModulesPlugin {
         { spaces: 2 }
       );
     } catch (error) {
-      console.warn(`[HtyfModulesPlugin] 写入依赖报告失败: ${error.message}`);
+      throw new Error(`[HtyfModulesPlugin] 写入依赖报告失败: ${error.message}`);
     }
   }
 

@@ -55,7 +55,8 @@ function makeSureReactNativeInstalled (workspaceRoot: string): Promise<void> {
       const devTag = process.env.DEVTAG || 'latest'
       console.log('Installing HTYF-MP related packages:')
       const pkg = {
-        "react-19": "npm:react@19.2.3",
+        "react": "19.2.3",
+        "react-18": "npm:react@18.3.1",
         "react-native": "0.86.0",
         "@react-native/metro-config": "0.86.0",
         "expo": "57.0.6",
