@@ -185,7 +185,8 @@ export default (ctx: IPluginContext) => {
         rnRunnerOpts.isWatch = true;
       }
 
-      if (result.index === ACTION_TYPES.MP_DEBUG && result.index === ACTION_TYPES.MP_BUILD) {
+      if (result.index === ACTION_TYPES.MP_DEBUG || result.index === ACTION_TYPES.MP_BUILD) {
+        // 要打生产包让 env 为 production; 让react使用production模式
         process.env.NODE_ENV = 'production'
       }
       console.log(JSON.stringify(rnRunnerOpts, null, 2))
