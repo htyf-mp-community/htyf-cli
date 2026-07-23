@@ -127,28 +127,19 @@ export function getFileContent (fileName: string) {
 
 export function getCommonStyle (appPath: string, basePath: string) {
   let styles: Record<string, string>[] = []
-  // 读取入口文件的内容
+  // 读取入口文件的内容；优先级: .htyf > .rn > 默认
   const jsExt: string[] = ['tsx', 'ts', 'jsx', 'js']
+  const platformExts = ['.htyf', '.rn', '']
   let codeStr = ''
-  // 先读带rn后缀的
-  for (let i = 0; i < jsExt.length; i++) {
-    const rnfilePath = `${appPath}.htyf.${jsExt[i]}`
-    const rnFileContent: string = getFileContent(rnfilePath)
-    if (!rnFileContent) {
-      codeStr = rnFileContent
-      break
-    }
-  }
-  // 不带rn后缀的
-  if (!codeStr) {
-    for (let i = 0; i < jsExt.length; i++) {
-      const filePath = `${appPath}.${jsExt[i]}`
-      const fileContent: string = getFileContent(filePath)
+  for (const plat of platformExts) {
+    for (const ext of jsExt) {
+      const fileContent = getFileContent(`${appPath}${plat}.${ext}`)
       if (fileContent) {
         codeStr = fileContent
         break
       }
     }
+    if (codeStr) break
   }
   if (!codeStr) return styles
   styles = getStyleCode(codeStr, basePath)

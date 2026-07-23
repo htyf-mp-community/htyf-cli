@@ -109,8 +109,9 @@ function lookup (modulePath, platform, isDirectory = false) {
   const omitExtensions = ([] as string[]).concat(helper.JS_EXT, helper.TS_EXT)
   const ext = path.extname(modulePath).toLowerCase()
   const extMatched = !!extensions.find(e => e === ext)
+  // 优先级: 平台专属(ios/android) > .htyf > .rn > 默认；两者都存在时优先 .htyf
   // when platformExt is empty string('') it means find modulePath itself
-  const platformExts = [`.${platform}`, '.htyf', '']
+  const platformExts = [`.${platform}`, '.htyf', '.rn', '']
   // include ext
   if (extMatched) {
     for (const plat of platformExts) {

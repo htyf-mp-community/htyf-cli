@@ -109,9 +109,11 @@ export function resolveStyle (id: string, opts: ResolveStyleOptions) {
   const incPaths = [path.resolve(basedir, dir)].concat(paths)
   const ext = idExt || defaultExt
 
+  // 优先级: 平台专属 > .htyf > .rn > 默认；两者都存在时优先 .htyf
   const extensions = [
     '.' + platform + ext,
     '.htyf' + ext,
+    '.rn' + ext,
     ext
   ]
 
