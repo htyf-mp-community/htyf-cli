@@ -25,23 +25,23 @@ npm run dev:htyf
 - `红糖小程序 - 打包小程序`：生成用于发布的资源包
 - `同步依赖版本`：同步 `@htyf-mp/*` 等依赖版本
 
-首次构建时，平台插件会在项目根目录生成 `htyf.config.json`。通常无需手动修改该文件。
+首次构建时，平台插件会在项目根目录生成 `htyf.config.json`。
 
 ## 红糖云服应用配置
 
-项目根目录的 `app.json` 用于描述红糖云服小程序。通过 `@htyf-mp/cli` 创建项目时会自动生成该文件：
+项目根目录的 `htyf.config.json`文件
 
 ```json
 {
-  "htyf": {
-    "type": "app",
-    "name": "my-htyf-app",
-    "projectname": "我的应用",
-    "appid": "htyfappxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "rotate": "portrait",
-    "appUrlConfig": "https://example.com/app.json",
-    "zipUrl": "https://example.com/dist.[PLATFORM].dgz"
-  }
+  "miniprogramRoot": "dist/",
+  // 应用名
+  "name": "_taro_temp_",
+  // 简介
+  "description": "htyf",
+  // appid
+  "appid": "wx565635841f9879d3",
+  // 资源域名 打包后资源可访问的域名
+  "assetsHost": "https://assets.htyf.com"
 }
 ```
 
@@ -85,6 +85,48 @@ export default defineConfig({
 - `postcss.cssModules`：CSS Modules 配置
 
 页面路由、窗口样式等 Taro 应用配置仍在 `src/app.config.ts` 中维护。
+
+## 平台专属文件
+
+红糖云服端构建会按文件名后缀解析平台专属实现。业务代码仍按原路径引用（例如 `import './index'` 或 `import './index.less'`），构建工具自动选择对应文件。
+
+支持的后缀（以 `index` 为例）：
+
+| 文件 | 说明 |
+| --- | --- |
+| `index.ios.ts` / `index.android.ts` | 仅对应原生平台 |
+| `index.htyf.ts` / `index.htyf.tsx` | 红糖云服端专用 |
+| `index.rn.ts` / `index.rn.tsx` | React Native 通用实现 |
+| `index.ts` / `index.tsx` | 默认实现（小程序、H5 等） |
+
+样式文件同样支持，例如 `index.htyf.less`、`index.rn.scss`。
+
+解析优先级（同时存在多个候选时，取更高优先级）：
+
+1. 平台专属：`.ios` / `.android`（以及当前构建目标平台）
+2. `.htyf`
+3. `.rn`
+4. 无平台后缀的默认文件
+
+因此，当 `index.htyf.tsx` 与 `index.rn.tsx` 同时存在时，红糖云服端会优先使用 `.htyf` 版本。
+
+模板中的示例：
+
+```text
+src/components/Button/
+  index.tsx          # 默认（小程序 / H5）
+  index.less
+  index.htyf.tsx     # 红糖云服端优先使用
+  index.htyf.less
+```
+
+引用时无需写后缀：
+
+```ts
+import { Button2 } from '@/components/Button'
+```
+
+建议：仅在红糖云服端与其他端实现差异较大时新增 `.htyf` 文件；若实现可与通用 RN 共用，使用 `.rn` 即可。
 
 ## 开发、调试与发布
 

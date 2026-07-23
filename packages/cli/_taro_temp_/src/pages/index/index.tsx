@@ -1,6 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
-import { Button2 } from '@/components'
+import { Button2 } from '@/components/Button'
 import './index.less'
 
 
