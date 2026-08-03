@@ -4,6 +4,8 @@ import chalk from 'chalk';
 import { confirm } from '@inquirer/prompts';
 
 const sharedOutputPath = path.join(__dirname, '../shared-output.json');
+const pluginPackageJsonPath = path.join(__dirname, '../package.json');
+const HTYF_TARO_PACKAGE_PREFIX = '@htyf-mp/taro';
 
 const DEPENDENCY_SECTIONS = [
   'dependencies',
@@ -57,7 +59,70 @@ function collectSyncChanges(packageJson, sharedVersions) {
 }
 
 /**
- * 将 shared-output.json 中的版本同步到项目根目录 package.json
+ * 读取 @htyf-mp/taro-plugin-platform 当前版本
+ * @returns {string | null}
+ */
+function getPluginVersion() {
+  if (!fse.pathExistsSync(pluginPackageJsonPath)) {
+    return null;
+  }
+
+  const pluginPackageJson = fse.readJsonSync(pluginPackageJsonPath);
+  return pluginPackageJson.version || null;
+}
+
+/**
+ * 收集 package.json 中 @htyf-mp/taro 开头依赖的待同步项
+ * @param {Record<string, string>} packageJson
+ * @param {string} targetVersion
+ * @returns {Array<{ name: string, section: string, from: string, to: string }>}
+ */
+function collectTaroPackageChanges(packageJson, targetVersion) {
+  const changes: { name: string, section: string, from: string, to: string }[] = [];
+
+  for (const section of DEPENDENCY_SECTIONS) {
+    const deps = packageJson[section];
+    if (!deps) {
+      continue;
+    }
+
+    for (const [name, version] of Object.entries(deps)) {
+      if (!name.startsWith(HTYF_TARO_PACKAGE_PREFIX)) {
+        continue;
+      }
+
+      if (normalizeVersion(version) !== targetVersion) {
+        changes.push({
+          name: name as string,
+          section: section as string,
+          from: version as string,
+          to: targetVersion,
+        });
+      }
+    }
+  }
+
+  return changes;
+}
+
+/**
+ * 合并多个变更列表，同一 section + name 仅保留最后一次
+ * @param {Array<Array<{ name: string, section: string, from: string, to: string }>>} changeLists
+ */
+function mergeSyncChanges(...changeLists) {
+  const changeMap = new Map();
+
+  for (const changes of changeLists) {
+    for (const change of changes) {
+      changeMap.set(`${change.section}:${change.name}`, change);
+    }
+  }
+
+  return Array.from(changeMap.values());
+}
+
+/**
+ * 将 shared-output.json 与 @htyf-mp/taro 依赖版本同步到项目根目录 package.json
  * @param {{ skipConfirm?: boolean }} [options]
  */
 export async function syncDepsShell(workspaceRoot: string, options: { skipConfirm?: boolean } = {}) {
@@ -76,10 +141,18 @@ export async function syncDepsShell(workspaceRoot: string, options: { skipConfir
 
   const sharedVersions = fse.readJsonSync(sharedOutputPath);
   const packageJson = fse.readJsonSync(packageJsonPath);
-  const changes = collectSyncChanges(packageJson, sharedVersions);
+  const pluginVersion = getPluginVersion();
+
+  if (!pluginVersion) {
+    console.error(`未找到 ${pluginPackageJsonPath} 或缺少 version 字段，无法同步 @htyf-mp/taro 依赖`);
+  }
+
+  const sharedChanges = collectSyncChanges(packageJson, sharedVersions);
+  const taroChanges = pluginVersion ? collectTaroPackageChanges(packageJson, pluginVersion) : [];
+  const changes = mergeSyncChanges(sharedChanges, taroChanges);
 
   if (changes.length === 0) {
-    console.log('所有相关依赖版本已与 shared-output.json 一致，无需同步');
+    console.log('所有相关依赖版本已是最新，无需同步');
     return;
   }
 
@@ -95,7 +168,7 @@ export async function syncDepsShell(workspaceRoot: string, options: { skipConfir
   }
 
   const confirmed = skipConfirm || await confirm({
-    message: '确认将以上依赖版本同步为 shared-output.json 中的版本？',
+    message: '确认将以上依赖版本同步为最新版本？',
     default: true,
   });
 
