@@ -84,11 +84,13 @@ export async function syncDepsShell(workspaceRoot: string, options: { skipConfir
   }
 
   console.info(`发现 ${changes.length} 个依赖需要同步：`);
+  // @ts-ignore
+  const _chalk = typeof chalk.cyan === 'function' ? chalk : chalk.default;
   for (const change of changes) {
     console.log(
-      `  ${chalk.cyan(change.name)} ` +
-      `[${chalk.gray(change.section)}] ` +
-      `${chalk.yellow(change.from)} -> ${chalk.green(change.to)}`
+      `  ${_chalk.cyan(change.name)} ` +
+      `[${_chalk.gray(change.section)}] ` +
+      `${_chalk.yellow(change.from)} -> ${_chalk.green(change.to)}`
     );
   }
 
