@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/taro-rn",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Taro RN framework",
   "author": "O2Team",
   "license": "MIT",
@@ -71,11 +71,11 @@
     "react-native": "0.86.2",
     "react-native-device-info": "15.0.2",
     "react-native-image-zoom-viewer": "^3.0.1",
+    "react-native-mmkv": "4.3.2",
     "react-native-nitro-geolocation": "1.4.3",
     "react-native-nitro-modules": "0.36.5",
     "react-native-root-siblings": "5.0.1",
-    "react-native-safe-area-context": "5.8.1",
-    "react-native-mmkv": "4.3.2"
+    "react-native-safe-area-context": "5.8.1"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "3.1.1",
@@ -96,11 +96,11 @@
     "react-native": "0.86.2",
     "react-native-device-info": "15.0.2",
     "react-native-image-zoom-viewer": "3.0.1",
+    "react-native-mmkv": "4.3.2",
     "react-native-nitro-geolocation": "1.4.3",
     "react-native-nitro-modules": "0.36.5",
     "react-native-root-siblings": "5.0.1",
-    "react-native-safe-area-context": "5.8.1",
-    "react-native-mmkv": "4.3.2"
+    "react-native-safe-area-context": "5.8.1"
   },
   "publishConfig": {
     "access": "public"
