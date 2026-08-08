@@ -38,8 +38,8 @@
     "pnpm": ">=9.0.0"
   },
   "peerDependencies": {
-    "react-native-reanimated": "4.5.1",
-    "react-native-worklets": "0.10.2"
+    "react-native-reanimated": "4.5.3",
+    "react-native-worklets": "0.11.3"
   },
   "dependencies": {
     "@babel/core": "7.29.0",
@@ -47,7 +47,7 @@
     "@babel/plugin-transform-class-static-block": "7.28.6",
     "@babel/preset-env": "7.29.2",
     "@babel/runtime": "7.29.2",
-    "@callstack/repack": "5.2.5",
+    "@callstack/repack": "5.3.0",
     "@callstack/repack-plugin-expo-modules": "5.2.5",
     "@callstack/repack-plugin-reanimated": "5.2.5",
     "@inquirer/prompts": "7.8.0",
@@ -67,8 +67,8 @@
     "ora": "9.3.0",
     "portfinder": "1.0.38",
     "qrcode": "1.5.4",
-    "react-native-reanimated": "4.5.1",
-    "react-native-worklets": "0.10.2",
+    "react-native-reanimated": "4.5.3",
+    "react-native-worklets": "0.11.3",
     "shelljs": "0.10.0",
     "superstatic": "10.0.0",
     "systeminformation": "5.31.5",

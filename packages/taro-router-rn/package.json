@@ -39,17 +39,17 @@
     "query-string": "9.0.0"
   },
   "devDependencies": {
-    "react-native": "0.86.0",
-    "react-native-gesture-handler": "3.0.2",
-    "react-native-safe-area-context": "5.8.0",
-    "react-native-screens": "4.26.1"
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "3.1.0",
+    "react-native-safe-area-context": "5.8.1",
+    "react-native-screens": "4.27.0"
   },
   "peerDependencies": {
     "react": "19.2.3",
-    "react-native": "0.86.0",
-    "react-native-gesture-handler": "3.0.2",
-    "react-native-safe-area-context": "5.8.0",
-    "react-native-screens": "4.26.1"
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "3.1.0",
+    "react-native-safe-area-context": "5.8.1",
+    "react-native-screens": "4.27.0"
   },
   "publishConfig": {
     "access": "public"

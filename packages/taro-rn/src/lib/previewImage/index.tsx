@@ -1,9 +1,10 @@
 import React from 'react'
-import { ActivityIndicator, Alert, Modal, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import RootSiblings from 'react-native-root-siblings'
 
 import { downloadFile } from '../file'
+import { LocalModal } from '../LocalModal'
 import { saveMedia } from '../media'
 
 const styles = StyleSheet.create({
@@ -88,7 +89,7 @@ export function previewImage(obj: Taro.previewImage.Option): void {
   }
   try {
     sibling = new RootSiblings(
-      <Modal style={styles.mask} onRequestClose={onSwipeDown}>
+      <LocalModal visible style={styles.mask} onRequestClose={onSwipeDown}>
         <ImageViewer
           imageUrls={urls.map((item: string) => {
             return {
@@ -115,7 +116,7 @@ export function previewImage(obj: Taro.previewImage.Option): void {
             )
           }}
         />
-      </Modal>
+      </LocalModal>
     )
   } catch (e) {
     onFail(e)

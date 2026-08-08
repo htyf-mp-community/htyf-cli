@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Animated, Dimensions, Easing, Modal, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { Animated, Dimensions, Easing, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
+import { LocalModal } from './LocalModal'
 import { Mask } from './Mask'
 
 const { width, height } = Dimensions.get('window')
@@ -84,7 +85,7 @@ class Popup extends Component<PopupProps, PopupState> {
     } = this.props
 
     return (
-      <Modal
+      <LocalModal
         visible={this.state.visible}
         transparent
         onShow={onShow}
@@ -102,7 +103,7 @@ class Popup extends Component<PopupProps, PopupState> {
             >{children}</View>
           </Animated.View>
         </Mask>
-      </Modal>
+      </LocalModal>
     )
   }
 }
