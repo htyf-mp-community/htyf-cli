@@ -12,8 +12,8 @@
   "scripts": {
     "prepare": "husky",
     "new": "taro new",
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "concurrently -k \"react-native run-ios --no-packager\"",
+    "android": "concurrently -k \"react-native run-android --no-packager\"",
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
@@ -128,6 +128,7 @@
     "@types/webpack-env": "1.13.6",
     "babel-plugin-module-resolver": "5.0.3",
     "babel-preset-taro": "4.2.1",
+    "concurrently": "^10.0.4",
     "eslint": "8.57.0",
     "eslint-config-taro": "4.2.1",
     "eslint-plugin-react": "7.34.1",
