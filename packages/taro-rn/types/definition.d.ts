@@ -15,3 +15,11 @@ declare interface File {}
 declare interface MediaTrackSettings {}
 
 declare const global: any
+
+interface DGZGlobalCurrentMpClient {
+  appid?: string
+}
+
+interface GlobalThis {
+  __DGZ_GLOBAL_CURRENT_MP_CLIENT__?: DGZGlobalCurrentMpClient
+}

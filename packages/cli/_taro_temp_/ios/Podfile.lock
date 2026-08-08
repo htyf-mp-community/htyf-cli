@@ -143,8 +143,34 @@ PODS:
     - hermes-engine/Pre-built (= 250829098.0.16)
   - hermes-engine/Pre-built (250829098.0.16)
   - JWTDecode (3.0.1)
+  - MMKVCore (2.4.0)
   - NitroGeolocation (1.4.3):
     - hermes-engine
+    - NitroModules
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
+  - NitroMmkv (4.3.2):
+    - hermes-engine
+    - MMKVCore (= 2.4.0)
     - NitroModules
     - RCTRequired
     - RCTTypeSafety
@@ -2645,6 +2671,7 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - NitroGeolocation (from `../node_modules/react-native-nitro-geolocation`)
+  - NitroMmkv (from `../node_modules/react-native-mmkv`)
   - NitroModules (from `../node_modules/react-native-nitro-modules`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
   - RCTRequired (from `../node_modules/react-native/Libraries/Required`)
@@ -2740,6 +2767,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - JWTDecode
+    - MMKVCore
     - SwiftUIIntrospect
     - SwiftyRSA
 
@@ -2797,6 +2825,8 @@ EXTERNAL SOURCES:
     :tag: hermes-v250829098.0.16
   NitroGeolocation:
     :path: "../node_modules/react-native-nitro-geolocation"
+  NitroMmkv:
+    :path: "../node_modules/react-native-mmkv"
   NitroModules:
     :path: "../node_modules/react-native-nitro-modules"
   RCTDeprecation:
@@ -3005,7 +3035,9 @@ SPEC CHECKSUMS:
   FBLazyVector: 3c3be9a019176b5699455f7f66c5444b78a411c6
   hermes-engine: d5960977a75b9dabe6e2a19472fcd663a88c1a0d
   JWTDecode: 2eed97c2fa46ccaf3049a787004eedf0be474a87
+  MMKVCore: 3d16ce9f7d411e135020915fde98a056859a1efa
   NitroGeolocation: c99862e219b43e9a419cb382fcccd8e4d6059dd9
+  NitroMmkv: 85a251e15c39d7c95fe58cf40786fa126b8d143c
   NitroModules: 452230d9b63c6c3f59dd97eeaa27ec3449271d4a
   RCTDeprecation: bccb6545c26db881ecddfd83a3f9ea82aba1605f
   RCTRequired: b2f74764d596fc0051f00fee94b49bf41a6f7f5a

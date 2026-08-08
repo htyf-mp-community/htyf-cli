@@ -1,10 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import { clearStorage } from '../src/lib/clearStorage'
 import { getStorage } from '../src/lib/getStorage'
 import { getStorageInfo } from '../src/lib/getStorageInfo'
 import { removeStorage } from '../src/lib/removeStorage'
 import { setStorage } from '../src/lib/setStorage'
+import { getMMKVStorage } from '../src/utils/mmkvStorage'
 
 const Taro = {
   setStorage,
@@ -14,7 +13,6 @@ const Taro = {
   removeStorage,
 }
 
-// NativeModules.RNCAsyncStorage setup mock
 describe('storage', () => {
   describe('setStorage', () => {
     test('should set value into storage', async () => {
@@ -43,7 +41,7 @@ describe('storage', () => {
       expect(complete.mock.calls[0][0]).toEqual({ errMsg: expectMsg })
       expect(res.errMsg).toMatch(expectMsg)
 
-      const getData = await AsyncStorage.getItem(key) || ''
+      const getData = getMMKVStorage().getString(key) || ''
       expect(JSON.parse(getData)).toBe(data)
     })
 
@@ -82,7 +80,7 @@ describe('storage', () => {
       const fail = jest.fn()
       const complete = jest.fn()
 
-      await AsyncStorage.setItem(key, JSON.stringify(data))
+      getMMKVStorage().set(key, JSON.stringify(data))
       const res = await Taro.getStorage({
         key,
         success,
@@ -112,8 +110,8 @@ describe('storage', () => {
       const fail = jest.fn()
       const complete = jest.fn()
 
-      await AsyncStorage.setItem(key, JSON.stringify(data))
-      const getData = await AsyncStorage.getItem(key) || ''
+      getMMKVStorage().set(key, JSON.stringify(data))
+      const getData = getMMKVStorage().getString(key) || ''
 
       expect(JSON.parse(getData)).toBe(data)
 
@@ -148,8 +146,8 @@ describe('storage', () => {
       const fail = jest.fn()
       const complete = jest.fn()
 
-      await AsyncStorage.setItem(key1, JSON.stringify(data))
-      await AsyncStorage.setItem(key2, JSON.stringify(data))
+      getMMKVStorage().set(key1, JSON.stringify(data))
+      getMMKVStorage().set(key2, JSON.stringify(data))
 
       const res = await Taro.getStorageInfo({
         success,
@@ -182,18 +180,18 @@ describe('storage', () => {
       const key2 = 'foo'
       const data = 'data'
 
-      await AsyncStorage.setItem(key1, JSON.stringify(data))
-      await AsyncStorage.setItem(key2, JSON.stringify(data))
+      getMMKVStorage().set(key1, JSON.stringify(data))
+      getMMKVStorage().set(key2, JSON.stringify(data))
 
-      const getData1 = await AsyncStorage.getItem(key1) || ''
-      const getData2 = await AsyncStorage.getItem(key2) || ''
+      const getData1 = getMMKVStorage().getString(key1) || ''
+      const getData2 = getMMKVStorage().getString(key2) || ''
 
       expect(JSON.parse(getData1)).toBe(data)
       expect(JSON.parse(getData2)).toBe(data)
 
       await Taro.clearStorage({})
 
-      const res = await AsyncStorage.getAllKeys()
+      const res = getMMKVStorage().getAllKeys()
 
       expect.assertions(3)
 

@@ -1,13 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import { errorHandler, successHandler } from '../../utils'
+import { getMMKVStorage } from '../../utils/mmkvStorage'
 
-export async function clearStorage(option: Taro.clearStorage.Option = {}): Promise<TaroGeneral.CallbackResult> {
+export async function clearStorage (option: Taro.clearStorage.Option = {}): Promise<TaroGeneral.CallbackResult> {
   const { success, fail, complete } = option
   const res = { errMsg: 'clearStorage:ok' }
 
   try {
-    await AsyncStorage.clear()
+    getMMKVStorage().clearAll()
     return successHandler(success, complete)(res)
   } catch (err) {
     res.errMsg = err.message

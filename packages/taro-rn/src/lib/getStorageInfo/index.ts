@@ -1,26 +1,16 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import { errorHandler, successHandler } from '../../utils'
+import { getMMKVStorage, getStorageCurrentSize } from '../../utils/mmkvStorage'
 
-async function getStorageCurrentSize() {
-  const keys = await AsyncStorage.getAllKeys()
-  const entries = await AsyncStorage.getMany(keys)
-  const size = Object.values(entries).reduce((prev, current) => {
-    return prev + (current ? current.length : 0)
-  }, 0)
-  return Number((size / 1024).toFixed(2))
-}
-
-export async function getStorageInfo(option: Taro.getStorageInfo.Option = {}): Promise<TaroGeneral.CallbackResult> {
+export async function getStorageInfo (option: Taro.getStorageInfo.Option = {}): Promise<TaroGeneral.CallbackResult> {
   const { success, fail, complete } = option
   const res = { errMsg: 'getStorageInfo:ok' }
 
   try {
-    const data = await AsyncStorage.getAllKeys()
+    const mmkv = getMMKVStorage()
     const result = {
       ...res,
-      keys: data,
-      currentSize: await getStorageCurrentSize(),
+      keys: mmkv.getAllKeys(),
+      currentSize: getStorageCurrentSize(mmkv),
       limitSize: Infinity
     }
     // @ts-ignore

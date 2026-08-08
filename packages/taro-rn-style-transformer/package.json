@@ -34,7 +34,7 @@
     "@htyf-mp/stylelint-taro-rn": "workspace:*",
     "@htyf-mp/taro-css-to-react-native": "workspace:*",
     "@react-native/metro-babel-transformer": "^0.73.2",
-    "@tarojs/helper": "4.2.0",
+    "@tarojs/helper": "4.2.1",
     "fbjs": "3.0.5",
     "less": "^4.2.0",
     "postcss-css-variables": "^0.19.0",

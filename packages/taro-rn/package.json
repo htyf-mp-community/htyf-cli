@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@htyf-mp/taro-runtime-rn": "workspace:*",
-    "@tarojs/taro": "4.2.0",
+    "@tarojs/taro": "4.2.1",
     "base64-js": "1.5.1"
   },
   "devDependencies": {
@@ -74,7 +74,8 @@
     "react-native-nitro-geolocation": "1.4.3",
     "react-native-nitro-modules": "0.36.5",
     "react-native-root-siblings": "5.0.1",
-    "react-native-safe-area-context": "5.8.1"
+    "react-native-safe-area-context": "5.8.1",
+    "react-native-mmkv": "4.3.2"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "3.1.1",
@@ -98,7 +99,8 @@
     "react-native-nitro-geolocation": "1.4.3",
     "react-native-nitro-modules": "0.36.5",
     "react-native-root-siblings": "5.0.1",
-    "react-native-safe-area-context": "5.8.1"
+    "react-native-safe-area-context": "5.8.1",
+    "react-native-mmkv": "4.3.2"
   },
   "publishConfig": {
     "access": "public"

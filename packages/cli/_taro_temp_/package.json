@@ -90,6 +90,7 @@
     "react-native-device-info": "15.0.2",
     "react-native-gesture-handler": "3.1.0",
     "react-native-image-zoom-viewer": "3.0.1",
+    "react-native-mmkv": "4.3.2",
     "react-native-nitro-geolocation": "1.4.3",
     "react-native-nitro-modules": "0.36.5",
     "react-native-pager-view": "8.0.4",

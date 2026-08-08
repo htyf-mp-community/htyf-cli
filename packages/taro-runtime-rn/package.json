@@ -35,7 +35,7 @@
   "dependencies": {
     "@htyf-mp/taro-components-rn": "workspace:*",
     "@htyf-mp/taro-router-rn": "workspace:*",
-    "@tarojs/shared": "4.2.0"
+    "@tarojs/shared": "4.2.1"
   },
   "devDependencies": {
     "react-native": "0.86.2",

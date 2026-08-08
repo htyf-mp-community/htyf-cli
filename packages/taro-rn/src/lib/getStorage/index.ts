@@ -1,13 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import { errorHandler, successHandler } from '../../utils'
+import { getMMKVStorage } from '../../utils/mmkvStorage'
 
-export async function getStorage(option: Taro.getStorage.Option<any>): Promise<Taro.getStorage.SuccessCallbackResult<any>> {
+export async function getStorage (option: Taro.getStorage.Option<any>): Promise<Taro.getStorage.SuccessCallbackResult<any>> {
   const { key, success, fail, complete } = option
   const res = { errMsg: 'getStorage:ok' }
 
   try {
-    const data = await AsyncStorage.getItem(key)
+    const data = getMMKVStorage().getString(key)
     if (data) {
       const result = {
         data: JSON.parse(data),
