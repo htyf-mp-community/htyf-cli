@@ -20,9 +20,11 @@
 
 import inquirer from 'inquirer';
 import path from 'path';
-import lodash from 'lodash';
-import fse from 'fs-extra';
 import chalk from 'chalk';
+import { requireCjs } from './cjs.mjs';
+
+const lodash = requireCjs('lodash');
+const fse = requireCjs('fs-extra');
 import boxen from 'boxen';
 import gradient from 'gradient-string';
 import { confirm } from '@inquirer/prompts';

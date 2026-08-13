@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import fse from 'fs-extra';
 import md5 from 'md5';
-import lodash from 'lodash';
 import ora from 'ora';
+import { requireCjs } from './cjs.mjs';
+
+const fse = requireCjs('fs-extra');
+const lodash = requireCjs('lodash');
 import boxen from 'boxen';
 import chalk from 'chalk';
 import gradient from 'gradient-string';

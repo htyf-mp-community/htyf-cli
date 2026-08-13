@@ -111,7 +111,14 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       postcss: {
         cssModules: {
           enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
-        }
+        },
+        // postcss-pxtransform 不认识 htyf，必须用 rn，否则 px 会被转成 rpx 导致样式解析失败
+        pxtransform: {
+          enable: true,
+          config: {
+            platform: 'rn',
+          },
+        },
       }
     }
   }

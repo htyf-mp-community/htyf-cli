@@ -104,9 +104,19 @@ export default async (env = {}) => {
         // 处理静态资源（图片等），支持inline模式
         ...Repack.getAssetTransformRules(!!mpOptions.extraChunksPath ?  {
           inline: !!mpOptions.extraChunksPath,
-          svg: 'svgr',
+          svg: {
+            type: 'svgr',
+            options: {
+              svgo: false,
+            },
+          },
         } : {
-          svg: "svgr",
+          svg: {
+            type: 'svgr',
+            options: {
+              svgo: false,
+            },
+          },
         }),
       ],
     },

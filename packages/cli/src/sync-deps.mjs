@@ -1,6 +1,8 @@
 import path from 'path';
-import fse from 'fs-extra';
 import chalk from 'chalk';
+import { requireCjs } from './cjs.mjs';
+
+const fse = requireCjs('fs-extra');
 import { fileURLToPath } from 'node:url';
 import { confirm } from '@inquirer/prompts';
 import { Logger } from './logger.mjs';

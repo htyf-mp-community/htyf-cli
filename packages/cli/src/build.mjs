@@ -6,10 +6,12 @@
  */
 
 import path from 'path';
-import fse from 'fs-extra';
-import AdmZip from 'adm-zip';
-import QRCode from 'qrcode';
 import { fileURLToPath } from 'node:url';
+import { requireCjs } from './cjs.mjs';
+
+const fse = requireCjs('fs-extra');
+const AdmZip = requireCjs('adm-zip');
+const QRCode = requireCjs('qrcode');
 import { Logger } from './logger.mjs';
 import { CONSTANTS } from './constants.mjs';
 import { FileSystemUtils } from './file-system.mjs';

@@ -1,5 +1,7 @@
-import lodash from 'lodash';
 import si from 'systeminformation';
+import { requireCjs } from './cjs.mjs';
+
+const lodash = requireCjs('lodash');
 import { Logger } from './logger.mjs';
 
 /**

@@ -1,5 +1,7 @@
-import shell from 'shelljs';
 import ora from 'ora';
+import { requireCjs } from './cjs.mjs';
+
+const shell = requireCjs('shelljs');
 import { Logger } from './logger.mjs';
 import { CONSTANTS } from './constants.mjs';
 

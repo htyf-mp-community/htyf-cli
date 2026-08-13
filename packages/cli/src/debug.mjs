@@ -6,10 +6,12 @@
  */
 
 import path from 'path';
-import fse from 'fs-extra';
-import superstatic from 'superstatic';
-import portfinder from 'portfinder';
 import chalk from 'chalk';
+import { requireCjs } from './cjs.mjs';
+
+const fse = requireCjs('fs-extra');
+const superstatic = requireCjs('superstatic');
+const portfinder = requireCjs('portfinder');
 import boxen from 'boxen';
 import gradient from 'gradient-string';
 import { Logger } from './logger.mjs';

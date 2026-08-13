@@ -1,7 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import fse from 'fs-extra';
 import { execa } from 'execa';
+import { requireCjs } from './cjs.mjs';
+
+const fse = requireCjs('fs-extra');
 import { Logger } from './logger.mjs';
 
 /**

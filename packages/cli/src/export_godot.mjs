@@ -12,9 +12,11 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { accessSync, constants as fsConstants } from 'node:fs';
 import process from 'node:process';
 import { homedir } from 'node:os';
-import fs from 'fs-extra';
-import AdmZip from 'adm-zip';
 import { execa } from 'execa';
+import { requireCjs } from './cjs.mjs';
+
+const fs = requireCjs('fs-extra');
+const AdmZip = requireCjs('adm-zip');
 import inquirer from 'inquirer';
 
 // ========== 常量定义 ==========

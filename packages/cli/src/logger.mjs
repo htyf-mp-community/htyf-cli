@@ -1,7 +1,9 @@
 import chalk from 'chalk';
-import fse from 'fs-extra';
 import path from 'path';
 import fs from 'fs';
+import { requireCjs } from './cjs.mjs';
+
+const fse = requireCjs('fs-extra');
 import { CONSTANTS, LOG_LEVELS } from './constants.mjs';
 
 // 当前日志级别

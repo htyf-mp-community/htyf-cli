@@ -1,7 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import fse from 'fs-extra';
+import { requireCjs } from './cjs.mjs';
 import { Logger } from './logger.mjs';
+
+const fse = requireCjs('fs-extra');
 
 /**
  * 文件系统工具类

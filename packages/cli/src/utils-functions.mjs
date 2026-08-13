@@ -1,7 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import fse from 'fs-extra';
+import { requireCjs } from './cjs.mjs';
 import { Logger } from './logger.mjs';
+
+const fse = requireCjs('fs-extra');
 import { CONSTANTS } from './constants.mjs';
 import { getProjectRoot } from './utils.mjs';
 
