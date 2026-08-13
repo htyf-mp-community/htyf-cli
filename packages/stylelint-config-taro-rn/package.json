@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/stylelint-config-taro-rn",
-  "version": "0.5.5",
+  "version": "0.5.6-alpha.0",
   "description": "Shareable stylelint config for React Native CSS modules",
   "author": "O2Team",
   "license": "MIT",
