@@ -41,6 +41,44 @@ function checkHtyfConfig (workspaceRoot: string): boolean {
   return true
 }
 
+function bumpPatchVersion (version: string): string {
+  const parts = String(version || '0.0.0').split('.')
+  const lastIndex = parts.length - 1
+  const last = parseInt(parts[lastIndex], 10)
+  parts[lastIndex] = String(Number.isNaN(last) ? 1 : last + 1)
+  return parts.join('.')
+}
+
+async function promptAndBumpAppVersion (appPath: string, inquirerFun: any): Promise<string> {
+  const packageJsonPath = path.join(appPath, 'package.json')
+  const packageInfo = JSON.parse(fs.readFileSync(packageJsonPath, {
+    encoding: 'utf8'
+  }))
+  const currentVersion = packageInfo.version || '0.0.0'
+  const nextVersion = bumpPatchVersion(currentVersion)
+
+  const { version } = await inquirerFun.prompt([
+    {
+      type: 'input',
+      name: 'version',
+      message: `当前版本为 ${currentVersion}，请确认构建版本号：`,
+      default: nextVersion,
+      validate: (input: string) => {
+        if (!/^\d+(\.\d+)*$/.test(String(input).trim())) {
+          return '请输入合法的版本号，例如 1.0.1'
+        }
+        return true
+      }
+    }
+  ])
+
+  const confirmedVersion = String(version).trim()
+  packageInfo.version = confirmedVersion
+  fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageInfo, null, 2)}\n`, 'utf8')
+  console.log(chalk.green(`版本号已更新: ${currentVersion} -> ${confirmedVersion}`))
+  return confirmedVersion
+}
+
 function makeSureReactNativeInstalled (workspaceRoot: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const packageInfo = JSON.parse(fs.readFileSync(path.join(workspaceRoot, 'package.json'), {
@@ -188,6 +226,7 @@ export default (ctx: IPluginContext) => {
       if (result.index === ACTION_TYPES.MP_DEBUG || result.index === ACTION_TYPES.MP_BUILD) {
         // 要打生产包让 env 为 production; 让react使用production模式
         process.env.NODE_ENV = 'production'
+        await promptAndBumpAppVersion(appPath, inquirerFun)
       }
       console.log(JSON.stringify(rnRunnerOpts, null, 2))
 
