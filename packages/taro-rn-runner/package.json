@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/taro-rn-runner",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "ReactNative build tool for taro",
   "author": "O2Team",
   "license": "MIT",
