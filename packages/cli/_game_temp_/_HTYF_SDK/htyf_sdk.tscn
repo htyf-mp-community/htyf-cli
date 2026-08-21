@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bkvkvfya6xfan"]
 
-[ext_resource type="Script" uid="uid://cpibkihcko8gg" path="res://_HTYF_SDK/htyf_sdk.gd" id="1_ltjo0"]
+[ext_resource type="Script" path="res://_HTYF_SDK/htyf_sdk.gd" id="1_ltjo0"]
 
 [node name="HTYF-SDK" type="Node"]
 script = ExtResource("1_ltjo0")

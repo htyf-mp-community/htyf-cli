@@ -11,6 +11,6 @@
  "description": "",
  "dependencies": {
     "@htyf-mp/cli": "0.5.7",
-    "@htyf-mp/js-sdk": "0.2.20"
+    "@htyf-mp/js-sdk": "0.2.22"
   }
 }

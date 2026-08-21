@@ -16,7 +16,7 @@
     "@dr.pogodin/react-native-fs": "2.39.2",
     "@gorhom/bottom-sheet": "5.2.14",
     "@htyf-mp/cli": "0.5.7",
-    "@htyf-mp/js-sdk": "0.2.20",
+    "@htyf-mp/js-sdk": "0.2.22",
     "@htyf-mp/rn-sdk": "*",
     "@react-native-async-storage/async-storage": "3.1.1",
     "@react-native-camera-roll/camera-roll": "7.10.2",

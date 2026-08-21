@@ -229,6 +229,17 @@ theme_override_styles/pressed = SubResource("3")
 theme_override_styles/hover = SubResource("3")
 text = "菜单按钮矩形"
 
+[node name="GetMenuRectSyncButton" type="Button" parent="Demo/Scroll/Main"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.96, 1, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("2")
+theme_override_styles/pressed = SubResource("3")
+theme_override_styles/hover = SubResource("3")
+text = "菜单按钮矩形 (同步)"
+
 [node name="GetNetworkStateButton" type="Button" parent="Demo/Scroll/Main"]
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
