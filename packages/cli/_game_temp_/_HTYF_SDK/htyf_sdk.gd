@@ -300,4 +300,3 @@ func getStorage(key: String, on_result: Callable = Callable()):
         self.log("getStorage key is empty", "warn")
         if on_result.is_valid():
             on_result.call({ "success": false, "error": "key is empty" })
-
