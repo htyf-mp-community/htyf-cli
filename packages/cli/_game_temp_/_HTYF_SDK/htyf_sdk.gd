@@ -21,8 +21,12 @@ var _menu_button_bounding_client_rect: Dictionary = {
     "bottom" = 0,
     "left" = 0,
     "width" = 0,
-    "height" = 0
+    "height" = 0,
+    "windowWidth" = 0,
+    "windowHeight" = 0,
+    "pixelRatio" = 1
 }
+var _window_info: Dictionary = {}
 
 func set_dev_mode(is_dev_mode: bool) -> void:
     _is_dev_mode = is_dev_mode
@@ -81,6 +85,7 @@ func _on_ipc_response(message: String) -> void:
                 self.log(_data)
                 pass
         )
+        call_get_window_info()
         return
     var id: String = str(data.get("id", ""))
     if id == "":
@@ -241,7 +246,10 @@ func call_get_menu_button_bounding_client_rect(on_result: Callable = Callable())
                     "bottom": result.get("bottom", 0),
                     "left": result.get("left", 0),
                     "width": result.get("width", 0),
-                    "height": result.get("height", 0)
+                    "height": result.get("height", 0),
+                    "windowWidth": result.get("windowWidth", 0),
+                    "windowHeight": result.get("windowHeight", 0),
+                    "pixelRatio": result.get("pixelRatio", 1)
                 }
                 _menu_button_bounding_client_rect = rect
                 if _is_dev_mode:
@@ -261,6 +269,68 @@ func get_menu_button_bounding_client_rect_sync() -> Dictionary:
     var height: float = float(_menu_button_bounding_client_rect.get("height", 0))
     var ready: bool = width > 0.0 and height > 0.0
     return { "ready": ready, "rect": _menu_button_bounding_client_rect.duplicate(true) }
+
+## 获取宿主窗口信息，字段语义与微信小游戏 wx.getWindowInfo() 一致。
+func call_get_window_info(on_result: Callable = Callable()) -> void:
+    call_rn(
+        "getWindowInfo",
+        {},
+        func(data: Dictionary):
+            if data.get("success", false) == true:
+                _window_info = data.get("payload", {}).duplicate(true)
+                if on_result.is_valid():
+                    on_result.call(_window_info.duplicate(true))
+            elif on_result.is_valid():
+                on_result.call(data)
+    )
+
+## 同步读取最近一次成功缓存。首次异步请求完成前 ready=false。
+func get_window_info_sync() -> Dictionary:
+    var ready := float(_window_info.get("windowWidth", 0)) > 0.0 and float(_window_info.get("windowHeight", 0)) > 0.0
+    return { "ready": ready, "info": _window_info.duplicate(true) }
+
+## 将 RN/微信语义的逻辑窗口坐标转换为 Godot 设计 viewport 坐标。
+## stretch_mode: "stretch"（分别拉伸）、"contain"（完整显示）、"cover"（铺满裁切）。
+## design_size 默认使用当前 viewport 可见尺寸；也可显式传入项目的设计分辨率。
+func get_menu_button_rect_for_viewport(
+    design_size: Vector2 = Vector2.ZERO,
+    stretch_mode: String = "contain"
+) -> Dictionary:
+    var source := get_menu_button_bounding_client_rect_sync()
+    if !source.get("ready", false):
+        return source
+    var rect: Dictionary = source.get("rect", {})
+    var host_size := Vector2(
+        float(rect.get("windowWidth", 0)),
+        float(rect.get("windowHeight", 0))
+    )
+    if host_size.x <= 0.0 or host_size.y <= 0.0:
+        return { "ready": false, "error": "MENU_BUTTON_WINDOW_SIZE_UNAVAILABLE", "rect": rect }
+    if design_size.x <= 0.0 or design_size.y <= 0.0:
+        design_size = get_viewport().get_visible_rect().size
+
+    var scale := Vector2(host_size.x / design_size.x, host_size.y / design_size.y)
+    var offset := Vector2.ZERO
+    if stretch_mode == "contain" or stretch_mode == "cover":
+        var uniform_scale: float
+        if stretch_mode == "cover":
+            uniform_scale = maxf(scale.x, scale.y)
+        else:
+            uniform_scale = minf(scale.x, scale.y)
+        scale = Vector2(uniform_scale, uniform_scale)
+        offset = (host_size - design_size * uniform_scale) * 0.5
+    elif stretch_mode != "stretch":
+        return { "ready": false, "error": "INVALID_STRETCH_MODE", "rect": rect }
+
+    var converted := {
+        "left": (float(rect.get("left", 0)) - offset.x) / scale.x,
+        "right": (float(rect.get("right", 0)) - offset.x) / scale.x,
+        "top": (float(rect.get("top", 0)) - offset.y) / scale.y,
+        "bottom": (float(rect.get("bottom", 0)) - offset.y) / scale.y,
+        "width": float(rect.get("width", 0)) / scale.x,
+        "height": float(rect.get("height", 0)) / scale.y
+    }
+    return { "ready": true, "rect": converted, "source": rect }
 
 # 示例：设置存储
 func setStorage(options: Dictionary, on_result: Callable = Callable()):

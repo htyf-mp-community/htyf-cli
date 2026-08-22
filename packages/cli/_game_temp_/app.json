@@ -2,7 +2,7 @@
   "htyf": {
     "type": "game",
     "name": "game_demo",
-    "version": "1.0.90",
+    "version": "1.0.92",
     "appid": "game_demo_sdk",
     "rotate": "portrait",
     "appUrlConfig": "https://raw.githubusercontent.com/htyf-mp-community/demo/main/v2/game_demo_sdk/latest/app.json",
