@@ -161,7 +161,7 @@ export async function mpDebugShell(newAppInfo, isGodot = false) {
       });
 
       // 生成调试二维码 URL
-      const qrcodeUrl = `https://share.dagouzhi.com/#/pages/index/index?data=${encodeURIComponent(JSON.stringify(args))}`;
+      const qrcodeUrl = `https://mp.dagouzhi.com/share?data=${encodeURIComponent(JSON.stringify(args))}`;
 
       // ========== 显示调试信息 ==========
       console.log('\n');
@@ -247,4 +247,3 @@ export async function mpDebugShell(newAppInfo, isGodot = false) {
     process.exit(1);
   }
 }
-

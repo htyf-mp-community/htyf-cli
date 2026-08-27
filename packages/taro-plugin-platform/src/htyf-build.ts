@@ -125,7 +125,7 @@ export async function mpBuildShell(workspaceRoot: string, mode: 'debug' | 'build
         fse.writeJSONSync(`${distConfigPath}`, debugerAppJson);
 
         // 生成调试二维码 URL
-        const qrcodeUrl = `https://share.dagouzhi.com/#/pages/index/index?data=${encodeURIComponent(JSON.stringify(debugerAppJson))}`;
+        const qrcodeUrl = `https://mp.dagouzhi.com/share?data=${encodeURIComponent(JSON.stringify(debugerAppJson))}`;
 
         // ========== 显示调试信息 ==========
         console.log('\n');
