@@ -33,9 +33,10 @@ approved those replacements.
    state, styling, request, and test conventions while normalizing navigation
    and persistence to the required implementations below.
 3. Map each source capability to React Native and to an allowed native module.
-   Pure TypeScript/JavaScript dependencies are allowed when they do not add a
-   native binary. Any new native dependency must appear in the allowlist below
-   at the stated version.
+   First exhaust a pure TypeScript/JavaScript implementation and the target's
+   existing native modules. Pure TypeScript/JavaScript dependencies are allowed
+   when they do not add a native binary. Any new native dependency must appear
+   in the allowlist below at the stated version.
 4. Migrate in vertical slices. For each route, finish UI, interactions, data,
    error handling, permissions, and tests before marking it complete.
 5. Compare the source and target feature-by-feature. Resolve every checklist
@@ -127,6 +128,32 @@ from this list, using the version already pinned by the target project:
 Treat the target `package.json` as the source of truth for exact versions. If a
 needed native capability is absent from both this list and the target, stop and
 report the capability gap instead of silently installing a replacement.
+
+## Native source boundary
+
+Keep migration changes in TypeScript/JavaScript and supported configuration.
+When a feature appears to require changes under `ios/` or `android/`, first
+investigate whether the same outcome is possible with JavaScript, React Native
+APIs, the HTYF JS SDK, or an already allowed and configured native module.
+
+If no viable JavaScript-level solution exists, defer that feature for manual
+native work. Leave the `ios/` and `android/` source unchanged, keep the rest of
+the migration moving, and expose a safe unavailable or reduced-functionality
+state where the missing feature would otherwise fail or mislead the user.
+
+Record every deferred native feature in both places:
+
+- Add a concise `TODO(htyf-native)` comment at the nearest JavaScript
+  integration boundary. State what is unavailable and point to the migration
+  gap document; do not leave commented-out native code or a fake success path.
+- Create or update `docs/htyf-migration-gaps.md` in the target. Record the
+  source feature, user impact, JavaScript approaches evaluated, why they were
+  insufficient, the likely iOS/Android work, the current fallback, and a
+  concrete manual verification criterion.
+
+Classify these items as documented native blockers in the migration checklist
+and completion report. They are not completed features, even when a fallback
+keeps the application stable.
 
 ## In-tree overlays only
 

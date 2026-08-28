@@ -16,7 +16,7 @@ assets, permissions, loading, empty and error states, and platform interaction.
    repository.
 2. Read [the migration rules](references/migration-rules.md) completely
    before modifying the target. Treat them as the authoritative navigation,
-   storage, dependency, overlay, header-layout, testing, and
+   storage, dependency, native-source, overlay, header-layout, testing, and
    acceptance constraints for this skill.
 3. Inventory the source by feature and create a checkable migration list.
 4. Implement vertical slices in the target using its existing architecture.
