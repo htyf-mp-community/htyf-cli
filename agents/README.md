@@ -6,14 +6,15 @@ Skill：`.agents/skills/htyf-migration`。支持 Agent Skills 的 Codex 打开�
 
 ## 当前 Agent
 
-[`htyf-migration.md`](htyf-migration.md) 是迁移规则的单一事实来源；
-[`SKILL.md`](../.agents/skills/htyf-migration/SKILL.md) 提供 Codex 的发现、
-调用和执行入口。两者共同用于把已有小程序或应用迁移到 React Native
-`htyf` 项目，并指导 AI 完成以下工作：
+[`migration-rules.md`](../.agents/skills/htyf-migration/references/migration-rules.md)
+是迁移规则的单一事实来源；[`SKILL.md`](../.agents/skills/htyf-migration/SKILL.md)
+提供 Codex 的发现、调用和执行入口。两者共同用于把已有小程序或应用迁移到
+React Native `htyf` 项目，并指导 AI 完成以下工作：
 
 - 盘点源项目的页面、路由、状态、接口、资源和原生能力；
 - 按功能逐项迁移并保持交互、异常状态和权限行为一致；
 - 仅使用允许的 React Native 原生依赖；
+- 使用 React Navigation 统一路由，并用独立命名空间的 MMKV 持久化数据；
 - 正确适配 HTYF 胶囊区域、Safe Area、横竖屏及像素坐标；
 - 补充坐标转换、矩形避让和页面布局测试；
 - 本地缺少 HTYF 模板时，先征得用户同意，再从官方仓库获取模板。
@@ -52,7 +53,8 @@ Skill：`.agents/skills/htyf-migration`。支持 Agent Skills 的 Codex 打开�
 ## 维护指南
 
 - Skill 的触发与执行入口位于 `.agents/skills/htyf-migration/SKILL.md`。
-- 新增迁移约束时更新 [`htyf-migration.md`](htyf-migration.md)，避免在多个
-  文件重复维护同一规则。
+- 新增迁移约束时更新
+  [`migration-rules.md`](../.agents/skills/htyf-migration/references/migration-rules.md)，
+  避免在多个文件重复维护同一规则。
 - 新增其他类型的 Agent 时，为其创建独立 Markdown 文件，并在根目录
   `.agents/skills/<skill-name>/SKILL.md` 中配置清晰、具体的触发条件。

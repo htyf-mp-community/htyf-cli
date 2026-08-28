@@ -1,6 +1,6 @@
 ---
 name: htyf-migration
-description: Migrate an existing mini-program or application into an HTYF React Native project with complete feature parity. Use for full or partial HTYF migrations, native dependency selection, capsule and safe-area layout adaptation, and migration verification.
+description: Migrate an existing mini-program or application into an HTYF React Native project with complete feature parity. Use for full or partial HTYF migrations, React Navigation and MMKV adaptation, native dependency selection, capsule and safe-area layout, and migration verification.
 ---
 
 # HTYF Migration
@@ -14,9 +14,10 @@ assets, permissions, loading, empty and error states, and platform interaction.
 1. Resolve the source and target paths from the request and workspace. When a
    usable local template is missing, ask before fetching one from the official
    repository.
-2. Read [the migration rules](../../../agents/htyf-migration.md) completely
-   before modifying the target. Treat them as the authoritative dependency,
-   overlay, header-layout, testing, and acceptance constraints for this skill.
+2. Read [the migration rules](references/migration-rules.md) completely
+   before modifying the target. Treat them as the authoritative navigation,
+   storage, dependency, overlay, header-layout, testing, and
+   acceptance constraints for this skill.
 3. Inventory the source by feature and create a checkable migration list.
 4. Implement vertical slices in the target using its existing architecture.
    Complete each slice's UI, interactions, data, permissions, error handling,
