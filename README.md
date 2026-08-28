@@ -126,6 +126,21 @@ CLI 从项目根目录的 `app.json` 读取 `htyf` 配置。常用字段包括�
 
 执行打包时，CLI 会提示确认新版本号、更新 `app.json`，并将资源输出到 `dist` 目录。
 
+## AI Agent 辅助迁移
+
+仓库提供面向 AI 编程助手的 HTYF 项目迁移规则。支持 `AGENTS.md` 的助手
+会在收到小程序或应用迁移任务时，自动读取迁移流程、原生依赖限制、胶囊与
+Safe Area 适配要求以及测试验收标准。
+
+使用时向 AI 提供源项目路径、目标 `htyf` 路径和迁移范围，例如：
+
+```text
+请按照 agents/htyf-migration.md，将 /path/to/source 的全部功能迁移到
+/path/to/htyf。先生成迁移清单，再逐项实现并运行测试。
+```
+
+详细说明和更多提示词见 [HTYF AI Agent 使用说明](agents/README.md)。
+
 ## 本地开发
 
 ### 环境要求
