@@ -43,6 +43,42 @@ approved those replacements.
    item, type error, relevant test failure, and unsupported dependency before
    reporting completion.
 
+## Incremental re-migration
+
+Treat migration as repeatable synchronization, not a one-time copy. After each
+successful migration, create or update `.htyf-migration/source-state.json` in
+the target and commit it with the migrated code. Record the source repository
+identity and path, branch, migrated Git commit, whether source working-tree
+changes were included, a deterministic manifest for non-Git or uncommitted
+source files, migration time, and the completed or blocked feature mapping.
+
+At the start of every later migration, read that state before editing. Compare
+the recorded baseline with the source's current checked-out commit and working
+tree. For Git sources, inspect commits and file changes across the baseline
+range, including additions, modifications, deletions, renames, dependency and
+configuration changes, plus current uncommitted source changes. For a non-Git
+source or missing commit, compare the stored manifest with a fresh deterministic
+manifest. If no trustworthy baseline exists, rebuild the full source inventory
+instead of assuming that unchanged-looking files were already migrated.
+
+Translate the source delta into feature-level changes and bring every relevant
+update into the HTYF target. Reconcile it with existing React Native adapters,
+tests, manual fixes, and HTYF-specific behavior; do not replace the target tree
+wholesale or restore source APIs that earlier migration rules replaced. Handle
+source deletions and renames explicitly, removing obsolete target behavior only
+after confirming that no HTYF-specific consumer still needs it.
+
+The current source checkout is the input boundary. Inspect remote/upstream
+status when available, but obtain permission before fetching, pulling, switching
+branches, or otherwise changing the source checkout. If a newer upstream
+revision is known but unavailable locally, report the exact revision gap rather
+than claiming the target is current.
+
+Update `source-state.json` to the new baseline only after the delta is migrated
+and verified. Keep the previous baseline when work fails or remains incomplete,
+and report the pending source commits/files so the next run resumes from the
+last verified state.
+
 ## Navigation and persistence
 
 Use `@react-navigation` for all application routing. Build the route hierarchy
@@ -254,10 +290,14 @@ layout tests where practical. At minimum cover:
     keyboard interaction, and safe-area layout when a bottom sheet is used.
     Include content longer than the viewport and verify the final item is fully
     visible and actionable at maximum scroll for every supported snap point.
+11. For a repeated migration, tests covering each changed source behavior and
+    regression tests for the target adaptations touched while merging the
+    source delta.
 
 ## Completion report
 
 Report the migrated feature checklist, deliberate source-to-target differences,
-native modules used, and verification commands with their results. Migration is
-complete only when every inventoried feature is implemented or explicitly
-identified as blocked with a concrete reason.
+the source baseline and delta applied, native modules used, and verification
+commands with their results. Migration is complete only when every inventoried
+feature is implemented or explicitly identified as blocked with a concrete
+reason and the recorded source baseline matches the last verified input.

@@ -130,8 +130,9 @@ CLI 从项目根目录的 `app.json` 读取 `htyf` 配置。常用字段包括�
 
 仓库提供 `$htyf-migration` Codex Skill。Codex 可以根据 HTYF 迁移任务自动
 调用，也可以由用户显式调用，并读取迁移流程、React Navigation 与 MMKV
-约束、原生依赖与原生源码修改边界、`@gorhom/bottom-sheet`、页面树内覆盖层、
-胶囊与 Safe Area 适配要求以及测试验收标准。
+约束、源代码增量再迁移、原生依赖与原生源码修改边界、
+`@gorhom/bottom-sheet`、页面树内覆盖层、胶囊与 Safe Area 适配要求以及测试
+验收标准。
 
 使用时向 AI 提供源项目路径、目标 `htyf` 路径和迁移范围，例如：
 
