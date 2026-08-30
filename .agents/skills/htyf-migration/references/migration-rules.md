@@ -172,6 +172,23 @@ migrated interaction. This allowance applies only to `@gorhom/bottom-sheet`;
 it does not permit wrapping the sheet with React Native `Modal` or
 `FullWindowOverlay`.
 
+For scrollable sheet content, use the package's coordinated scrollables such
+as `BottomSheetScrollView`, `BottomSheetFlatList`, or
+`BottomSheetSectionList`. Reserve `BottomSheetView` for content that genuinely
+fits without scrolling. Ensure the scroll content's bottom padding includes
+the bottom safe-area inset, the measured height of any fixed footer or action
+bar, and visible spacing after the final item. A `bottomInset` on the sheet does
+not replace this content padding. When a footer overlays the scroll area,
+measure or otherwise derive its actual height instead of hardcoding a device
+height.
+
+Choose snap points or dynamic sizing that leave a real scroll viewport, and
+recalculate for orientation, font scaling, keyboard state, and changing
+content. At every supported snap point, the final item and its actions must be
+scrollable completely above the safe area, footer, keyboard, and sheet edge;
+reaching the maximum scroll offset while content remains clipped is a layout
+failure.
+
 Do not import, render, wrap, or indirectly rely on React Native `Modal`,
 `react-native-screens`' `FullWindowOverlay`, or equivalent components that
 create a native window, full-window overlay, or presentation layer outside the
@@ -235,6 +252,8 @@ layout tests where practical. At minimum cover:
    storage adapter used by application code.
 10. Bottom-sheet opening, snap points, backdrop and hardware-back dismissal,
     keyboard interaction, and safe-area layout when a bottom sheet is used.
+    Include content longer than the viewport and verify the final item is fully
+    visible and actionable at maximum scroll for every supported snap point.
 
 ## Completion report
 
