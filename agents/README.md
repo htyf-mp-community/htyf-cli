@@ -16,6 +16,7 @@ React Native `htyf` 项目，并指导 AI 完成以下工作：
 - 仅使用允许的 React Native 原生依赖；
 - 使用 React Navigation 统一路由，并用独立命名空间的 MMKV 持久化数据；
 - 原生功能优先寻找 JS 方案，必须改 iOS/Android 源码时记录缺口并交由人工处理；
+- 底部弹窗可使用 `@gorhom/bottom-sheet`，并保持在 HTYF React 根树内；
 - 正确适配 HTYF 胶囊区域、Safe Area、横竖屏及像素坐标；
 - 补充坐标转换、矩形避让和页面布局测试；
 - 本地缺少 HTYF 模板时，先征得用户同意，再从官方仓库获取模板。

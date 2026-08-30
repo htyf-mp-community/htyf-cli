@@ -78,6 +78,7 @@ from this list, using the version already pinned by the target project:
   `react-native-screens`, `react-native-restart`, and
   `react-native-edge-to-edge`.
 - UI/layout: `@lodev09/react-native-true-sheet`,
+  `@gorhom/bottom-sheet`,
   `@react-native-community/blur`, `@react-native-community/checkbox`,
   `@react-native-community/datetimepicker`,
   `@react-native-community/slider`, `@react-native-masked-view/masked-view`,
@@ -162,6 +163,15 @@ inside the HTYF application or page React tree. Implement them with an
 in-tree container, absolute positioning, `zIndex`/`elevation`, safe-area
 insets, and explicit back-button and accessibility behavior.
 
+Bottom sheets may use `@gorhom/bottom-sheet`, including its `BottomSheet` and
+`BottomSheetModal` APIs. Place `BottomSheetModalProvider` inside the HTYF
+application root so its portal remains owned by that React tree. Configure
+safe-area insets, keyboard behavior, backdrop dismissal, gesture conflicts,
+snap points, accessibility focus, and Android hardware-back dismissal for the
+migrated interaction. This allowance applies only to `@gorhom/bottom-sheet`;
+it does not permit wrapping the sheet with React Native `Modal` or
+`FullWindowOverlay`.
+
 Do not import, render, wrap, or indirectly rely on React Native `Modal`,
 `react-native-screens`' `FullWindowOverlay`, or equivalent components that
 create a native window, full-window overlay, or presentation layer outside the
@@ -223,6 +233,8 @@ layout tests where practical. At minimum cover:
    route flows.
 9. MMKV namespace isolation, persistence across instance recreation, and the
    storage adapter used by application code.
+10. Bottom-sheet opening, snap points, backdrop and hardware-back dismissal,
+    keyboard interaction, and safe-area layout when a bottom sheet is used.
 
 ## Completion report
 
