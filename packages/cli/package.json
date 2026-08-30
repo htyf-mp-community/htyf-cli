@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/cli",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "description": "红糖云服app小程序模板-cli",
   "type": "module",
   "bin": {
