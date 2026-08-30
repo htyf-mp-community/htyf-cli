@@ -7,6 +7,8 @@ class_name _HtyfSdk
 ## 1) 先看 call_rn 是否发出（带 id/type） -> 2) 看 RN 是否回传 emitToGodot -> 3) 看 _on_ipc_response 是否命中 pending 回调。
 signal ipcMain(message: String)
 signal ipcResponse(message: String)
+## 本地 AI 流式事件：started | delta | completed | cancelled | error。
+signal ai_event(event: Dictionary)
 
 var _pending_callbacks: Dictionary = {}
 var _ipc_response_connected: bool = false
@@ -73,6 +75,11 @@ func _on_ipc_response(message: String) -> void:
         var ev: int = int(data.get("event", 2017))
         if _host_lifecycle_callback.is_valid():
             _host_lifecycle_callback.call(ev)
+        return
+    if str(data.get("type", "")) == "aiEvent":
+        var ai_payload: Variant = data.get("payload", {})
+        if typeof(ai_payload) == TYPE_DICTIONARY:
+            ai_event.emit(ai_payload)
         return
     if str(data.get("type", "")) == "isReady":
         var ev: int = int(data.get("event", false))
@@ -206,6 +213,27 @@ func call_deactivate_keep_awake() -> void:
 ## 示例：关闭应用
 func call_close_app() -> void:
     call_rn("closeApp", {})
+
+## 一次性本地 AI 问答。options 至少包含 prompt；可选 sessionId、systemPrompt、generation、timeoutMs。
+## on_result 收到统一响应：{ success, payload?, error? }。
+func call_ask_ai(options: Dictionary, on_result: Callable = Callable()) -> String:
+    return call_rn("askAI", options, on_result)
+
+## 启动流式本地 AI 问答。成功后 payload 含 requestId；token 及完成事件由 ai_event 信号推送。
+func call_start_ai(options: Dictionary, on_result: Callable = Callable()) -> String:
+    return call_rn("startAI", options, on_result)
+
+## 取消运行中或排队中的 AI 请求。
+func call_cancel_ai(request_id: String, on_result: Callable = Callable()) -> String:
+    return call_rn("cancelAI", { "requestId": request_id }, on_result)
+
+## 释放指定 AI 会话在宿主中的临时上下文。
+func call_close_ai_session(session_id: String, on_result: Callable = Callable()) -> String:
+    return call_rn("closeAISession", { "sessionId": session_id }, on_result)
+
+## 获取 AI 可用、就绪、忙碌状态及当前模型名称。
+func call_get_ai_status(on_result: Callable = Callable()) -> String:
+    return call_rn("getAIStatus", {}, on_result)
 
 ## 示例：展示激励广告
 ## on_result 回调签名：func _cb(data: Dictionary) -> void

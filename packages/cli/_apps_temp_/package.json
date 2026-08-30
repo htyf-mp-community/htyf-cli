@@ -15,7 +15,7 @@
     "@callstack/repack": "5.3.0",
     "@dr.pogodin/react-native-fs": "2.40.1",
     "@gorhom/bottom-sheet": "5.2.14",
-    "@htyf-mp/cli": "0.5.8",
+    "@htyf-mp/cli": "0.6.0",
     "@htyf-mp/js-sdk": "0.2.25",
     "@htyf-mp/rn-sdk": "*",
     "@react-native-async-storage/async-storage": "3.1.1",
