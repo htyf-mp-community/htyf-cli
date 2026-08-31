@@ -79,6 +79,42 @@ and verified. Keep the previous baseline when work fails or remains incomplete,
 and report the pending source commits/files so the next run resumes from the
 last verified state.
 
+## Complete code documentation
+
+Leave the migrated target maintainable by a developer who has not seen the
+source project. Preserve source comments that remain accurate, rewrite comments
+whose assumptions changed during migration, and remove comments that no longer
+describe the code. Follow the target repository's comment language; when it has
+no established convention, use concise Chinese comments.
+
+Document every migrated or modified exported component, hook, service, adapter,
+store, utility, type, and configuration entry with JSDoc/TSDoc when its contract
+is not already fully expressed by an established interface. State its purpose,
+parameters, return value, thrown errors, side effects, lifecycle or cleanup
+requirements, and platform limitations that callers must understand. Include
+units and coordinate spaces for dimensions, pixels, logical points, durations,
+offsets, and persisted values.
+
+Add nearby implementation comments for decisions that are not obvious from the
+code, including source-to-HTYF behavior mappings, JavaScript replacements for
+native features, React Navigation transitions, MMKV namespaces and key
+ownership, async ordering, race prevention, fallback paths, capsule geometry,
+safe-area calculations, bottom-sheet sizing, gesture interaction, and security
+or compatibility tradeoffs. Explain why the constraint exists and what must
+remain true; avoid comments that merely restate the next line.
+
+Use actionable annotations for unfinished work. `TODO(htyf-native)` continues
+to identify deferred native work, and other TODO/FIXME comments must include a
+concrete missing outcome plus a link or path to the relevant migration-gap or
+tracking document. Do not hide incomplete behavior behind vague comments,
+commented-out code, or empty catch blocks.
+
+Before completion, review every changed source file and ensure its public
+contracts and non-obvious invariants are documented, examples and identifiers
+still match the implementation, and no stale source-platform comment survives.
+Documentation completeness is part of the migration checklist, not optional
+cleanup after implementation.
+
 ## Navigation and persistence
 
 Use `@react-navigation` for all application routing. Build the route hierarchy
