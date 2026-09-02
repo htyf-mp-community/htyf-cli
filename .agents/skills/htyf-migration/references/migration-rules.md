@@ -1,7 +1,8 @@
 # HTYF migration rules
 
-Use this guide when moving an existing project into an `htyf` React Native
-project or when completing a partially migrated feature.
+Use this guide when moving an existing project into an HTYF direct React Native
+application, Taro multi-end application, or Godot game target, or when
+completing a partially migrated feature.
 
 ## Objective
 
@@ -10,19 +11,126 @@ project in the `htyf` target. Preserve navigation, state, data flows, loading,
 empty/error states, permissions, assets, and platform interactions. A screen
 that merely renders is not complete if its interactions or edge cases differ.
 
-## Template source
+## Project type and template source
 
-Before starting a migration, look for a usable HTYF application template in
-the local workspace, including `packages/cli/_apps_temp_`. Prefer the local
-template when it exists.
+Determine the source project type before choosing a template. Treat a readable
+`project.godot` as the primary Godot signal. Confirm it by inspecting the
+configured main scene and supporting `.gd`, `.tscn`, `.tres`, or `addons/`
+content when available. A generated `.godot/` cache directory by itself is not
+enough to classify a project. `app.json` with `type: "game"` is supporting
+evidence, not a replacement for inspecting the actual source. When the signals
+conflict or the project contains multiple runtimes, ask the user which part is
+the migration input instead of guessing.
 
-If no local HTYF template is available, ask the user whether to download the
-template from
-[`htyf-mp-community/htyf-cli`](https://github.com/htyf-mp-community/htyf-cli.git),
-using that repository's `packages/cli/_apps_temp_` directory. Download or clone
-it only after the user confirms. Copy the template into the intended target
-without overwriting existing project files unless the user has explicitly
-approved those replacements.
+After classification, select exactly one matching template:
+
+- For a direct React Native application migration, look for
+  `packages/cli/_apps_temp_` in the local workspace.
+- For a non-Godot project where the user explicitly requests the Taro template,
+  look for `packages/cli/_taro_temp_` in the local workspace. The user's
+  explicit Taro choice overrides automatic selection of `_apps_temp_`.
+- For a Godot migration, look for `packages/cli/_game_temp_` in the local
+  workspace. Preserve its Godot project structure and game packaging setup.
+
+Prefer the matching local template when it is usable. If it is missing, ask
+the user whether to obtain that specific directory from
+[`htyf-mp-community/htyf-cli`](https://github.com/htyf-mp-community/htyf-cli).
+For Godot, download only that repository's `packages/cli/_game_temp_` template
+directory. For a user-selected Taro migration, download only
+`packages/cli/_taro_temp_`; for a direct React Native application use
+`packages/cli/_apps_temp_`. Do not clone, download, fetch, or copy from the
+remote repository until the user explicitly confirms. Copy the selected
+template into the intended target without overwriting existing project files
+unless the user has explicitly approved those replacements.
+
+Record the detected project type, evidence, selected template path, and
+template revision or deterministic manifest in the migration checklist and
+`.htyf-migration/source-state.json`. A later incremental migration must retain
+the same target type unless the user explicitly requests a conversion.
+
+## User-selected Taro target
+
+Use this branch only for a non-Godot project when the user explicitly selects
+the Taro template. Treat `_taro_temp_`, its pinned Taro and `@htyf-mp/*`
+versions, platform plugin, Taro configuration, routing, APIs, build scripts,
+and platform-file resolution as the target architecture. Preserve multi-end
+behavior where it is in scope.
+
+Before implementing this branch, read the current official
+[Taro React Native development notes](https://docs.taro.zone/docs/react-native-remind)
+and follow the guidance applicable to the template's pinned Taro version. Use
+Taro components and APIs, Taro application/page configuration, and the
+template's `.htyf`, `.rn`, `.ios`, and `.android` file-resolution conventions.
+Adapt styles to the React Native/Yoga subset: prefer Flex layout, make the
+intended axis explicit, use supported class selectors or inline style
+overrides, and use HTYF-specific files or conditional compilation for platform
+differences. Verify selectors, units, positioning, borders, shadows, background
+images, overflow, and shorthand properties against the current Taro guide
+rather than assuming browser CSS support.
+
+Normalize migrated HTYF-specific business code to the HTYF platform identity:
+
+- Rename source or generated `.rn.*` business files that exist for the HTYF
+  target to their `.htyf.*` equivalents, including script and style files such
+  as `index.rn.tsx` to `index.htyf.tsx` and `index.rn.scss` to
+  `index.htyf.scss`. Update imports only when they explicitly include the
+  platform suffix; ordinary extensionless imports remain unchanged so the
+  template resolver selects `.htyf` first.
+- Move Taro application and page configuration intended for the HTYF target
+  from the `rn` adaptation field to the corresponding `htyf` field. Preserve
+  supported option values and re-verify navigation, window, and page behavior
+  through the HTYF build.
+- Use a shared `.rn.*` implementation only when it intentionally serves more
+  than the HTYF target and no HTYF-specific behavior is required. Record that
+  sharing decision in the migration checklist; new HTYF-only adaptations use
+  `.htyf.*`.
+
+Do not perform a blind repository-wide `rn` to `htyf` text replacement. Keep
+React Native package names, runtime concepts, and low-level compatibility
+settings required by `_taro_temp_`. In particular, preserve transformer values
+such as `postcss.pxtransform.config.platform: 'rn'` when the template requires
+them to prevent `px` from being converted as mini-program `rpx`. The selected
+template and its comments are the source of truth for these internal settings.
+
+The direct React Native application sections below do not govern the Taro
+branch. In particular, retain Taro routing instead of rebuilding the app with a
+direct `NavigationContainer`; retain the template's storage abstraction and
+dependency graph instead of enforcing the direct-RN MMKV/AsyncStorage rule or
+native-package allowlist; and implement overlays, platform APIs, and lifecycle
+through Taro and the HTYF Taro plugin rather than direct RN presentation APIs.
+Do not add or remove a dependency solely to satisfy a direct React Native rule.
+When a Taro capability gap remains, use the template's platform-specific file
+mechanism and document the divergence; ask before changing `ios/` or `android/`
+source.
+
+Build and test at least the HTYF target with the template's Taro scripts. When
+the requested migration preserves other Taro targets, also build or test each
+affected target. Treat compilation warnings about unsupported styles or APIs as
+migration findings, not cosmetic noise.
+
+## Godot game target and HTYF SDK
+
+For a Godot source, use the game branch of this guide. The React Native-only
+navigation, persistence, dependency, native-source, and overlay sections below
+do not apply unless the user explicitly requests a separate React Native host
+change. Inventory scenes, scripts, resources, input mappings, autoloads,
+rendering settings, save data, platform calls, and export/package settings.
+
+The selected game template's `packages/cli/_game_temp_/_HTYF_SDK` directory is
+the Red Sugar Cloud Service (红糖云服) integration SDK and is platform-owned
+code. Keep the entire directory and the template's `project.godot` autoload
+entry that registers `HtyfSdk`. Use the selected template version as the source
+of truth: migrate game scenes, scripts, and assets around it, and never replace
+it with a same-named directory from the source or delete, rename, or casually
+edit its files. If the source already contains `_HTYF_SDK`, compare and report
+the differences; ask before carrying any source SDK customization forward.
+Record the retained SDK revision or manifest so a re-migration does not
+silently overwrite it.
+
+Use `HtyfSdk` APIs for supported host capabilities. Do not duplicate its RN
+bridge or bypass it with source-platform APIs. Confirm that the autoload and
+every referenced SDK resource resolve when the project opens and after the game
+package is built.
 
 ## Workflow
 
@@ -30,13 +138,13 @@ approved those replacements.
    stores, services, assets, permissions, native capabilities, and tests.
    Record every item in a migration checklist before editing the target.
 2. Inspect the target's existing architecture and dependencies. Reuse its
-   state, styling, request, and test conventions while normalizing navigation
-   and persistence to the required implementations below.
-3. Map each source capability to React Native and to an allowed native module.
-   First exhaust a pure TypeScript/JavaScript implementation and the target's
-   existing native modules. Pure TypeScript/JavaScript dependencies are allowed
-   when they do not add a native binary. Any new native dependency must appear
-   in the allowlist below at the stated version.
+   state, styling, request, navigation, persistence, and test conventions unless
+   the selected branch below explicitly replaces them.
+3. Map each source capability to the selected target branch. For a direct React
+   Native application, map it to an allowed native module, first exhausting a
+   pure TypeScript/JavaScript implementation and existing modules. For Taro,
+   use Taro APIs, components, configuration, and platform files. For Godot,
+   prefer GDScript/Godot APIs and the retained `HtyfSdk` integration.
 4. Migrate in vertical slices. For each route, finish UI, interactions, data,
    error handling, permissions, and tests before marking it complete.
 5. Compare the source and target feature-by-feature. Resolve every checklist
@@ -62,9 +170,11 @@ manifest. If no trustworthy baseline exists, rebuild the full source inventory
 instead of assuming that unchanged-looking files were already migrated.
 
 Translate the source delta into feature-level changes and bring every relevant
-update into the HTYF target. Reconcile it with existing React Native adapters,
-tests, manual fixes, and HTYF-specific behavior; do not replace the target tree
-wholesale or restore source APIs that earlier migration rules replaced. Handle
+update into the HTYF target. Reconcile it with existing direct React Native
+adapters, Taro platform adaptations, or Godot/`HtyfSdk` integration, tests,
+manual fixes, and HTYF-specific behavior; do not replace the target tree
+wholesale, cross target-branch boundaries, overwrite `_HTYF_SDK`, or restore
+source APIs that earlier migration rules replaced. Handle
 source deletions and renames explicitly, removing obsolete target behavior only
 after confirming that no HTYF-specific consumer still needs it.
 
@@ -89,7 +199,9 @@ no established convention, use concise Chinese comments.
 
 Document every migrated or modified exported component, hook, service, adapter,
 store, utility, type, and configuration entry with JSDoc/TSDoc when its contract
-is not already fully expressed by an established interface. State its purpose,
+is not already fully expressed by an established interface. In Godot scripts,
+use GDScript documentation comments for public classes, methods, signals,
+autoload APIs, exported properties, and resource contracts. State its purpose,
 parameters, return value, thrown errors, side effects, lifecycle or cleanup
 requirements, and platform limitations that callers must understand. Include
 units and coordinate spaces for dimensions, pixels, logical points, durations,
@@ -115,7 +227,7 @@ still match the implementation, and no stale source-platform comment survives.
 Documentation completeness is part of the migration checklist, not optional
 cleanup after implementation.
 
-## Navigation and persistence
+## React Native application navigation and persistence
 
 Use `@react-navigation` for all application routing. Build the route hierarchy
 with `NavigationContainer` and the appropriate React Navigation stack, tab, or
@@ -139,7 +251,7 @@ transitive application usage with the dedicated MMKV storage module. Before
 completion, search runtime code and local wrappers for AsyncStorage imports and
 verify that every persistent key is owned by the intended MMKV namespace.
 
-## Native dependency allowlist
+## React Native application native dependency allowlist
 
 The target runs React Native `0.86.3`. Native packages may only be selected
 from this list, using the version already pinned by the target project:
@@ -202,7 +314,7 @@ Treat the target `package.json` as the source of truth for exact versions. If a
 needed native capability is absent from both this list and the target, stop and
 report the capability gap instead of silently installing a replacement.
 
-## Native source boundary
+## React Native application native source boundary
 
 Keep migration changes in TypeScript/JavaScript and supported configuration.
 When a feature appears to require changes under `ios/` or `android/`, first
@@ -228,7 +340,7 @@ Classify these items as documented native blockers in the migration checklist
 and completion report. They are not completed features, even when a fallback
 keeps the application stable.
 
-## In-tree overlays only
+## React Native application in-tree overlays only
 
 Render dialogs, sheets, menus, popovers, loading masks, and other overlays
 inside the HTYF application or page React tree. Implement them with an
@@ -275,8 +387,14 @@ match must be removed from runtime UI code or demonstrated to be unrelated.
 
 ## Page header and capsule layout
 
-Use `@htyf-mp/js-sdk`'s `jssdk.getMenuButtonBoundingClientRect()` as the
-capsule's occupied rectangle, not as a reserved full-width row.
+Use the selected target branch's SDK to obtain the capsule's occupied rectangle,
+not as a reserved full-width row. Direct React Native applications use
+`@htyf-mp/js-sdk`'s `jssdk.getMenuButtonBoundingClientRect()`. Godot games call
+`HtyfSdk.call_get_menu_button_bounding_client_rect()` and consume the cached
+result through `HtyfSdk.get_menu_button_rect_for_viewport()` after it reports
+`ready: true`. Taro targets use the capsule API exposed through Taro or the
+HTYF Taro plugin and keep the calculation in Taro component/layout code rather
+than importing a direct React Native application adapter.
 
 - Keep titles, back buttons, and actions in the usable area to the capsule's
   left when their vertical ranges overlap it. Their right edge must be 8–12 pt
@@ -291,7 +409,24 @@ capsule's occupied rectangle, not as a reserved full-width row.
   Do not encode device models or fixed header heights.
 - If capsule data is missing or invalid, fall back to the system safe area.
 
+For Godot, pass the actual design viewport size and the matching `stretch`,
+`contain`, or `cover` mode to `get_menu_button_rect_for_viewport()`. Use the
+returned Godot viewport coordinates for `Control` layout; do not compare raw
+host-window coordinates directly with scene coordinates and do not assume the
+template's 720 x 1280 design size equals the current host window. Recalculate
+after the asynchronous SDK result arrives and whenever viewport size,
+orientation, or stretch configuration changes. Apply the same per-element
+vertical intersection rule below: only controls vertically overlapping the
+capsule lose right-side width, while controls below it regain the full viewport
+width. Keep touch targets equivalent to at least 44 x 44 logical points after
+coordinate conversion.
+
 ### Coordinate normalization
+
+The following raw-SDK normalization procedure applies to the direct React
+Native application branch. Godot must use `_HTYF_SDK`'s
+`get_menu_button_rect_for_viewport()` conversion described above and then apply
+the same rectangle-intersection layout rule to its converted result.
 
 Normalize the SDK rectangle into logical points before layout. Validate finite,
 positive bounds and compare the raw rectangle against the current logical
@@ -318,22 +453,41 @@ layout tests where practical. At minimum cover:
 5. A long title truncating or wrapping without entering the capsule rectangle.
 6. Content below the capsule regaining full width.
 7. Dimension/orientation changes recalculating the layout.
-8. React Navigation route parameters and hardware-back behavior for migrated
-   route flows.
-9. MMKV namespace isolation, persistence across instance recreation, and the
-   storage adapter used by application code.
-10. Bottom-sheet opening, snap points, backdrop and hardware-back dismissal,
-    keyboard interaction, and safe-area layout when a bottom sheet is used.
+8. For direct React Native applications, React Navigation route parameters and
+   hardware-back behavior for migrated route flows.
+9. For direct React Native applications, MMKV namespace isolation, persistence
+   across instance recreation, and the storage adapter used by application
+   code.
+10. For direct React Native applications, bottom-sheet opening, snap points,
+    backdrop and hardware-back dismissal, keyboard interaction, and safe-area
+    layout when a bottom sheet is used.
     Include content longer than the viewport and verify the final item is fully
     visible and actionable at maximum scroll for every supported snap point.
 11. For a repeated migration, tests covering each changed source behavior and
     regression tests for the target adaptations touched while merging the
     source delta.
+12. For Godot, detection from `project.godot`, main-scene and autoload resource
+    resolution, retention of the template `_HTYF_SDK`, and successful loading
+    of the `HtyfSdk` autoload. Test capsule conversion at the configured design
+    viewport/stretch mode, asynchronous readiness, orientation changes, invalid
+    data fallback, overlapping controls, and full-width content below the
+    capsule. Run the game template's packaging verification when available.
+13. For a user-selected Taro target, the HTYF Taro build, Taro route and page
+    lifecycle behavior, `.htyf.*` platform-file selection, `htyf` application
+    and page configuration, supported-style conversion, and every affected
+    additional Taro target. Confirm extensionless imports resolve the HTYF file,
+    required low-level `rn` compatibility values remain intact, and no direct
+    React Native application adapter or dependency policy was imposed on the
+    Taro branch.
 
 ## Completion report
 
-Report the migrated feature checklist, deliberate source-to-target differences,
-the source baseline and delta applied, native modules used, and verification
-commands with their results. Migration is complete only when every inventoried
-feature is implemented or explicitly identified as blocked with a concrete
-reason and the recorded source baseline matches the last verified input.
+Report the detected project type and evidence, user template choice when any,
+selected template and revision,
+migrated feature checklist, deliberate source-to-target differences, source
+baseline and delta applied, retained `_HTYF_SDK` revision for Godot or native
+modules used for direct React Native, Taro targets verified, and verification
+commands with their results.
+Migration is complete only when every inventoried feature is implemented or
+explicitly identified as blocked with a concrete reason and the recorded source
+baseline matches the last verified input.

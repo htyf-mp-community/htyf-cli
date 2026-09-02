@@ -129,10 +129,21 @@ CLI 从项目根目录的 `app.json` 读取 `htyf` 配置。常用字段包括�
 ## AI Agent 辅助迁移
 
 仓库提供 `$htyf-migration` Codex Skill。Codex 可以根据 HTYF 迁移任务自动
-调用，也可以由用户显式调用，并读取迁移流程、React Navigation 与 MMKV
-约束、源代码增量再迁移、完整代码注释、原生依赖与原生源码修改边界、
+调用，也可以由用户显式调用，并读取项目类型与模板选择、用户指定的 Taro
+模板与官方 RN 开发注意事项、Godot 游戏模板及 `_HTYF_SDK` 红糖云服 SDK、
+迁移流程、纯 RN 项目的 React Navigation 与 MMKV 约束、源代码增量再迁移、
+完整代码注释、原生依赖与原生源码修改边界、
 `@gorhom/bottom-sheet`、页面树内覆盖层、胶囊与 Safe Area 适配要求以及测试
-验收标准。
+验收标准。Godot 项目只有在本地缺少游戏模板且用户确认后，才会从官方仓库
+[`htyf-mp-community/htyf-cli`](https://github.com/htyf-mp-community/htyf-cli)
+下载 `packages/cli/_game_temp_` 模板目录。
+
+非 Godot 项目若由用户明确指定 Taro，则使用该仓库的
+`packages/cli/_taro_temp_`，并遵循
+[Taro React Native 端开发前注意](https://docs.taro.zone/docs/react-native-remind)。
+纯 React Native 应用的路由、存储、依赖和覆盖层规则不直接套用到 Taro
+模板。Taro 迁移生成的 HTYF 专属业务文件使用 `.htyf.*` 后缀，应用和页面的
+平台适配使用 `htyf` 字段；模板底层要求的 RN 转换器兼容参数保持不变。
 
 使用时向 AI 提供源项目路径、目标 `htyf` 路径和迁移范围，例如：
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "HTYF 项目迁移"
-  short_description: "将现有小程序或应用完整迁移到 HTYF React Native 项目"
-  default_prompt: "Use $htyf-migration to migrate the specified source project into an HTYF React Native target with feature parity and required tests."
+  short_description: "将小程序、Taro 应用或 Godot 游戏迁移到匹配的 HTYF 项目"
+  default_prompt: "Use $htyf-migration to detect the source project type and migrate it with the matching direct React Native, user-selected Taro, or Godot HTYF template, preserving feature parity and adding required tests."
