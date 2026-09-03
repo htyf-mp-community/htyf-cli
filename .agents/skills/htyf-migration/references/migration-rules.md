@@ -132,6 +132,42 @@ bridge or bypass it with source-platform APIs. Confirm that the autoload and
 every referenced SDK resource resolve when the project opens and after the game
 package is built.
 
+### Godot plugin compatibility limits
+
+The target host embeds a Godot engine and loads a PCK. Only scripts and
+resources compatible with that host's engine version and target platform are
+supported; exporting a PCK does not make native dependencies compatible.
+
+| Dependency type | Support rule |
+| --- | --- |
+| Pure GDScript plugin | Supported after engine-version and target-platform compatibility verification. |
+| Editor-only plugin | May be used during development; exported content must not depend on unsupported runtime capabilities. |
+| C++ GDExtension | Unsupported. |
+| Custom C++ engine module | Unsupported. |
+| Android or iOS native plugin | Unsupported. |
+
+Before migration, inspect `addons/`, `.gdextension` descriptors, native library
+files, platform plugins, and custom engine modules. Inspect plugin code,
+configuration, runtime references, and transitive dependencies rather than
+inferring compatibility from a directory name. Record each dependency's type,
+affected features, and compatibility evidence in the migration checklist.
+Repeat this audit for dependency changes during incremental migrations.
+
+Replace unsupported dependencies with equivalent GDScript, Godot built-in
+functionality, or the existing host SDK. Do not work around these restrictions
+by modifying the host native project, integrating native libraries, or
+recompiling the engine. If no equivalent replacement is possible, record the
+blocker and affected features in `docs/htyf-migration-gaps.md` and annotate the
+integration boundary in code. Do not silently remove features, provide empty
+implementations, or declare the migration complete while these blockers remain.
+
+Compatibility acceptance must run in the target host with its embedded engine
+loading the migrated PCK. Exercise affected features and record host/engine
+versions, target platform, PCK identity, test steps, and results. Editor success
+or successful PCK export alone is not compatibility evidence. If the target
+host is unavailable, report acceptance as pending; do not claim compatibility
+or migration completion.
+
 ## Workflow
 
 1. Inventory the source project by feature: routes, screens, components,
@@ -471,7 +507,9 @@ layout tests where practical. At minimum cover:
     of the `HtyfSdk` autoload. Test capsule conversion at the configured design
     viewport/stretch mode, asynchronous readiness, orientation changes, invalid
     data fallback, overlapping controls, and full-width content below the
-    capsule. Run the game template's packaging verification when available.
+    capsule. Audit plugin compatibility and verify the migrated PCK in the
+    target host as required by the Godot plugin compatibility limits above;
+    packaging verification alone is insufficient.
 13. For a user-selected Taro target, the HTYF Taro build, Taro route and page
     lifecycle behavior, `.htyf.*` platform-file selection, `htyf` application
     and page configuration, supported-style conversion, and every affected
@@ -488,6 +526,9 @@ migrated feature checklist, deliberate source-to-target differences, source
 baseline and delta applied, retained `_HTYF_SDK` revision for Godot or native
 modules used for direct React Native, Taro targets verified, and verification
 commands with their results.
+For Godot, also report the dependency compatibility audit, replacements,
+unresolved blockers, and target-host acceptance evidence. Godot migrations with
+unsupported dependency blockers or pending host acceptance remain incomplete.
 Migration is complete only when every inventoried feature is implemented or
 explicitly identified as blocked with a concrete reason and the recorded source
 baseline matches the last verified input.
