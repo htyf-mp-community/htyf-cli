@@ -4,3 +4,8 @@ node_modules
 *.log
 dist
 coverage
+
+/pnpm-lock.yaml
+/packages/stylelint-taro-rn/yarn.lock
+/packages/taro-rn-style-transformer/yarn.lock
+/packages/taro-rn-runner/yarn.lock
