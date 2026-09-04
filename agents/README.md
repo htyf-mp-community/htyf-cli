@@ -27,6 +27,8 @@ Skill：`.agents/skills/htyf-migration`。支持 Agent Skills 的 Codex 打开�
 - 迁移前识别 Godot 项目；经用户确认后才获取 `_game_temp_` 游戏模板；
 - 保留游戏模板的 `_HTYF_SDK` 红糖云服 SDK 与 `HtyfSdk` 自动加载配置，并按
   Godot 视口坐标正确避让胶囊菜单。
+- Godot 迁移目标固定为 4.5，项目导入、版本转换、测试、PCK 导出和宿主验收
+  均使用 Godot 4.5。
 - 非 Godot 项目在用户明确指定 Taro 时使用 `_taro_temp_`，并以 Taro 官方 RN
   开发指南及模板架构为准，不套用纯 React Native 应用规则。
 - Taro 的 HTYF 专属业务文件使用 `.htyf.*`，应用和页面适配使用 `htyf` 字段；
@@ -62,8 +64,9 @@ Godot 游戏迁移示例：
 
 ```text
 使用 $htyf-migration，将 <Godot 源项目绝对路径> 迁移到 <目标绝对路径>。
-先检查 project.godot 并确认项目类型；使用游戏模板，保留 _HTYF_SDK 和
-HtyfSdk 自动加载配置，按实际 Godot 视口适配胶囊菜单，然后完成打包验证。
+先检查 project.godot、确认项目类型和源版本；迁移到 Godot 4.5 游戏模板，
+保留 _HTYF_SDK 和 HtyfSdk 自动加载配置，按实际 Godot 视口适配胶囊菜单，
+然后使用 Godot 4.5 完成 PCK 导出和目标宿主验证。
 ```
 
 推荐提示词：

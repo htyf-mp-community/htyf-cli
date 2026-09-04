@@ -136,7 +136,8 @@ CLI 从项目根目录的 `app.json` 读取 `htyf` 配置。常用字段包括�
 `@gorhom/bottom-sheet`、页面树内覆盖层、胶囊与 Safe Area 适配要求以及测试
 验收标准。Godot 项目只有在本地缺少游戏模板且用户确认后，才会从官方仓库
 [`htyf-mp-community/htyf-cli`](https://github.com/htyf-mp-community/htyf-cli)
-下载 `packages/cli/_game_temp_` 模板目录。
+下载 `packages/cli/_game_temp_` 模板目录。Godot 迁移目标版本固定为 4.5，导入、
+转换、测试、PCK 导出和目标宿主验收均以 Godot 4.5 为准。
 
 非 Godot 项目若由用户明确指定 Taro，则使用该仓库的
 `packages/cli/_taro_temp_`，并遵循

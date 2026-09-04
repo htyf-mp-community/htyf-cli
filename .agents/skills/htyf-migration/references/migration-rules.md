@@ -116,6 +116,16 @@ do not apply unless the user explicitly requests a separate React Native host
 change. Inventory scenes, scripts, resources, input mappings, autoloads,
 rendering settings, save data, platform calls, and export/package settings.
 
+The Godot migration target is **Godot 4.5**. Keep the target
+`project.godot` compatible with 4.5 and verify that `config/features` contains
+`"4.5"`. Inspect and record the source Godot version before editing. When the
+source uses another version, migrate its scenes, resources, scripts, shaders,
+project settings, and APIs to Godot 4.5 semantics; do not silently retain
+syntax or serialized formats that only work in an older or newer engine.
+Perform project import, conversion, editor checks, PCK export, plugin checks,
+and automated tests with Godot 4.5. Do not open or resave the migrated target
+with another Godot version because that may rewrite project resources.
+
 The selected game template's `packages/cli/_game_temp_/_HTYF_SDK` directory is
 the Red Sugar Cloud Service (红糖云服) integration SDK and is platform-owned
 code. Keep the entire directory and the template's `project.godot` autoload
@@ -134,9 +144,9 @@ package is built.
 
 ### Godot plugin compatibility limits
 
-The target host embeds a Godot engine and loads a PCK. Only scripts and
-resources compatible with that host's engine version and target platform are
-supported; exporting a PCK does not make native dependencies compatible.
+The target host embeds Godot 4.5 and loads a PCK. Only scripts and resources
+compatible with Godot 4.5 and the target platform are supported; exporting a
+PCK does not make native dependencies compatible.
 
 | Dependency type | Support rule |
 | --- | --- |
@@ -161,7 +171,8 @@ blocker and affected features in `docs/htyf-migration-gaps.md` and annotate the
 integration boundary in code. Do not silently remove features, provide empty
 implementations, or declare the migration complete while these blockers remain.
 
-Compatibility acceptance must run in the target host with its embedded engine
+Compatibility acceptance must run in the target host with its embedded Godot
+4.5 engine
 loading the migrated PCK. Exercise affected features and record host/engine
 versions, target platform, PCK identity, test steps, and results. Editor success
 or successful PCK export alone is not compatibility evidence. If the target
@@ -503,13 +514,15 @@ layout tests where practical. At minimum cover:
     regression tests for the target adaptations touched while merging the
     source delta.
 12. For Godot, detection from `project.godot`, main-scene and autoload resource
-    resolution, retention of the template `_HTYF_SDK`, and successful loading
-    of the `HtyfSdk` autoload. Test capsule conversion at the configured design
-    viewport/stretch mode, asynchronous readiness, orientation changes, invalid
-    data fallback, overlapping controls, and full-width content below the
-    capsule. Audit plugin compatibility and verify the migrated PCK in the
-    target host as required by the Godot plugin compatibility limits above;
-    packaging verification alone is insufficient.
+    resolution, target `config/features` value `"4.5"`, retention of the
+    template `_HTYF_SDK`, and successful loading of the `HtyfSdk` autoload.
+    Import, test, and export using Godot 4.5. Test capsule conversion at the
+    configured design viewport/stretch mode, asynchronous readiness,
+    orientation changes, invalid data fallback, overlapping controls, and
+    full-width content below the capsule. Audit plugin compatibility and verify
+    the migrated PCK in the Godot 4.5 target host as required by the Godot
+    plugin compatibility limits above; packaging verification alone is
+    insufficient.
 13. For a user-selected Taro target, the HTYF Taro build, Taro route and page
     lifecycle behavior, `.htyf.*` platform-file selection, `htyf` application
     and page configuration, supported-style conversion, and every affected
@@ -526,9 +539,10 @@ migrated feature checklist, deliberate source-to-target differences, source
 baseline and delta applied, retained `_HTYF_SDK` revision for Godot or native
 modules used for direct React Native, Taro targets verified, and verification
 commands with their results.
-For Godot, also report the dependency compatibility audit, replacements,
-unresolved blockers, and target-host acceptance evidence. Godot migrations with
-unsupported dependency blockers or pending host acceptance remain incomplete.
+For Godot, also report the source version, Godot 4.5 conversion work, dependency
+compatibility audit, replacements, unresolved blockers, and Godot 4.5
+target-host acceptance evidence. Godot migrations with unsupported dependency
+blockers or pending host acceptance remain incomplete.
 Migration is complete only when every inventoried feature is implemented or
 explicitly identified as blocked with a concrete reason and the recorded source
 baseline matches the last verified input.
