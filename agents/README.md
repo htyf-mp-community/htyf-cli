@@ -29,6 +29,8 @@ Skill：`.agents/skills/htyf-migration`。支持 Agent Skills 的 Codex 打开�
   Godot 视口坐标正确避让胶囊菜单。
 - Godot 迁移目标固定为 4.5，项目导入、版本转换、测试、PCK 导出和宿主验收
   均使用 Godot 4.5。
+- Godot 以移动端触控为主要交互环境；键盘移动需要映射为合适的触控交互，必要
+  时评估纯 GDScript 虚拟摇杆，并在真机目标宿主验证多点触控和安全区布局。
 - 非 Godot 项目在用户明确指定 Taro 时使用 `_taro_temp_`，并以 Taro 官方 RN
   开发指南及模板架构为准，不套用纯 React Native 应用规则。
 - Taro 的 HTYF 专属业务文件使用 `.htyf.*`，应用和页面适配使用 `htyf` 字段；

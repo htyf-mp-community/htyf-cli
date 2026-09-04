@@ -172,12 +172,73 @@ integration boundary in code. Do not silently remove features, provide empty
 implementations, or declare the migration complete while these blockers remain.
 
 Compatibility acceptance must run in the target host with its embedded Godot
-4.5 engine
-loading the migrated PCK. Exercise affected features and record host/engine
+4.5 engine loading the migrated PCK. Exercise affected features and record host/engine
 versions, target platform, PCK identity, test steps, and results. Editor success
 or successful PCK export alone is not compatibility evidence. If the target
 host is unavailable, report acceptance as pending; do not claim compatibility
 or migration completion.
+
+### Godot mobile interaction and virtual controls
+
+Treat phones and tablets with touch as the primary Godot target. Before moving
+gameplay code, inventory every keyboard, mouse, gamepad, hover, right-click,
+drag, pointer-lock, shortcut, and text-entry interaction. Map each interaction
+to a usable touch equivalent while preserving optional physical keyboard and
+gamepad support through shared InputMap actions. Gameplay code should consume
+actions or semantic input vectors rather than hardcoded key codes or direct
+references to the virtual-control UI.
+
+When continuous keyboard movement has no usable touch equivalent, evaluate a
+virtual joystick. Use on-screen buttons for discrete actions such as jump,
+attack, pause, or interact; use direct manipulation, swipe, tap, or a second
+stick only when those controls fit the source interaction. A virtual joystick
+does not replace text input, accessibility actions, pointer-accurate selection,
+or every keyboard shortcut. Simplify or redesign the interaction when that
+produces a clearer mobile experience without changing game rules.
+
+Prefer a small in-project implementation with Godot 4.5 `Control`, touch input,
+and InputMap APIs when it satisfies the behavior. Before introducing an open
+source joystick, inspect all repository files and transitive dependencies and
+confirm that the selected revision contains only compatible GDScript and
+resources, has an acceptable license, supports Godot 4.5, has no
+GDExtension/native/runtime editor dependency, and works with the target
+renderer and embedded host. Record the source URL, license, pinned commit or
+release, copied files, local changes, and compatibility evidence. Obtain user
+permission before downloading third-party code.
+
+One candidate to evaluate, not an automatic dependency, is the MIT-licensed
+[Virtual Joystick for Godot 4](https://godotengine.org/asset-library/asset/1718)
+with source at
+[MarcoFazioRandom/Virtual-Joystick-Godot](https://github.com/MarcoFazioRandom/Virtual-Joystick-Godot).
+Its public repository currently exposes GDScript, scenes, textures, and editor
+plugin configuration and supports fixed, dynamic, and following joystick
+modes, dead zones, InputMap actions, and touch visibility. Reinspect the exact
+revision at migration time; the listing or repository description alone is not
+proof of Godot 4.5 host compatibility.
+
+Design virtual controls for mobile ergonomics:
+
+- Keep controls inside safe areas and outside the capsule, system gestures,
+  cutouts, and critical gameplay UI. Reflow them for phone/tablet sizes,
+  aspect-ratio changes, and both supported orientations.
+- Size touch targets for reliable thumb use, provide adjustable dead and clamp
+  zones, avoid accidental activation, and retain analog magnitude when the
+  source movement supports it.
+- Support simultaneous touches so movement and action buttons work together.
+  Give each touch identifier clear ownership, release all input on touch cancel,
+  focus loss, pause, scene change, and control removal, and prevent stuck input.
+- Make controls legible without obscuring gameplay. Provide visual pressed and
+  direction feedback, and expose configurable placement, handedness, scale, and
+  opacity when the game benefits from them.
+- Display touch controls based on the active input context without removing
+  keyboard/gamepad mappings. Switching input methods must not duplicate actions
+  or leave stale movement vectors.
+
+Verify the final controls on physical target-host devices, not only with mouse
+touch emulation. Test multi-touch movement plus actions, dead-zone boundaries,
+slow and full-speed movement, rapid direction changes, touch cancellation,
+pause/resume, scene transitions, input-method switching, safe-area/capsule
+avoidance, rotation, representative aspect ratios, and sustained thumb use.
 
 ## Workflow
 
@@ -522,7 +583,10 @@ layout tests where practical. At minimum cover:
     full-width content below the capsule. Audit plugin compatibility and verify
     the migrated PCK in the Godot 4.5 target host as required by the Godot
     plugin compatibility limits above; packaging verification alone is
-    insufficient.
+    insufficient. For keyboard- or mouse-driven gameplay, verify the mobile
+    touch mapping and any virtual joystick/buttons on physical target devices,
+    including multi-touch, cancellation, input switching, safe areas, rotation,
+    and representative aspect ratios.
 13. For a user-selected Taro target, the HTYF Taro build, Taro route and page
     lifecycle behavior, `.htyf.*` platform-file selection, `htyf` application
     and page configuration, supported-style conversion, and every affected
@@ -541,8 +605,11 @@ modules used for direct React Native, Taro targets verified, and verification
 commands with their results.
 For Godot, also report the source version, Godot 4.5 conversion work, dependency
 compatibility audit, replacements, unresolved blockers, and Godot 4.5
-target-host acceptance evidence. Godot migrations with unsupported dependency
-blockers or pending host acceptance remain incomplete.
+target-host acceptance evidence. Also report the source-to-mobile input map,
+virtual-control implementation or evaluated joystick candidates, third-party
+source/license/revision when used, and physical-device results. Godot migrations
+with unsupported dependency blockers or pending host acceptance remain
+incomplete.
 Migration is complete only when every inventoried feature is implemented or
 explicitly identified as blocked with a concrete reason and the recorded source
 baseline matches the last verified input.
