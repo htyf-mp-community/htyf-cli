@@ -17,9 +17,12 @@
     "version:patch": "lerna version patch --no-private",
     "version:minor": "lerna version minor --no-private",
     "version:major": "lerna version major --no-private",
-    "publish:packages": "pnpm build && lerna publish --force-publish --no-private -y",
-    "publish:dev": "pnpm build && lerna publish --force-publish --no-private -y --dist-tag alpha",
-    "publish:changed": "lerna changed"
+    "publish:packages": "pnpm build && pnpm verify:packages && lerna publish --force-publish --no-private -y",
+    "publish:dev": "pnpm build && pnpm verify:packages && lerna publish --force-publish --no-private -y --dist-tag alpha",
+    "publish:changed": "lerna changed",
+    "verify:packages": "node scripts/audit-packages.mjs",
+    "pack:packages": "pnpm build && pnpm verify:packages",
+    "test:packages": "node --test scripts/package-files.test.mjs"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

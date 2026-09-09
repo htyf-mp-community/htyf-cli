@@ -72,8 +72,9 @@ const styles = StyleSheet.create({
 })
 
 export class TabBar extends React.PureComponent<TabBarProps & WithSafeAreaInsetsProps, TabBarState> {
-  handleKeyboardShowEvent: EmitterSubscription
-  handleKeyboardHideEvent: EmitterSubscription
+  handleKeyboardShowEvent?: EmitterSubscription
+  handleKeyboardHideEvent?: EmitterSubscription
+  private visibilityAnimation?: Animated.CompositeAnimation
   constructor (props: TabBarProps & WithSafeAreaInsetsProps) {
     super(props)
     const { height = 0, width = 0 } = Dimensions.get('window')
@@ -95,39 +96,50 @@ export class TabBar extends React.PureComponent<TabBarProps & WithSafeAreaInsets
   }
 
   componentDidMount () {
-    const { keyboardHidesTabBar = false } = this.props
-    if (keyboardHidesTabBar) {
-      if (Platform.OS === 'ios') {
-        this.handleKeyboardShowEvent = Keyboard.addListener('keyboardWillShow', () => this.handleKeyboardShow())
-        this.handleKeyboardHideEvent = Keyboard.addListener('keyboardWillHide', () => this.handleKeyboardHide())
-      } else {
-        this.handleKeyboardShowEvent = Keyboard.addListener('keyboardDidShow', () => this.handleKeyboardShow())
-        this.handleKeyboardHideEvent = Keyboard.addListener('keyboardDidHide', () => this.handleKeyboardHide())
-      }
-    }
+    this.updateKeyboardSubscriptions()
+  }
+
+  private removeKeyboardSubscriptions () {
+    this.handleKeyboardShowEvent?.remove()
+    this.handleKeyboardHideEvent?.remove()
+    this.handleKeyboardShowEvent = undefined
+    this.handleKeyboardHideEvent = undefined
+  }
+
+  private updateKeyboardSubscriptions () {
+    this.removeKeyboardSubscriptions()
+    if (!this.props.keyboardHidesTabBar) return
+    this.handleKeyboardShowEvent = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => this.handleKeyboardShow()
+    )
+    this.handleKeyboardHideEvent = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => this.handleKeyboardHide()
+    )
   }
 
   componentWillUnmount () {
-    const { keyboardHidesTabBar = false } = this.props
-    if (keyboardHidesTabBar) {
-      this.handleKeyboardShowEvent.remove()
-      this.handleKeyboardHideEvent.remove()
-    }
+    this.removeKeyboardSubscriptions()
+    this.visibilityAnimation?.stop()
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps): void {
-    const curVisible = getTabVisible()
-    const { tabVisible, insets } = this.state
-    if (curVisible !== tabVisible) {
-      this.setState({
-        tabVisible: curVisible
-      })
+  componentDidUpdate (prevProps: TabBarProps & WithSafeAreaInsetsProps): void {
+    if (prevProps === this.props) return
+    if (!!prevProps.keyboardHidesTabBar !== !!this.props.keyboardHidesTabBar) {
+      this.updateKeyboardSubscriptions()
+      if (!this.props.keyboardHidesTabBar && this.state.isKeyboardShown) {
+        this.setState({ isKeyboardShown: false })
+      }
+    }
+    const curVisible = this.props.tabOptions?.tabBarVisible !== false && getTabVisible() &&
+      !(this.props.keyboardHidesTabBar && this.state.isKeyboardShown)
+    if (curVisible !== this.state.tabVisible) {
+      this.setState({ tabVisible: curVisible })
       this.setTabBarHidden(!curVisible)
     }
-    if (nextProps.insets && insets !== nextProps.insets) {
-      this.setState({
-        insets: nextProps.insets
-      })
+    if (this.props.insets && this.state.insets !== this.props.insets) {
+      this.setState({ insets: this.props.insets })
     }
   }
 
@@ -140,31 +152,32 @@ export class TabBar extends React.PureComponent<TabBarProps & WithSafeAreaInsets
   }
 
   handleKeyboardHide () {
-    this.setState({
-      isKeyboardShown: false,
-      tabVisible: getTabVisible()
-    })
-    this.setTabBarHidden(false)
+    const tabVisible = this.props.tabOptions?.tabBarVisible !== false && getTabVisible()
+    this.setState({ isKeyboardShown: false, tabVisible })
+    this.setTabBarHidden(!tabVisible)
   }
 
   setTabBarHidden (isHidden: boolean) {
+    this.visibilityAnimation?.stop()
     if (!getTabConfig('needAnimate')) return
     const { visible } = this.state
     if (isHidden) {
       this.setState({
         tabVisible: false
       })
-      Animated.timing(visible, {
+      this.visibilityAnimation = Animated.timing(visible, {
         toValue: 0,
         duration: 200,
         useNativeDriver
-      }).start()
+      })
+      this.visibilityAnimation.start()
     } else {
-      Animated.timing(visible, {
+      this.visibilityAnimation = Animated.timing(visible, {
         toValue: 1,
         duration: 250,
         useNativeDriver
-      }).start(({ finished }) => {
+      })
+      this.visibilityAnimation.start(({ finished }) => {
         if (finished) {
           this.setState({
             tabVisible: true
@@ -198,10 +211,10 @@ export class TabBar extends React.PureComponent<TabBarProps & WithSafeAreaInsets
     return str ? `${name}?${str}` : `${name}`
   }
 
-  handleLayout (e: LayoutChangeEvent): void {
+  handleLayout = (e: LayoutChangeEvent): void => {
     const { layout } = this.state
     const { height, width } = e.nativeEvent.layout
-    if (layout.height !== height && layout.width !== width) {
+    if (layout.height !== height || layout.width !== width) {
       this.setState({
         layout: {
           width,
@@ -238,7 +251,7 @@ export class TabBar extends React.PureComponent<TabBarProps & WithSafeAreaInsets
     const { state, descriptors, navigation } = this.props
     const horizontal = true
     const tabSelfStyle = this.getTabBarStyle()
-    return <View style={{ flexDirection: 'row', flex: 1 }} onLayout={() => this.handleLayout}>
+    return <View style={{ flexDirection: 'row', flex: 1 }} onLayout={this.handleLayout}>
       {state.routes.map((route, index) => {
         const focused = index === state.index
         const { options } = descriptors[route.key]

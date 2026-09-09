@@ -97,3 +97,15 @@ testRule({
     }
   ]
 })
+
+testRule({
+  ruleName,
+  config: [true],
+  accept: ['0', '.5px', '1e2px', '16REM', '1VW'].map(value => ({ code: `.foo { line-height: ${value}; }` })),
+  reject: ['16pxjunk', '16px 20px', '1..2vh', '.vh'].map(value => ({
+    code: `.foo { line-height: ${value}; }`,
+    message: messages.rejected(value),
+    line: 1,
+    column: 21
+  }))
+})

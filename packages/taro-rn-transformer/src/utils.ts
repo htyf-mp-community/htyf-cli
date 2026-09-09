@@ -38,30 +38,19 @@ export function getStyleCode (code: string, basePath: string) {
     ]
   })
 
-  const styleTypes = RN_CSS_EXT
   const styleSource: Record<string, string>[] = []
-  t.isNode(ast) && traverse(ast, {
-    ImportDeclaration (path) {
-      const node = path.node
-      const resource: string = node.source.value
-      const ext = nodePath.extname(resource)
-      // 是否是样式文件
-      if (!styleTypes.includes(ext)) {
-        return
-      }
-      let sourceName = ''
-      if (node.specifiers.length) {
-        sourceName = node.specifiers[0].local.name
-      }
-      const realPath = nodePath.resolve(basePath, resource)
-      const fileName = nodePath.basename(realPath)
-      styleSource.push({
-        name: sourceName,
-        path: realPath,
-        fileName: fileName
-      })
-    }
-  })
+  // Static imports are top-level statements; do not traverse function/JSX bodies.
+  for (const node of ast.program.body) {
+    if (!t.isImportDeclaration(node)) continue
+    const resource = node.source.value
+    if (!RN_CSS_EXT.includes(nodePath.extname(resource))) continue
+    const realPath = nodePath.resolve(basePath, resource)
+    styleSource.push({
+      name: node.specifiers[0]?.local.name || '',
+      path: realPath,
+      fileName: nodePath.basename(realPath)
+    })
+  }
   return styleSource
 }
 
@@ -78,11 +67,12 @@ export function isPageFile (file: string, sourceDir: string) {
 
 function isJSXSource (file: string, code: string) {
   let result = false
-  if (/.(j|t)sx$/.test(file)) { // jsx,tsx 组件
+  if (/\.(j|t)sx$/.test(file)) { // jsx,tsx 组件
     result = true
   } else if (file.endsWith('.ts')) { // ts 脚本
     result = false
   } else {
+    if (!code.includes('<')) return false
     // .js
     const ast = parser.parse(code, {
       sourceType: 'module',
@@ -93,8 +83,9 @@ function isJSXSource (file: string, code: string) {
       ]
     })
     t.isNode(ast) && traverse(ast, {
-      JSXElement () {
+      'JSXElement|JSXFragment' (path) {
         result = true
+        path.stop()
       }
     })
   }

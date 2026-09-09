@@ -63,7 +63,6 @@ export default async function taroWebpackLoader (
         deviceRatio: rnConfig.deviceRatio || config.deviceRatio,
         isEntryFile: (filename: string) => filename.includes(entryFilePath),
         nextTransformer: ({ src }: { src: string }) => ({ code: src }),
-        rn: rnConfig,
         htyf: rnConfig
       }
     })) as TransformResult

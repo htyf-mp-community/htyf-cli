@@ -22,83 +22,54 @@ const styles = StyleSheet.create({
   }
 })
 
-export default class Badge extends React.PureComponent<BadgeProps, BadgeState> {
-  constructor (props: BadgeProps) {
-    super(props)
-    const { visible } = this.props
-    this.state = {
-      opacity: new Animated.Value(visible ? 1 : 0),
-      visible: visible
-    }
-  }
+const Badge = React.memo(function Badge ({ style, size = 18, children, visible }: BadgeProps) {
+  const [opacity] = React.useState(() => new Animated.Value(visible ? 1 : 0))
+  const scale = React.useMemo(() => opacity.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.5, 1]
+  }), [opacity])
 
-  UNSAFE_componentWillReceiveProps (nextProps: BadgeProps): void {
-    const { visible, opacity } = this.state
-    const curVisible = nextProps.visible
-    if (curVisible !== visible) {
-      if (curVisible) {
-        Animated.spring(opacity, {
-          toValue: 1,
-          // duration: 250,
-          useNativeDriver: true
-        }).start(({ finished }) => {
-          if (finished) {
-            this.setState({
-              visible: true
-            })
-          }
-        })
-      } else {
-        this.setState({
-          visible: false
-        })
-        Animated.spring(opacity, {
-          toValue: 0,
-          // duration: 200,
-          useNativeDriver: true
-        }).start()
-      }
-    }
-  }
+  React.useEffect(() => {
+    const animation = Animated.spring(opacity, {
+      toValue: visible ? 1 : 0,
+      useNativeDriver: true
+    })
+    animation.start()
+    return () => animation.stop()
+  }, [opacity, visible])
 
-  render () {
-    const { opacity } = this.state
-    const { style, size = 18, children, visible } = this.props
-    const { ...restStyle } = StyleSheet.flatten(style) || {}
-    const textColor = 'white'
+  const textColor = 'white'
 
-    const borderRadius = size / 2
-    const fontSize = Math.floor((size * 3) / 4)
+  const borderRadius = size / 2
+  const fontSize = Math.floor((size * 3) / 4)
 
-    return (!visible ? null
-      : (
-        <Animated.Text
-          numberOfLines={1}
-          style={[
-            {
-              opacity,
-              transform: [
-                {
-                  scale: opacity.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0.5, 1]
-                  })
-                }
-              ],
-              backgroundColor: '#FA5151',
-              color: textColor,
-              fontSize,
-              lineHeight: size - 1,
-              height: size,
-              minWidth: size,
-              borderRadius
-            },
-            styles.container,
-            restStyle
-          ]}
-        >
-          {children}
-        </Animated.Text>)
-    )
-  }
-}
+  return (!visible ? null
+    : (
+      <Animated.Text
+        numberOfLines={1}
+        style={[
+          {
+            opacity,
+            transform: [
+              {
+                scale
+              }
+            ],
+            backgroundColor: '#FA5151',
+            color: textColor,
+            fontSize,
+            lineHeight: size - 1,
+            height: size,
+            minWidth: size,
+            borderRadius
+          },
+          styles.container,
+          style
+        ]}
+      >
+        {children}
+      </Animated.Text>)
+  )
+})
+
+export default Badge

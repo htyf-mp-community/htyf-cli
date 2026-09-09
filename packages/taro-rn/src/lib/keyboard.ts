@@ -1,4 +1,4 @@
-import { Keyboard } from 'react-native'
+import { EmitterSubscription, Keyboard } from 'react-native'
 
 import { createCallbackManager, errorHandler, successHandler } from '../utils'
 
@@ -15,7 +15,7 @@ const hideKeyboard = (opts: Taro.hideKeyboard.Option = {}): Promise<TaroGeneral.
 }
 
 const _cbManager = createCallbackManager()
-let _hasListener = false
+let keyboardSubscriptions: EmitterSubscription[] = []
 
 const keyboardHeightListener = (height: number) => {
   _cbManager.trigger({ height })
@@ -27,14 +27,15 @@ const keyboardHeightListener = (height: number) => {
  */
 const onKeyboardHeightChange = (callback: Taro.onKeyboardHeightChange.Callback): void => {
   _cbManager.add(callback)
-  if (!_hasListener) {
-    Keyboard.addListener('keyboardDidShow', (e) => {
-      keyboardHeightListener(e.endCoordinates.height)
-    })
-    Keyboard.addListener('keyboardDidHide', () => {
-      keyboardHeightListener(0)
-    })
-    _hasListener = true
+  if (keyboardSubscriptions.length === 0) {
+    keyboardSubscriptions = [
+      Keyboard.addListener('keyboardDidShow', (e) => {
+        keyboardHeightListener(e.endCoordinates.height)
+      }),
+      Keyboard.addListener('keyboardDidHide', () => {
+        keyboardHeightListener(0)
+      })
+    ]
   }
 }
 
@@ -51,9 +52,8 @@ const offKeyboardHeightChange = (callback?: Taro.onKeyboardHeightChange.Callback
     console.warn('offKeyboardHeightChange failed')
   }
   if (_cbManager.count() === 0) {
-    Keyboard.removeAllListeners('keyboardDidShow')
-    Keyboard.removeAllListeners('keyboardDidHide')
-    _hasListener = false
+    keyboardSubscriptions.forEach(subscription => subscription.remove())
+    keyboardSubscriptions = []
   }
 }
 

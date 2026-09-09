@@ -4,6 +4,16 @@ import * as React from 'react'
 import Input from '../components/Input'
 
 describe('<Input /> & <Textarea>', () => {
+  it('preserves defaults and explicit overrides without function defaultProps', () => {
+    const { getByPlaceholderText, rerender } = render(<Input placeholder="defaults" />)
+    expect(getByPlaceholderText('defaults')).toHaveProp('returnKeyType', 'done')
+    expect(getByPlaceholderText('defaults')).toHaveProp('maxLength', 140)
+    expect(getByPlaceholderText('defaults')).toHaveProp('keyboardType', 'default')
+    rerender(<Input placeholder="defaults" confirmType="search" maxlength={-1} />)
+    expect(getByPlaceholderText('defaults')).toHaveProp('returnKeyType', 'search')
+    expect(getByPlaceholderText('defaults').props.maxLength).toBeUndefined()
+  })
+
   describe('events', () => {
     it('onKeyDown', () => {
       const onKeyDown = jest.fn()

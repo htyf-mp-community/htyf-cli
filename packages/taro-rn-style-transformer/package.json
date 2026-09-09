@@ -11,9 +11,8 @@
   ],
   "scripts": {
     "prod": "pnpm run build",
-    "prebuild": "pnpm run clean",
     "clean": "rimraf ./dist",
-    "build": "tsc",
+    "build": "pnpm run clean && tsc",
     "dev": "tsc -w",
     "lint": "eslint src __tests__ --ext .js,.ts",
     "test": "vitest run",

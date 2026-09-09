@@ -96,50 +96,50 @@ const styles = StyleSheet.create({
   badgeVertical: {}
 })
 
-export default class TabBarItem extends React.PureComponent<TabBarItemProps> {
-  render () {
-    const {
-      label,
-      horizontal,
-      showRedDot,
-      badge,
-      size = 20,
-      labelColor,
-      iconSource,
-      tabOptions,
-      tabStyle = {},
-      labelStyle = {},
-      allowFontScaling = true,
-      showLabel = true
-    } = this.props
-    const tabBarBadgeStyle = tabOptions?.tabBarBadgeStyle || {}
-    return (
-      <View style={[styles.tabItem, styles.itemHorizontal, tabStyle]}>
-        <View style={styles.icon}>
-          {!!iconSource && <Image style={{ width: size, height: size }} source={iconSource} />}
-          {!!showRedDot && !badge && <View style={styles.redDot} />}
-          {!!badge && <Badge
-            visible={badge != null}
-            style={[
-              styles.badge,
-              horizontal ? styles.badgeHorizontal : styles.badgeVertical,
-              tabBarBadgeStyle
-            ]}
-            size={(size * 3) / 4}
-          >{('' + badge).length >= 4 ? '...' : badge}</Badge>
-          }
-        </View>
-        {showLabel && <Text
-          numberOfLines={1}
-          allowFontScaling={allowFontScaling}
+const TabBarItem = React.memo(function TabBarItem (props: TabBarItemProps) {
+  const {
+    label,
+    horizontal,
+    showRedDot,
+    badge,
+    size = 20,
+    labelColor,
+    iconSource,
+    tabOptions,
+    tabStyle = {},
+    labelStyle = {},
+    allowFontScaling = true,
+    showLabel = true
+  } = props
+  const tabBarBadgeStyle = tabOptions?.tabBarBadgeStyle || {}
+  return (
+    <View style={[styles.tabItem, styles.itemHorizontal, tabStyle]}>
+      <View style={styles.icon}>
+        {!!iconSource && <Image style={{ width: size, height: size }} source={iconSource} />}
+        {!!showRedDot && !badge && <View style={styles.redDot} />}
+        {!!badge && <Badge
+          visible={badge != null}
           style={[
-            styles.label,
-            horizontal ? styles.labelBeside : styles.labelBeneath,
-            labelStyle,
-            { color: labelColor }
+            styles.badge,
+            horizontal ? styles.badgeHorizontal : styles.badgeVertical,
+            tabBarBadgeStyle
           ]}
-        >{label}</Text>}
-      </View >
-    )
-  }
-}
+          size={(size * 3) / 4}
+        >{('' + badge).length >= 4 ? '...' : badge}</Badge>
+        }
+      </View>
+      {showLabel && <Text
+        numberOfLines={1}
+        allowFontScaling={allowFontScaling}
+        style={[
+          styles.label,
+          horizontal ? styles.labelBeside : styles.labelBeneath,
+          labelStyle,
+          { color: labelColor }
+        ]}
+      >{label}</Text>}
+    </View >
+  )
+})
+
+export default TabBarItem

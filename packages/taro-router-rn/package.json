@@ -12,10 +12,9 @@
   ],
   "scripts": {
     "prod": "pnpm run build",
-    "prebuild": "pnpm run clean",
     "clean": "rimraf ./dist",
     "dev": "tsc -w",
-    "build": "tsc",
+    "build": "pnpm run clean && tsc",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
   "repository": {

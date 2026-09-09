@@ -25,5 +25,5 @@ function byLine (a, b) {
 }
 
 export function sortRules (rules) {
-  return rules.sort(byExport).sort(byLine)
+  return rules.sort((a, b) => byExport(a, b) || byLine(a, b))
 }

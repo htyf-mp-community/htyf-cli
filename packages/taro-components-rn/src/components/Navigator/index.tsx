@@ -1,6 +1,4 @@
-import React, {
-  useCallback,
-} from 'react'
+import { useCallback } from 'react'
 
 import { omit } from '../../utils'
 import View from '../View'

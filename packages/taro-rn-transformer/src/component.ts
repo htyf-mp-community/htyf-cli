@@ -4,7 +4,7 @@ import { globalAny, TransformPage } from './types/index'
 import { transformLinaria } from './utils'
 
 export default function componentLoader ({ sourceCode, filename, projectRoot, sourceDir }: TransformPage) {
-  const filePath = path.join(projectRoot, filename)
+  const filePath = path.resolve(projectRoot, filename)
 
   // 文件
   const extName = path.basename(filename).split('.')[0]
@@ -19,7 +19,7 @@ export default function componentLoader ({ sourceCode, filename, projectRoot, so
       commonStyle.forEach((item) => {
         let importStr = ''
         const relativePath = path.relative(path.dirname(filePath), item.path).replace(/\\/g, '/')
-        const realPath = path.dirname(filePath) === path.dirname(item.path) ? `./${item.fileName}` : `${relativePath}`
+        const realPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`
         if (item.name) {
           importStr = `import ${item.name} from '${realPath}'`
         } else {

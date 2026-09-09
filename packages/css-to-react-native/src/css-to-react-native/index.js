@@ -7,7 +7,7 @@ import transforms from './transforms/index'
 
 // Note if this is wrong, you'll need to change tokenTypes.js too
 const numberOrLengthRe = /^([+-]?(?:\d*\.)?\d+(?:[Ee][+-]?\d+)?)((?:px)|(?:vw$)|(?:vh$)|(?:vmin$)|(?:vmax$))?$/i
-const boolRe = /^true|false$/i
+const boolRe = /^(?:true|false)$/i
 const nullRe = /^null$/i
 const undefinedRe = /^undefined$/i
 
@@ -30,13 +30,13 @@ export const transformRawValue = (input) => {
     }
   }
 
-  const boolMatch = input.match(boolRe)
+  const boolMatch = value.match(boolRe)
   if (boolMatch !== null) return boolMatch[0].toLowerCase() === 'true'
 
-  const nullMatch = input.match(nullRe)
+  const nullMatch = value.match(nullRe)
   if (nullMatch !== null) return null
 
-  const undefinedMatch = input.match(undefinedRe)
+  const undefinedMatch = value.match(undefinedRe)
   if (undefinedMatch !== null) return undefined
 
   return value
@@ -65,7 +65,7 @@ const transformShorthandValue =
     : checkBaseTransformShorthandValue
 
 export const getStylesForProperty = (propName, inputValue, allowShorthand) => {
-  const isRawValue = allowShorthand === false || !(propName in transforms)
+  const isRawValue = allowShorthand === false || !Object.hasOwn(transforms, propName)
   const propValue = isRawValue
     ? transformRawValue(inputValue)
     : transformShorthandValue(propName, inputValue.trim())

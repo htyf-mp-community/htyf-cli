@@ -46,12 +46,13 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
 
   private autoplayTimer: ReturnType<typeof setTimeout>
   private isScrolling: boolean
-  private count: number
+  private get count(): number {
+    return this.getChildrenCount(this.props.children)
+  }
 
   constructor(props: CarouselProps) {
     super(props)
-    const { selectedIndex, children } = this.props
-    this.count = this.getChildrenCount(children)
+    const { selectedIndex } = this.props
     this.isScrolling = false
     this.state = {
       selectedIndex: this.getVirtualIndex(Math.min(selectedIndex as number, this.count - 1)),
@@ -67,22 +68,15 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
   }
 
   componentDidUpdate(prevProps: CarouselProps): void {
-    if (
-      (prevProps.autoplay !== undefined && prevProps.autoplay !== this.props.autoplay) ||
-      (prevProps.infinite !== undefined && prevProps.infinite !== this.props.infinite)
-    ) {
-      this.autoplay(!this.props.autoplay)
+    const { selectedIndex, infinite, children } = this.props
+    if (prevProps.selectedIndex !== selectedIndex || prevProps.infinite !== infinite ||
+      this.getChildrenCount(prevProps.children) !== this.count) {
+      const index = this.getVirtualIndex(Math.max(0, Math.min(selectedIndex as number, this.count - 1)))
+      if (this.count > 0 && index !== this.state.selectedIndex) this.goTo(index)
     }
-  }
-
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps(props: CarouselProps): void {
-    const { selectedIndex, infinite, children } = props
-    this.count = this.getChildrenCount(children)
-    if (selectedIndex === this.props.selectedIndex && infinite === this.props.infinite) return
-    const index = this.getVirtualIndex(Math.min(selectedIndex as number, this.count - 1), infinite)
-    if (index !== this.state.selectedIndex) {
-      this.goTo(index)
+    if (prevProps.autoplay !== this.props.autoplay || prevProps.infinite !== infinite ||
+      prevProps.autoplayInterval !== this.props.autoplayInterval || prevProps.children !== children) {
+      this.autoplay()
     }
   }
 
@@ -178,12 +172,12 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
             this.isScrolling = true
             break
           case 'idle':
-            this.autoplay()
             this.isScrolling = false
+            this.autoplay()
             break
           case 'settling':
-            this.autoplay()
             this.isScrolling = false
+            this.autoplay()
             break
           default:
             break
@@ -214,10 +208,8 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
   }
 
   private autoplay = (stop = false) => {
-    if (stop) {
-      clearTimeout(this.autoplayTimer)
-      return
-    }
+    clearTimeout(this.autoplayTimer)
+    if (stop) return
     const { children, autoplay, infinite, autoplayInterval } = this.props
     const { selectedIndex } = this.state
     const count = this.count
@@ -225,7 +217,6 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
       return
     }
 
-    clearTimeout(this.autoplayTimer)
     if (count < 2) return
 
     this.autoplayTimer = setTimeout(() => {

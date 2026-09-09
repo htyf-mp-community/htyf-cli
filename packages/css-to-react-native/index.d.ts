@@ -3,4 +3,4 @@ export default function transform(css: string, options?: {
   scalable?: boolean;
 }): { [selector: string]: unknown; }
 
-export declare function transformCSS(rules: Array<any[]>, shorthandBlacklist?: Array<{ [key: string]: any }>): { [key: string]: any };
+export declare function transformCSS(rules: Array<[string, string]>, shorthandBlacklist?: string[]): { [key: string]: any };

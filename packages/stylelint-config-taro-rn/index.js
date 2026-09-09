@@ -1,6 +1,6 @@
 /** @type {import('stylelint').Config} */
 module.exports = {
-  plugins: ['@htyf-mp/stylelint-taro-rn'],
+  plugins: [require.resolve('@htyf-mp/stylelint-taro-rn/esm')],
   rules: {
     'taro-rn/css-property-no-unknown': true,
     'taro-rn/line-height-no-value-without-unit': true,

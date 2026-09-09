@@ -1,7 +1,7 @@
 import parseCSS from 'css/lib/parse'
 import mediaQuery from 'css-mediaquery'
 
-import transformCSS from './css-to-react-native'
+import transformCSS, { getPropertyName, getStylesForProperty } from './css-to-react-native'
 import {
   dimensionFeatures,
   mediaQueryFeatures,
@@ -9,7 +9,6 @@ import {
 import { mediaQueryTypes } from './transforms/media-queries/types'
 import { remToPx } from './transforms/rem'
 import { allEqual } from './utils/allEqual'
-import { camelCase } from './utils/camelCase'
 import { sortRules } from './utils/sortRules'
 import { values } from './utils/values'
 
@@ -26,24 +25,21 @@ const shorthandBorderProps = [
 ]
 
 const transformDecls = (styles, declarations, result, options = {}) => {
-  for (const d in declarations) {
-    const declaration = declarations[d]
+  for (const declaration of declarations) {
     if (declaration.type !== 'declaration') continue
 
     const property = declaration.property
-    let value = remToPx(declaration.value)
+    // Preserve the historical !import alias while stripping a complete trailing marker.
+    let value = remToPx(declaration.value.replace(/\s*!\s*(?:important|import)\s*$/i, ''))
 
-    const isLengthUnit = lengthRe.test(value)
     const isViewportUnit = viewportUnitRe.test(value)
-    const isPercent = percentRe.test(value)
-    const isUnsupportedUnit = unsupportedUnitRe.test(value)
 
     if (
       property === 'line-height' &&
-      !isLengthUnit &&
+      !lengthRe.test(value) &&
       !isViewportUnit &&
-      !isPercent &&
-      !isUnsupportedUnit
+      !percentRe.test(value) &&
+      !unsupportedUnitRe.test(value)
     ) {
       // ignore invalid value avoid throw error cause app crash
       continue
@@ -54,32 +50,22 @@ const transformDecls = (styles, declarations, result, options = {}) => {
     }
     // scalable option, when it is false, transform single value 'px' unit to 'PX'
     // do not be wrapped by scalePx2dp function
-    if (
-      typeof options.scalable === 'boolean' &&
-      !options.scalable &&
-      /(?<!\d)(\d+)px/.test(value)
-    ) {
+    if (options.scalable === false) {
       value = value.replace(/(?<!\d)(\d+)px/g, '$1PX')
     }
-    // expect value is legal so that remove !import
-    if (/!import/i.test(value)) {
-      value = value.replace(/!import/, '')
-    }
-
+    const propertyName = getPropertyName(property)
+    const transformed = getStylesForProperty(propertyName, value, true)
     if (shorthandBorderProps.indexOf(property) > -1) {
       // transform single value shorthand border properties back to
       // shorthand form to support styling `Image`.
-      const transformed = transformCSS([[property, value]])
       const vals = values(transformed)
       if (allEqual(vals)) {
-        const replacement = {}
-        replacement[camelCase(property)] = vals[0]
-        Object.assign(styles, replacement)
+        styles[propertyName] = vals[0]
       } else {
         Object.assign(styles, transformed)
       }
     } else {
-      Object.assign(styles, transformCSS([[property, value]]))
+      Object.assign(styles, transformed)
     }
   }
 }
@@ -98,7 +84,8 @@ const transform = (css, options) => {
           result.__exportProps = {}
         }
 
-        rule.declarations.forEach(({ property, value }) => {
+        rule.declarations.forEach(({ type, property, value }) => {
+          if (type !== 'declaration') return
           const isAlreadyDefinedAsClass =
             typeof result[property] !== 'undefined' &&
             typeof result.__exportProps[property] === 'undefined'

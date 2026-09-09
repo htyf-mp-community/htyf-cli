@@ -51,7 +51,6 @@ const keyboardTypeMap: { [key: string]: string } = {
 const defaultProps = {
   type: 'text',
   maxlength: 140,
-  confirmType: 'done',
   selectionStart: -1,
   selectionEnd: -1
 }
@@ -65,7 +64,7 @@ const _Input = (props: InputProps) => {
     placeholder,
     disabled,
     maxlength = defaultProps.maxlength,
-    confirmType,
+    confirmType = 'done',
     confirmHold,
     cursor,
     selectionStart = defaultProps.selectionStart,
@@ -79,12 +78,10 @@ const _Input = (props: InputProps) => {
 
   const [returnValue, setReturnValue] = React.useState<string>()
   /** 用于保存输入框值 */
-  // @ts-ignore
-  const tmpValue = React.useRef<string>()
+  const tmpValue = React.useRef<string | undefined>(undefined)
   const [_height, setHeight] = React.useState(0)
   const lineCount = React.useRef(0)
-  // @ts-ignore
-  const inputRef = React.useRef<any>()
+  const inputRef = React.useRef<TextInput | null>(null)
 
   React.useEffect(() => {
     // @ts-ignore
@@ -138,7 +135,7 @@ const _Input = (props: InputProps) => {
       target: { value: tmpValue.current || '' },
       detail: { value: tmpValue.current || '' }
     })
-  }, [returnValue, props.onFocus])
+  }, [props.onFocus])
 
   const onBlur = React.useCallback((): void => {
     const { onBlur = noop } = props
@@ -277,8 +274,6 @@ const _Input = (props: InputProps) => {
     />
   )
 }
-
-_Input.defaultProps = defaultProps as InputProps
 
 _Input.displayName = '_Input'
 

@@ -13,9 +13,8 @@
   ],
   "scripts": {
     "prod": "pnpm run build",
-    "prebuild": "pnpm run clean",
     "clean": "rimraf ./dist",
-    "build": "pnpm --filter @htyf-mp/taro-rn-style-transformer run build && pnpm --filter @htyf-mp/taro-rn-supporter run build && pnpm --filter @htyf-mp/taro-rn-transformer run build && tsc",
+    "build": "pnpm run clean && tsc",
     "dev": "tsc -w",
     "lint": "eslint src templates __tests__ --ext .js,.ts",
     "test": "vitest run",
@@ -59,7 +58,7 @@
     "@tarojs/taro": "4.2.1",
     "babel-plugin-transform-react-jsx-to-rn-stylesheet": "4.2.0",
     "babel-preset-taro": "4.2.1",
-    "expo": "57.0.17",
+    "expo": "57.0.20",
     "expo-file-system": "57.0.6",
     "query-string": "^9.0.0",
     "react-is": "^18.3.1",
@@ -69,11 +68,12 @@
   },
   "peerDependencies": {
     "babel-preset-taro": "4.2.0",
-    "expo": "57.0.17",
+    "expo": "57.0.20",
     "react": "19.2.3",
     "react-native": "0.86.3"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "types": "dist/index.d.ts"
 }

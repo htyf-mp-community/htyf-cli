@@ -19,6 +19,7 @@ export interface SassGlobalConfig {
 // postcss
 export interface PostcssConfig {
   options: ProcessOptions // https://github.com/postcss/postcss#options
+  stylelint?: { enable?: boolean; config?: import('stylelint').Config }
   scalable: boolean // 控制是否对 css value 进行 scalePx2dp 转换
   pxtransform?: {
     enable: boolean

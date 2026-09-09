@@ -1,5 +1,4 @@
 import stylelint from 'stylelint'
-import declarationValueIndex from 'stylelint/lib/utils/declarationValueIndex.cjs'
 
 import { namespace } from '../../utils/index.js'
 
@@ -10,8 +9,7 @@ export const messages = stylelint.utils.ruleMessages(ruleName, {
     `Unexpected line-height "${height}", expect a value with units`
 })
 
-const lengthRe = /^(0$|(?:[+-]?(?:\d*\.)?\d+(?:[Ee][+-]?\d+)?)(?=px|PX|rem$))/
-const viewportUnitRe = /^([+-]?[0-9.]+)(vh|vw|vmin|vmax)$/
+const lengthRe = /^(?:0|[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?(?:px|rem|vh|vw|vmin|vmax))$/i
 
 export default function (actual) {
   return function (root, result) {
@@ -24,19 +22,16 @@ export default function (actual) {
     }
 
     root.walkDecls(/^line-height$/i, (decl) => {
-      if (lengthRe.test(decl.value) || viewportUnitRe.test(decl.value)) {
+      if (lengthRe.test(decl.value)) {
         return
       }
-
-      const valueOffset = decl.value.indexOf(decl.value)
-      const index = declarationValueIndex(decl) + valueOffset
 
       stylelint.utils.report({
         message: messages.rejected(decl.value),
         node: decl,
         result,
         ruleName,
-        index
+        word: decl.value
       })
     })
   }

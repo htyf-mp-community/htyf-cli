@@ -4,7 +4,6 @@ import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react
 // import { BackBehavior } from '@react-navigation/routers/src/TabRouter'
 import { CardStyleInterpolators, createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import { camelCase } from 'lodash'
-import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 
 import { navigationRef } from './rootNavigation'

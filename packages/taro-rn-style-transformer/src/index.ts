@@ -6,17 +6,18 @@ import { Config, TransformOptions } from './types'
 const RN_CSS_EXT = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus']
 const upstreamTransformer = require('@react-native/metro-babel-transformer')
 
-const getSingleStyleTransform = styleTransformIns()
+// Configuration objects are immutable for the lifetime of a Metro transform session.
+// Weak keys allow completed project sessions to be collected.
+const styleTransforms = new WeakMap<Config, StyleTransform>()
+const emptyConfig: Config = {}
 
-function styleTransformIns () {
-  let styleTransform: StyleTransform | null = null
-  return function (config: Config) {
-    // 初始化 config
-    if (!styleTransform) {
-      styleTransform = new StyleTransform(config)
-    }
-    return styleTransform
+function getStyleTransform (config: Config = emptyConfig) {
+  let transformer = styleTransforms.get(config)
+  if (!transformer) {
+    transformer = new StyleTransform(config)
+    styleTransforms.set(config, transformer)
   }
+  return transformer
 }
 
 type TransformInput = { src: string; filename: string; options: TransformOptions }
@@ -32,7 +33,7 @@ export async function transform (
   const { src: source, filename: file, options: opts } = input
   const ext = path.extname(file)
   if (RN_CSS_EXT.includes(ext)) {
-    const styleTransform = getSingleStyleTransform(opts.config || {})
+    const styleTransform = getStyleTransform(opts.config)
     const styles = await styleTransform.transform(source, file, opts)
     return upstreamTransformer.transform({
       src: styles,
@@ -49,7 +50,7 @@ export function rollupTransform (options: TransformOptions) {
     async transform (src: string, filename: string) {
       const ext = path.extname(filename)
       if (RN_CSS_EXT.includes(ext)) {
-        const styleTransform = getSingleStyleTransform(options.config || {})
+        const styleTransform = getStyleTransform(options.config)
         const code = await styleTransform.transform(src, filename, options)
         return { code }
       }

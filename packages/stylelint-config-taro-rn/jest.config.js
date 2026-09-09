@@ -1,4 +1,1 @@
-module.exports = {
-  preset: 'jest-preset-stylelint',
-  runner: 'jest-light-runner',
-}
+module.exports = { testEnvironment: 'node', transform: {} }

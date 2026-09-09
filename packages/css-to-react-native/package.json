@@ -9,13 +9,18 @@
   "files": [
     "dist",
     "src",
-    "index.d.ts"
+    "index.d.ts",
+    "!src/**/*.spec.js",
+    "!src/**/*.test.js",
+    "!dist/**/*.spec.*",
+    "!dist/**/*.test.*",
+    "!dist/**/__tests__/**",
+    "!dist/setup.*"
   ],
   "scripts": {
     "prod": "pnpm run build",
-    "prebuild": "pnpm run clean",
     "clean": "rimraf ./dist",
-    "build": "babel src --ignore *.spec.js --out-dir ./dist",
+    "build": "pnpm run clean && babel src --ignore \"**/*.spec.js,**/*.test.js,**/__tests__/**\" --out-dir ./dist",
     "test": "vitest run"
   },
   "repository": {

@@ -15,7 +15,7 @@ const defaultConfig = {
   alias: {
     '@': path.resolve(__dirname, './styles')
   },
-  rn: {
+  htyf: {
     postcss: {
       options: {
         plugins: []
@@ -146,7 +146,7 @@ describe('style transform with config options', () => {
 
   test('config.postcss disable scalePx2dp', async () => {
     const config = {
-      rn: {
+      htyf: {
         postcss: {
           options: {
             plugins: []

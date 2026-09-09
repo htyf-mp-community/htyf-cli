@@ -1,8 +1,28 @@
-import { DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter, Keyboard } from 'react-native'
 
 import * as Taro from '../src/lib/keyboard'
 
 describe('keyboard', () => {
+  afterEach(() => Taro.offKeyboardHeightChange())
+
+  it('preserves other consumers when the last Taro callback is removed', () => {
+    const external = jest.fn()
+    const subscription = Keyboard.addListener('keyboardDidShow', external)
+    const callback = jest.fn()
+    try {
+      Taro.onKeyboardHeightChange(callback)
+      Taro.offKeyboardHeightChange(callback)
+      DeviceEventEmitter.emit('keyboardDidShow', { endCoordinates: { height: 200 } })
+      expect(external).toHaveBeenCalledTimes(1)
+      expect(callback).not.toHaveBeenCalled()
+      Taro.onKeyboardHeightChange(callback)
+      DeviceEventEmitter.emit('keyboardDidShow', { endCoordinates: { height: 300 } })
+      expect(callback).toHaveBeenCalledWith({ height: 300 })
+      expect(external).toHaveBeenCalledTimes(2)
+    } finally {
+      subscription.remove()
+    }
+  })
   it('should hideKeyboard success', () => {
     const success = jest.fn()
     const fail = jest.fn()

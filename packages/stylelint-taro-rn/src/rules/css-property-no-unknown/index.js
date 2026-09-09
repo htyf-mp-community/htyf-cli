@@ -18,7 +18,7 @@ export const messages = stylelint.utils.ruleMessages(ruleName, {
   rejected: (property) => `无效的 React Native 样式属性 "${property}"`
 })
 
-const props = allCSS2RNProps.map(kebabCase)
+const props = new Set(allCSS2RNProps.map(kebabCase))
 
 export default function (actual, options) {
   return function (root, result) {
@@ -64,7 +64,7 @@ export default function (actual, options) {
         return
       }
 
-      if (props.indexOf(prop.toLowerCase()) !== -1) {
+      if (props.has(prop.toLowerCase())) {
         return
       }
 

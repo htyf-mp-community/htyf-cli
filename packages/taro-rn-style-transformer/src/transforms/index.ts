@@ -2,7 +2,7 @@ import * as path from 'node:path'
 
 import { printLog, processTypeEnum, recursiveMerge } from '@tarojs/helper'
 // @ts-ignore
-import transformCSS from 'taro-css-to-react-native'
+import transformCSS from '@htyf-mp/taro-css-to-react-native'
 
 import { Config, PostcssConfig, RenderAdditionalResult, TransformOptions } from '../types'
 import { normalizeSourceMap } from '../utils'

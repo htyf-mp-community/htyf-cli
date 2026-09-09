@@ -23,8 +23,9 @@
     "url": ""
   },
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "build": "pnpm run clean && rollup -c",
+    "dev": "rollup -c -w",
+    "clean": "rimraf ./dist ./types"
   },
   "bugs": {
     "url": ""

@@ -19,7 +19,7 @@ const defaultPxtransformOption: {
 } = {
   enable: true,
   config: {
-    platform: 'htyf'
+    platform: 'rn'
   }
 }
 
@@ -46,14 +46,12 @@ export function makePostcssPlugins ({
 }) {
   const optionsWithDefaults = ['pxtransform', 'postcss-import', 'postcss-reporter', 'stylelint', 'cssModules', 'postcss-css-variables']
 
-  if (designWidth) {
-    defaultPxtransformOption.config.designWidth = designWidth
-  }
-
-  if (deviceRatio) {
-    defaultPxtransformOption.config.deviceRatio = deviceRatio
-  }
-  const pxtransformOption = recursiveMerge({}, defaultPxtransformOption, postcssConfig.pxtransform)
+  const pxtransformOption = recursiveMerge({}, defaultPxtransformOption, {
+    config: {
+      ...(designWidth ? { designWidth } : {}),
+      ...(deviceRatio ? { deviceRatio } : {})
+    }
+  }, postcssConfig.pxtransform)
   const postcssCssVariablesOption = recursiveMerge({}, defaultPostcssCssVariablesOption, postcssConfig['postcss-css-variables'])
 
   const plugins = [
@@ -74,6 +72,16 @@ export function makePostcssPlugins ({
   ]
 
   if (pxtransformOption.enable) {
+    plugins.push({
+      postcssPlugin: 'htyf-platform-alias',
+      Once (root) {
+        root.walkComments(comment => {
+          if (/^#ifn?def\b/.test(comment.text)) {
+            comment.text = comment.text.replace(/\bhtyf\b/g, 'rn')
+          }
+        })
+      }
+    } as any)
     // @ts-ignore
     plugins.push(pxtransform(pxtransformOption.config))
   }
@@ -84,9 +92,12 @@ export function makePostcssPlugins ({
 
   const skipRows = additionalData ? additionalData.split('\n').length : 0
 
-  plugins.push(
+  if (postcssConfig.stylelint?.enable !== false) {
     // @ts-ignore
-    stylelint(stylelintConfig),
+    plugins.push(stylelint(recursiveMerge({}, stylelintConfig, postcssConfig.stylelint?.config)))
+  }
+
+  plugins.push(
     // @ts-ignore
     reporterSkip({ skipRows, filename }),
     require('postcss-reporter')({ clearReportedMessages: true })

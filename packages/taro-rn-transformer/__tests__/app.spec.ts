@@ -21,6 +21,6 @@ function run () {
 describe('app-loader', () => {
   it('app', () => {
     const result = run()
-    expect(result).toMatchSnapshot()
+    expect(result.replace(/[ \t]+$/gm, '')).toMatchSnapshot()
   })
 })

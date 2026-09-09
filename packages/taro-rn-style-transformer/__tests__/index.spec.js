@@ -1,3 +1,6 @@
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import { describe, expect, test } from 'vitest'
 
 import StyleTransform, { getWrapedCSS } from '../src/transforms'
@@ -206,12 +209,21 @@ describe('style transform', () => {
   })
 
   test('.less tranform node_modules file import', async () => {
-    const css = await run("@import 'less/test/browser/css/global-vars/simple.css';", './__tests__/styles/a.less')
-    expect(css).toEqual(getWrapedCSS(`{
+    const project = mkdtempSync(path.join(tmpdir(), 'htyf-style-import-'))
+    try {
+      const pkg = path.join(project, 'node_modules', 'test-style')
+      mkdirSync(pkg, { recursive: true })
+      writeFileSync(path.join(pkg, 'package.json'), '{"name":"test-style","main":"index.css"}')
+      writeFileSync(path.join(pkg, 'index.css'), '.test { color: red; }')
+      const css = await run("@import 'test-style/index.css';", path.join(project, 'a.less'))
+      expect(css).toEqual(getWrapedCSS(`{
   "test": {
     "color": "red"
   }
 }`))
+    } finally {
+      rmSync(project, { recursive: true, force: true })
+    }
   })
 
   test('.less import source omit extension', async () => {
