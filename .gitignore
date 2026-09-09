@@ -5,7 +5,7 @@ node_modules
 dist
 coverage
 
-/pnpm-lock.yaml
+# Lerna updates and stages the root pnpm lockfile during versioning.
 /packages/stylelint-taro-rn/yarn.lock
 /packages/taro-rn-style-transformer/yarn.lock
 /packages/taro-rn-runner/yarn.lock
