@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "dist/",
-  "name": "taro-playground",
+  "name": "Taro",
   "description": "HTYF Taro Playground example",
-  "appid": "wx565635841f9879d3",
-  "assetsHost": "https://assets.htyf.com"
+  "appid": "plugin_taro",
+  "assetsHost": "https://hongtangyun-1252095557.cos.ap-chengdu.myqcloud.com/assets/testMiniApps/appstore/plugin/taro/latest"
 }

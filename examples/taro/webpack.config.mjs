@@ -92,6 +92,14 @@ export default async (env = {}) => {
       alias: {
         ...(aliasOptions || {}),
         ...(_options.alias || {}),
+        // symlinks: false 会把 workspace 的嵌套链接视为不同模块。
+        // 页面容器、Taro API 和 Navigator 必须共享同一份运行时及 navigationRef。
+        ...Object.fromEntries([
+          '@htyf-mp/taro-rn',
+          '@htyf-mp/taro-runtime-rn',
+          '@htyf-mp/taro-router-rn',
+          '@htyf-mp/taro-components-rn',
+        ].map(name => [name, resolvePackageDir(name)])),
         "react-native": resolvePackageDir('react-native'),
         "react-native-svg": resolvePackageDir('react-native-svg'),
       },

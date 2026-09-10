@@ -29,7 +29,7 @@ export function createReactNativeApp (AppEntry: any, config: RNAppConfig, FirstP
     entryPagePath: config.appConfig.entryPagePath,
     window: config.appConfig.window,
     linkPrefix: config.appConfig.linkPrefix || [],
-    rnConfig: config.appConfig.htyf || {}
+    htyfConfig: config.appConfig.htyf || {}
   }
 
   const appRef = createRef<AppInstance>()

@@ -1,9 +1,9 @@
 // RootNavigation.js
-import { NavigationContainerRef, StackActions } from '@react-navigation/native'
+import { CommonActions, NavigationContainerRef, StackActions } from '@react-navigation/native'
 import { camelCase } from 'lodash'
 import * as React from 'react'
 
-import { getTabBarPages, handleUrl, setTabInitRoute, updateCurrentJumpUrl } from './utils/index'
+import { getTabBarPages, handleUrl, updateCurrentJumpUrl } from './utils/index'
 import { BaseOption, CallbackResult } from './utils/types'
 
 type NavigateMethod = 'navigateTo' | 'redirectTo' | 'navigateBack' | 'switchTab' | 'reLaunch'
@@ -63,13 +63,17 @@ export function navigate (option: NavigateOption | NavigateBackOption, method: N
       navigationRef.current?.dispatch(StackActions.replace(routeParam.pageName, routeParam.params))
     } else if (method === 'switchTab' || (method === 'reLaunch' && isTabPage(path))) {
       const states = navigationRef.current?.getRootState()
-      if (states?.routes[0].name !== 'tabNav') {
-        states && states?.routes.length > 1 && navigationRef.current?.dispatch(StackActions.popToTop())
-        navigationRef.current?.dispatch(StackActions.replace('tabNav'))
-        setTabInitRoute(routeParam.pageName)
+      const params = { screen: routeParam.pageName, params: routeParam.params }
+      if (method === 'reLaunch' || states?.routes[0]?.name !== 'tabNav') {
+        navigationRef.current?.dispatch(CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'tabNav', params }]
+        }))
       } else {
-        // @ts-expect-error navigationRef is not parametrized correctly
-        navigationRef.current?.navigate(routeParam.pageName, routeParam.params)
+        if (states.index > 0) {
+          navigationRef.current?.dispatch(StackActions.popToTop())
+        }
+        navigationRef.current?.dispatch(CommonActions.navigate('tabNav', params))
       }
     } else if (method === 'navigateBack') {
       const number = (option as NavigateBackOption).delta ? (option as NavigateBackOption).delta : 1

@@ -4,6 +4,7 @@ node_modules
 *.log
 dist
 coverage
+.swc
 
 # Lerna updates and stages the root pnpm lockfile during versioning.
 /packages/stylelint-taro-rn/yarn.lock
