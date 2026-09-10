@@ -1,0 +1,35 @@
+@import "../../styles/common.scss";
+@import "../../styles/variables.scss";
+
+.page {
+  padding: 40px 0 100px 0;
+}
+.page-header {
+  background-color: #fff;
+  padding: 30px 40px;
+  margin: 0 30px;
+  border-radius: 10px;
+  text-align: center;
+  &-img {
+    height: 180px;
+    width: 180px;
+    border-radius: 80px;
+    margin-right: 10px;
+    align-self: center;
+  }
+  &-desc {
+    text-align: left;
+    font-size: $font-size-sm;
+  }
+}
+
+.page-footer {
+  margin-top: 20px;
+  align-items: center;
+  text-align: center;
+  &-text {
+    padding: 20px;
+    font-size: $font-size-sm;
+    color: $color-grey-2;
+  }
+}

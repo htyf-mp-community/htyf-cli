@@ -1,0 +1,9 @@
+@import "../../../../styles/common.scss";
+.picker {
+  position: relative;
+  padding: 15px 30px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

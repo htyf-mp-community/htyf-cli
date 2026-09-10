@@ -5,6 +5,8 @@
     "noEmitOnError": false,
     "skipLibCheck": true,
     "checkJs": false,
+    // 构建运行在 Node；隔离 workspace 示例提升的 webpack-env 全局 require 类型。
+    "types": ["node"],
     
     "target": "ES2017",
     "module": "commonjs",
