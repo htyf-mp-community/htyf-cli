@@ -229,6 +229,11 @@ pnpm publish:dev       # 使用 alpha 标签发布
 pnpm publish:packages  # 构建并正式发布
 ```
 
+在父级 pnpm 工作区中使用本仓库时，通过 `pnpm run lerna -- <命令>`
+或以上脚本调用 Lerna。入口 `scripts/lerna.mjs` 固定当前仓库的工作目录和
+`NX_WORKSPACE_ROOT_PATH`，避免 Nx 将 `packages/*` 解析为父仓库中的包。
+可运行 `node --test scripts/lerna.test.mjs` 验证发布包范围。
+
 ## License
 
 各公开包遵循 [MIT License](https://opensource.org/license/mit)。
