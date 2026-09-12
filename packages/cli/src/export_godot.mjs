@@ -265,7 +265,7 @@ export async function promptGodotOptions(defaults = {}) {
   if (
     defaults.targetBaseDir &&
     projectDir &&
-    defaults.appid &&
+    (defaults.appid || (defaults.nonInteractive && defaults.name)) &&
     defaults.preset &&
     defaults.platform
   ) {
@@ -278,11 +278,15 @@ export async function promptGodotOptions(defaults = {}) {
     return {
       targetBaseDir: String(defaults.targetBaseDir).trim(),
       projectDir: projectDir,
-      name: String(defaults.appid).trim(),
+      name: String(defaults.appid || defaults.name).trim(),
+      nonInteractive: defaults.nonInteractive,
+      godotBin: defaults.godotBin,
       preset: String(defaults.preset).trim(),
       platform: defaults.platform
     };
   }
+
+  if (defaults.nonInteractive) throw new Error('缺少 Godot 导出参数');
 
   // 通过交互式命令行获取用户输入
   const answers = await inquirer.prompt([
@@ -415,22 +419,22 @@ async function promptForGodotBinaryPath(defaultPath) {
 /**
  * 解析并获取 Godot 编辑器可执行文件路径
  * 
- * 优先级：环境变量 > 缓存 > 默认路径
- * 总是会询问用户，但将缓存值或默认值作为默认输入
+ * 优先级：显式参数 > 环境变量 > 缓存 > 默认路径
+ * 交互模式询问用户；非交互模式直接验证并使用已解析路径
  * 
  * @returns {Promise<string>} Godot 编辑器可执行文件路径
  * @throws {Error} 当路径不可执行时抛出错误
  */
-async function resolveGodotBinary() {
+async function resolveGodotBinary(options = {}) {
   // 获取可能的默认值（优先级：环境变量 > 缓存 > 默认路径）
   const override = process.env.GODOT_EDITOR ? process.env.GODOT_EDITOR.trim() : '';
   const cached = readCachedGodotPath();
   
   // 确定默认值
-  let defaultPath = override || cached || DEFAULT_GODOT_BIN;
+  const defaultPath = options.godotBin || override || cached || DEFAULT_GODOT_BIN;
   
-  // 总是询问用户，但将缓存值或默认值作为默认输入
-  const godotPath = await promptForGodotBinaryPath(defaultPath);
+  // 自动化调用不进入输入提示
+  const godotPath = options.nonInteractive ? defaultPath : await promptForGodotBinaryPath(defaultPath);
 
   // 验证路径是否可执行
   if (!isExecutable(godotPath)) {
@@ -538,7 +542,7 @@ async function handleIosExport({ godotBin, projectDir, preset, targetBaseDir, na
  */
 export async function exportGodot(options) {
   // 解析并获取 Godot 编辑器路径
-  const godotBin = await resolveGodotBinary();
+  const godotBin = await resolveGodotBinary(options);
   const { platform, projectDir, preset, targetBaseDir, name } = options;
 
   // 执行两次 import 以确保资源正确导入

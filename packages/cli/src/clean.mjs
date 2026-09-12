@@ -74,6 +74,8 @@ export async function cleanShell(cleanType = 'all') {
   for (const cleanPath of pathsToClean) {
     if (FileSystemUtils.cleanDirectory(cleanPath)) {
       cleanedCount++;
+    } else {
+      throw new Error(`清理目录失败: ${cleanPath}`);
     }
   }
 

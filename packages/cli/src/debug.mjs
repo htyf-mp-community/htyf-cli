@@ -73,7 +73,7 @@ async function waitForWebH5Output(options = {}) {
  *   entry: './src/index.js'
  * }, false);
  */
-export async function mpDebugShell(newAppInfo, isGodot = false) {
+export async function mpDebugShell(newAppInfo, isGodot = false, buildOptions = {}) {
   try {
     // ========== 参数验证 ==========
     // Godot 项目不需要 entry 字段，Web 类型也不需要；
@@ -102,7 +102,7 @@ export async function mpDebugShell(newAppInfo, isGodot = false) {
 
     // ========== 构建小程序包 ==========
     Logger.info('开始构建小程序包...');
-    const zipPath = await mpBuildShell(newAppInfo, isGodot, { skipWebBuild: isWeb });
+    const zipPath = await mpBuildShell(newAppInfo, isGodot, { ...buildOptions, skipWebBuild: isWeb });
     const assetsPath = path.dirname(zipPath);
     const appJsonPath = path.join(assetsPath, 'app.json');
 

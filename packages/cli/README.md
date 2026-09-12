@@ -21,11 +21,11 @@ npx @htyf-mp/cli
 按照交互提示完成：
 
 1. **输入应用目录名**（例如 `my-htyf-mp`，用于创建项目文件夹）。
-2. **输入应用显示名称**（2–4 个中文/字母/数字）。
+2. **输入应用显示名称**（2–10 个中文/字母/数字）。
 3. **选择模板类型**：
    - `app-template`：React Native 应用小程序（对应 `type: 'app'`）。
    - `game-template`：Godot 游戏小程序（对应 `type: 'game'`）。
-   - `web-template`：Web/H5 小程序（对应 `type: 'web'`）。
+   - `taro-template`：Taro 小程序模板。
 4. 选择模板仓库镜像（当前默认使用 GitHub）。
 
 CLI 会自动：
@@ -35,7 +35,40 @@ CLI 会自动：
 - 生成 `app.json` 中的 `htyf` 配置（包含 `appid`、`name`、`zipUrl`、`appUrlConfig` 等）。
 - 将模板拷贝到你指定的项目目录中。
 
-> 各模板的具体用法，请参考生成项目中 `_apps_temp_` / `_game_temp_` / `_web_temp_` 目录下的 `README.md`。
+> 各模板的具体用法，请参考生成项目中 `_apps_temp_` / `_game_temp_` / `_taro_temp_` 目录下的 `README.md`。
+
+## AI / 脚本直接调用
+
+不带子命令时保留交互菜单；以下子命令均为非交互模式，不需要模拟按键或逐步回答问题。`--non-interactive` 可显式标注自动化调用。无终端且未指定命令时立即报错，不会挂起等待输入。
+
+```bash
+# 创建项目，--project 指定父目录；不会自动安装依赖
+htyf init --name my-app --display-name 我的应用 --template taro --project ./workspace
+
+# 构建，显式设置并写入 app.json 的 htyf.version
+htyf build --project ./workspace/my-app --version 1.2.3 --platform ios
+
+# 省略 --version 时使用现有版本，不自动递增
+htyf build --project ./workspace/my-app
+htyf debug --project ./workspace/my-app
+
+# Godot 项目（项目根目录包含 project.godot）
+htyf build --project ./my-game --version 1.0.0 --platform android \
+  --godot-bin /path/to/godot --godot-preset Android
+
+# 指定清理范围；省略范围为 all，直接执行清理
+htyf clean build --project ./workspace/my-app
+htyf sync-deps --project ./workspace/my-app
+htyf --help
+```
+
+可将 `htyf` 替换为 `npx @htyf-mp/cli` 或 `htyf-mp`。初始化必须提供 `--name`、`--display-name`、`--template`；模板支持 `taro`、`app`、`game` 及对应的 `*-template` 全名。目标目录已存在时失败，不覆盖项目。
+
+`--project` 默认当前目录，其他相对路径基于此目录解析。Godot 支持 `--godot-project` 指定内部项目目录；可执行文件依次取 `--godot-bin`、`GODOT_EDITOR`、缓存、内置默认路径，不可执行时立即失败。预设默认随平台选择 `iOS` 或 `Android`。
+
+成功退出码为 `0`，参数或执行失败为 `1`；输出为人类可读日志，构建完成输出产物路径。`debug` 为持续运行的调试服务，使用 Ctrl+C 停止。人工菜单的构建版本询问和 Godot 选项询问保留。`--debug` 表示详细日志，与 `debug` 子命令不同。
+
+旧命令 `--clean [类型]`、`--sync-deps` 继续可用，`mp-build` / `mp-debug` 分别为 `build` / `debug` 的别名。使用 `--help` 时仅显示帮助，不执行操作。
 
 ## 项目操作命令
 

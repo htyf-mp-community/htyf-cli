@@ -14,14 +14,15 @@ export class TemplateProcessor {
     this.config = config;
   }
 
-  async cloneRepository(repoUrl, tmpdir) {
+  async cloneRepository(repoUrl, tmpdir, options = {}) {
     Logger.info('正在克隆模板仓库...');
     Logger.debug(`仓库地址: ${repoUrl}`);
     Logger.debug(`目标目录: ${tmpdir}`);
     
     try {
       await execa('git', ['clone', '--depth', '1', repoUrl, tmpdir], {
-        timeout: 60000 // 60秒超时
+        timeout: 60000, // 60秒超时
+        ...(options.nonInteractive ? { env: { GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' } } : {})
       });
       Logger.success('模板仓库克隆完成');
     } catch (error) {

@@ -365,7 +365,10 @@ export async function mpBuildShell(newAppInfo, isGodot = false, buildOptions = {
       };
       
       // 提示用户输入或确认 Godot 导出选项
-      const godotOptions = await promptGodotOptions(godotDefaults);
+      const godotOptions = await promptGodotOptions({
+        ...godotDefaults, ...buildOptions.godot,
+        nonInteractive: buildOptions.nonInteractive
+      });
       outputPath = path.resolve(godotOptions.targetBaseDir);
       await fse.ensureDir(outputPath);
       

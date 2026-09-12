@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import md5 from 'md5';
 import ora from 'ora';
 import { requireCjs } from './cjs.mjs';
 
@@ -27,7 +26,7 @@ export class ProjectInitializer {
     this.processor = new TemplateProcessor(this.config);
   }
 
-  async initialize() {
+  async initialize(options = {}) {
     const spinner = ora('正在初始化项目...');
     let tmpdir = null;
     let rootPath = null;
@@ -53,7 +52,10 @@ export class ProjectInitializer {
 
     try {
       // 1. 获取用户输入
-      const userInputs = await this.getUserInputs();
+      const userInputs = options.nonInteractive ? {
+        appName: options.name, displayName: options.displayName,
+        templateType: options.template, nonInteractive: true, repoType: CONSTANTS.TEMPLATE_REPOS.GITHUB
+      } : await this.getUserInputs();
 
       // 2. 验证输入
       const validation = this.validateInputs(userInputs);
@@ -61,8 +63,7 @@ export class ProjectInitializer {
         process.removeListener('SIGINT', handleExit);
         process.removeListener('SIGTERM', handleExit);
         spinner.fail('输入验证失败');
-        Logger.error(validation.error);
-        return;
+        throw new Error(validation.error);
       }
 
       // 3. 检查目录
@@ -71,8 +72,7 @@ export class ProjectInitializer {
         process.removeListener('SIGINT', handleExit);
         process.removeListener('SIGTERM', handleExit);
         spinner.fail('目录已存在');
-        Logger.error(`目录已存在: ${rootPath}`);
-        return;
+        throw new Error(`目录已存在: ${rootPath}`);
       }
 
       // 4. 创建项目（在此之前启动 spinner）
@@ -95,6 +95,8 @@ export class ProjectInitializer {
       process.removeListener('SIGTERM', handleExit);
       spinner.fail('项目初始化失败');
       Logger.error('初始化失败:', error.message);
+      if (options.nonInteractive) throw error;
+      process.exitCode = 1;
       if (error.exitCode === 128) {
         Logger.error('Error: 目录已经存在。');
       } else if (error.code === 'ENOTFOUND') {
@@ -151,6 +153,9 @@ export class ProjectInitializer {
   }
 
   validateInputs(inputs) {
+    if (!this.config.validateAppName(inputs.appName)) return { isValid: false, error: '应用目录名称格式无效' };
+    if (!this.config.validateDisplayName(inputs.displayName)) return { isValid: false, error: '应用名称需为 2–10 个中文、字母或数字' };
+    if (!Object.hasOwn(this.config.templates, inputs.templateType)) return { isValid: false, error: '模板类型无效' };
     const pathValidation = FileSystemUtils.validatePath(inputs.appName);
     if (!pathValidation.isValid) {
       return { isValid: false, error: pathValidation.error };
@@ -164,8 +169,7 @@ export class ProjectInitializer {
 
     // 创建临时目录
     spinner.text = '正在准备临时目录...';
-    const tmpdir = path.join(os.tmpdir(), md5('__HTYF__'), appName);
-    fse.emptyDirSync(tmpdir);
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'htyf-init-'));
     
     // 设置临时目录引用，以便在退出时清理
     if (setTmpdirCallback) {
@@ -175,7 +179,7 @@ export class ProjectInitializer {
     try {
       // 克隆仓库
       spinner.text = '正在克隆模板仓库...';
-      await this.processor.cloneRepository(repoType, tmpdir);
+      await this.processor.cloneRepository(repoType, tmpdir, { nonInteractive: userInputs.nonInteractive });
 
       // 确定应用根路径
       const template = this.config.templates[templateType];
@@ -241,18 +245,9 @@ export class ProjectInitializer {
       // 移动到目标目录
       spinner.text = '正在创建项目目录...';
 
-      if (fs.existsSync(rootPath)) {
-        fse.ensureDirSync(rootPath);
-        const items = fs.readdirSync(appRootPath);
-        items.forEach((item) => {
-          const source = path.join(appRootPath, item);
-          const destination = path.join(rootPath, item);
-          fse.moveSync(source, destination, { overwrite: true });
-        });
-        fse.removeSync(appRootPath);
-      } else {
-        fse.moveSync(appRootPath, rootPath);
-      }
+      // 创建过程中目录可能被其他进程占用；同样拒绝覆盖。
+      if (fs.existsSync(rootPath)) throw new Error(`目录已存在: ${rootPath}`);
+      fse.moveSync(appRootPath, rootPath, { overwrite: false });
 
       // 清理临时目录
       fse.removeSync(tmpdir);
@@ -262,7 +257,7 @@ export class ProjectInitializer {
     } catch (error) {
       // 清理临时目录
       if (fs.existsSync(tmpdir)) {
-        // fse.removeSync(tmpdir);
+        fse.removeSync(tmpdir);
       }
       throw error;
     }

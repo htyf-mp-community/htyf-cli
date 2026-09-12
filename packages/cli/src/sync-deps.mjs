@@ -72,13 +72,11 @@ export async function syncDepsShell(options = {}) {
   const packageJsonPath = path.join(projectPath, 'package.json');
 
   if (!fse.pathExistsSync(packageJsonPath)) {
-    Logger.error(`未找到 package.json: ${packageJsonPath}`);
-    return;
+    throw new Error(`未找到 package.json: ${packageJsonPath}`);
   }
 
   if (!fse.pathExistsSync(sharedOutputPath)) {
-    Logger.error(`未找到 shared-output.json: ${sharedOutputPath}`);
-    return;
+    throw new Error(`未找到 shared-output.json: ${sharedOutputPath}`);
   }
 
   const sharedVersions = fse.readJsonSync(sharedOutputPath);

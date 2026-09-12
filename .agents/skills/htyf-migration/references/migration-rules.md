@@ -11,6 +11,31 @@ project in the `htyf` target. Preserve navigation, state, data flows, loading,
 empty/error states, permissions, assets, and platform interactions. A screen
 that merely renders is not complete if its interactions or edge cases differ.
 
+## Source and target boundary
+
+Resolve the source from the user's request and workspace. An explicit target
+path takes precedence; when none is specified, the target is exactly
+`<source>/HTYF`. Keep the existing source code, configuration, lockfiles, and
+assets unchanged. Create the template and all migrated code, dependencies,
+reports, and `.htyf-migration/` state inside the target. In-place migration
+requires an explicit user request; merely opening the source as the current
+workspace does not authorize rewriting it.
+
+If the target already exists, inspect its template/configuration and recorded
+source identity. Reuse a verified existing HTYF migration target and reconcile
+its baseline; a missing baseline requires a full inventory. If the directory
+contains unrelated content, is a symlink, or its identity is uncertain, leave
+it intact and ask for the target choice. Never reinitialize or replace an
+existing target automatically.
+
+When the target is inside the source, exclude the entire target subtree from
+source inventories, copies, searches, hashes, and Git baseline/delta analysis.
+Also exclude generated dependency/build/cache directories. Copy individual
+inventoried source features into the target; never recursively copy the source
+root into its own `HTYF/`. Repeated migrations reuse the same target and do not
+create `HTYF/HTYF`. Verify that original source files remain unchanged, accounting
+for user changes already present at the start.
+
 ## Project type and template source
 
 Determine the source project type before choosing a template. Treat a readable
@@ -22,26 +47,24 @@ evidence, not a replacement for inspecting the actual source. When the signals
 conflict or the project contains multiple runtimes, ask the user which part is
 the migration input instead of guessing.
 
-After classification, select exactly one matching template:
+After classification, select exactly one matching CLI template:
 
-- For a direct React Native application migration, look for
-  `packages/cli/_apps_temp_` in the local workspace.
-- For a non-Godot project where the user explicitly requests the Taro template,
-  look for `packages/cli/_taro_temp_` in the local workspace. The user's
-  explicit Taro choice overrides automatic selection of `_apps_temp_`.
-- For a Godot migration, look for `packages/cli/_game_temp_` in the local
-  workspace. Preserve its Godot project structure and game packaging setup.
+- Direct React Native application: `--template app`, sourced from
+  `packages/cli/_apps_temp_`.
+- Non-Godot project explicitly requesting Taro: `--template taro`, sourced
+  from `packages/cli/_taro_temp_`. This explicit choice overrides `app`.
+- Godot game: `--template game`, sourced from `packages/cli/_game_temp_`.
+  Preserve its Godot project structure and game packaging setup.
 
-Prefer the matching local template when it is usable. If it is missing, ask
-the user whether to obtain that specific directory from
-[`htyf-mp-community/htyf-cli`](https://github.com/htyf-mp-community/htyf-cli).
-For Godot, download only that repository's `packages/cli/_game_temp_` template
-directory. For a user-selected Taro migration, download only
-`packages/cli/_taro_temp_`; for a direct React Native application use
-`packages/cli/_apps_temp_`. Do not clone, download, fetch, or copy from the
-remote repository until the user explicitly confirms. Copy the selected
-template into the intended target without overwriting existing project files
-unless the user has explicitly approved those replacements.
+For a new target, follow [the CLI workflow](cli-workflow.md) to verify a
+non-interactive CLI, download/generate the matching official template, and
+place its files directly in the resolved target root before implementation.
+The migration request authorizes this official template initialization;
+proceed without asking again whether to download it. The CLI may clone the
+official repository internally and retain only the selected template. Inspect
+local template code when useful, but use the CLI initialization workflow to
+create the target configuration and identity. On incremental migrations,
+retain the existing target rather than downloading a replacement over it.
 
 Record the detected project type, evidence, selected template path, and
 template revision or deterministic manifest in the migration checklist and
@@ -597,8 +620,10 @@ layout tests where practical. At minimum cover:
 
 ## Completion report
 
-Report the detected project type and evidence, user template choice when any,
-selected template and revision,
+Report the source and target absolute paths, whether the default `HTYF/`
+location was used, source-preservation verification, CLI initialization command,
+detected project type and evidence, user template choice when any,
+selected template and revision or manifest,
 migrated feature checklist, deliberate source-to-target differences, source
 baseline and delta applied, retained `_HTYF_SDK` revision for Godot or native
 modules used for direct React Native, Taro targets verified, and verification

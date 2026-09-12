@@ -1,6 +1,6 @@
 # HTYF AI Agent 使用说明
 
-`agents` 目录保存 HTYF 迁移的详细规则；可执行入口已经封装为仓库级 Codex
+`agents` 目录提供 HTYF 迁移说明；详细规则与执行入口已经封装为仓库级 Codex
 Skill：`.agents/skills/htyf-migration`。支持 Agent Skills 的 Codex 打开本
 仓库后可以自动匹配，也可以通过 `$htyf-migration` 显式调用。
 
@@ -23,12 +23,13 @@ Skill：`.agents/skills/htyf-migration`。支持 Agent Skills 的 Codex 打开�
 - 为公共接口、复杂逻辑、平台适配、单位和降级路径补充完整且准确的代码注释；
 - 正确适配 HTYF 胶囊区域、Safe Area、横竖屏及像素坐标；
 - 补充坐标转换、矩形避让和页面布局测试；
-- 本地缺少 HTYF 模板时，先征得用户同意，再从官方仓库获取模板。
-- 迁移前识别 Godot 项目；经用户确认后才获取 `_game_temp_` 游戏模板；
+- 未指定迁移目录时使用源项目下的 `HTYF/`，原有源文件保持不变；
+- 使用 CLI 非交互命令生成对应官方模板，在模板中迁入源功能，无需再次确认下载；
+- 迁移前识别 Godot 项目，选择 `game` 模板；已有迁移目标按基线增量更新；
 - 保留游戏模板的 `_HTYF_SDK` 红糖云服 SDK 与 `HtyfSdk` 自动加载配置，并按
   Godot 视口坐标正确避让胶囊菜单。
-- Godot 迁移目标固定为 4.5，项目导入、版本转换、测试、PCK 导出和宿主验收
-  均使用 Godot 4.5。
+- Godot 迁移目标固定为 4.7，项目导入、版本转换、测试、PCK 导出和宿主验收
+  均使用 Godot 4.7。
 - Godot 以移动端触控为主要交互环境；键盘移动需要映射为合适的触控交互，必要
   时评估纯 GDScript 虚拟摇杆，并在真机目标宿主验证多点触控和安全区布局。
 - 非 Godot 项目在用户明确指定 Taro 时使用 `_taro_temp_`，并以 Taro 官方 RN
@@ -42,16 +43,25 @@ Skill：`.agents/skills/htyf-migration`。支持 Agent Skills 的 Codex 打开�
 
 1. 使用 Codex 打开本仓库。新建会话后，仓库 Skill 会出现在可用 Skill
    中；修改 Skill 后应重新启动会话以刷新发现结果。
-2. 在提示词中明确源项目路径、目标 `htyf` 路径和本次迁移范围。路径未知
-   时让 AI 先检查工作区，不要猜测目录。
+2. 在提示词中明确源项目和本次迁移范围。目标目录可省略，默认使用
+   `<源项目>/HTYF`；显式指定目标时以指定目录为准。
 3. 要求 AI 先输出功能清单，再开始迁移。迁移结束后检查其完成报告、差异
    说明和测试结果。
-4. 如果 AI 提示本地缺少 HTYF 模板，确认是否允许它从
-   [`htyf-mp-community/htyf-cli`](https://github.com/htyf-mp-community/htyf-cli)
-   获取匹配模板：纯 React Native 应用使用 `packages/cli/_apps_temp_`，用户
-   指定的 Taro 项目使用 `packages/cli/_taro_temp_`，Godot 游戏使用
-   `packages/cli/_game_temp_`。只下载匹配的模板目录；未经确认不会下载或覆盖
-   文件。
+4. AI 先检查 CLI 的 `--help`，再用 `init --non-interactive` 下载并生成
+   对应模板。模板直接放入目标目录后，所有迁移、安装、构建和报告均在目标中
+   完成；源代码盘点排除目标目录，避免递归迁移。
+
+命令选择、`HTYF/` 大写目录处理、构建和 Godot 参数见
+[CLI 迁移流程](../.agents/skills/htyf-migration/references/cli-workflow.md)。
+本地 CLI 可能尚未发布，应优先验证工作区 `packages/cli/src/index.mjs` 的
+能力，不能假设 npm 已发布版本支持新子命令。
+
+省略目标目录的示例：
+
+```text
+使用 $htyf-migration，迁移当前项目的全部功能。使用 CLI 生成对应模板到
+当前项目的 HTYF 目录，在模板中完成迁移，保留现有源项目文件。
+```
 
 Taro 迁移示例：
 
@@ -66,9 +76,9 @@ Godot 游戏迁移示例：
 
 ```text
 使用 $htyf-migration，将 <Godot 源项目绝对路径> 迁移到 <目标绝对路径>。
-先检查 project.godot、确认项目类型和源版本；迁移到 Godot 4.5 游戏模板，
+先检查 project.godot、确认项目类型和源版本；迁移到 Godot 4.7 游戏模板，
 保留 _HTYF_SDK 和 HtyfSdk 自动加载配置，按实际 Godot 视口适配胶囊菜单，
-然后使用 Godot 4.5 完成 PCK 导出和目标宿主验证。
+然后使用 Godot 4.7 完成 PCK 导出和目标宿主验证。
 ```
 
 推荐提示词：

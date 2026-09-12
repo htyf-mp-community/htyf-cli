@@ -11,17 +11,17 @@ assets, permissions, loading, empty and error states, and platform interaction.
 
 ## Execute
 
-1. Resolve the source and target paths from the request and workspace. Detect
-   whether the source is a Godot game before selecting a template. Use the
-   local `_game_temp_` for Godot, the local `_taro_temp_` when the user
-   explicitly selects Taro for a non-Godot project, and `_apps_temp_` for a
-   direct React Native application. When the required local template is
-   missing, ask before fetching it from the official repository.
-2. Read [the migration rules](references/migration-rules.md) completely
-   before modifying the target. Treat them as the authoritative navigation,
-   target-branch, storage, dependency, Taro, Godot SDK, code-documentation,
-   native-source, overlay, capsule-layout, testing, and acceptance constraints
-   for this skill.
+1. Resolve the source and target paths. When the user omits the target, use
+   `<source>/HTYF` and keep existing source files unchanged. Detect Godot before
+   selecting `game`; use `taro` for an explicitly selected non-Godot Taro
+   target, otherwise `app` for direct React Native.
+2. Read [the migration rules](references/migration-rules.md) completely and
+   [the CLI workflow](references/cli-workflow.md) before initializing or
+   modifying the target. For a new target, invoke the CLI non-interactively to
+   download/generate the matching official template and place it at the target
+   root. Migrate into that template. For a verified existing target, reuse it
+   and follow the incremental workflow. These references govern source
+   isolation, target setup, platform adaptation, tests, and acceptance.
 3. Read any recorded source baseline, compare it with the current source, then
    inventory the full source or its verified delta by feature and create a
    checkable migration list.
