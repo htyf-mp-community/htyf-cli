@@ -7,6 +7,9 @@ class_name _HtyfSdk
 ## 1) 先看 call_rn 是否发出（带 id/type） -> 2) 看 RN 是否回传 emitToGodot -> 3) 看 _on_ipc_response 是否命中 pending 回调。
 signal ipcMain(message: String)
 signal ipcResponse(message: String)
+signal host_layout_changed(snapshot: Dictionary)
+## 已转换为根 viewport 坐标；只在矩形或 ready 状态变化时通知。
+signal menu_button_rect_changed(result: Dictionary)
 ## 本地 AI 流式事件：started | delta | completed | cancelled | error。
 signal ai_event(event: Dictionary)
 
@@ -29,6 +32,10 @@ var _menu_button_bounding_client_rect: Dictionary = {
     "pixelRatio" = 1
 }
 var _window_info: Dictionary = {}
+var _host_layout: Dictionary = {}
+var _menu_watchers: Dictionary = {}
+var _menu_watch_id := 0
+var _last_menu_result: Dictionary = {}
 
 func set_dev_mode(is_dev_mode: bool) -> void:
     _is_dev_mode = is_dev_mode
@@ -47,6 +54,7 @@ func log(message: Variant, level: String = "warn") -> void:
 
 func _ready() -> void:
     _isReady = false
+    process_mode = Node.PROCESS_MODE_ALWAYS
     # 只连接一次：让所有 call_rn 都能通过 id 匹配回调
     if _ipc_response_connected:
         return
@@ -76,6 +84,10 @@ func _on_ipc_response(message: String) -> void:
         if _host_lifecycle_callback.is_valid():
             _host_lifecycle_callback.call(ev)
         return
+    if str(data.get("type", "")) == "hostLayoutChanged":
+        var snapshot: Dictionary = data.get("payload", {})
+        _accept_host_layout(snapshot)
+        return
     if str(data.get("type", "")) == "aiEvent":
         var ai_payload: Variant = data.get("payload", {})
         if typeof(ai_payload) == TYPE_DICTIONARY:
@@ -93,6 +105,7 @@ func _on_ipc_response(message: String) -> void:
                 pass
         )
         call_get_window_info()
+        call_get_host_layout()
         return
     var id: String = str(data.get("id", ""))
     if id == "":
@@ -283,7 +296,7 @@ func call_get_menu_button_bounding_client_rect(on_result: Callable = Callable())
                 if _is_dev_mode:
                     self.log({ "type": "menu rect updated", "rect": _menu_button_bounding_client_rect }, "debug")
                 if on_result.is_valid():
-                    on_result.call(_menu_button_bounding_client_rect)
+                    on_result.call(get_menu_button_bounding_client_rect_sync().get("rect", {}))
             else:
                 if _is_dev_mode:
                     self.log({ "type": "menu rect failed", "data": data }, "warn")
@@ -293,6 +306,19 @@ func call_get_menu_button_bounding_client_rect(on_result: Callable = Callable())
 
 ## 同步读取最近一次成功缓存。首次异步请求完成前 ready=false。
 func get_menu_button_bounding_client_rect_sync() -> Dictionary:
+    # RN 的 capsule 和 surface 都来自 measureInWindow，单位相同（逻辑点）。
+    # 使用最新布局还原窗口坐标，避免旋转或安全区变化后一直返回首帧缓存。
+    var surface: Dictionary = _host_layout.get("surface", {})
+    var capsule: Dictionary = _host_layout.get("capsule", {})
+    if float(surface.get("width", 0)) > 0.0 and float(surface.get("height", 0)) > 0.0 and !capsule.is_empty():
+        var left := float(surface.get("left", 0)) + float(capsule.get("left", 0)) * float(surface.width)
+        var top := float(surface.get("top", 0)) + float(capsule.get("top", 0)) * float(surface.height)
+        var width := float(capsule.get("width", 0)) * float(surface.width)
+        var height := float(capsule.get("height", 0)) * float(surface.height)
+        _menu_button_bounding_client_rect.merge({
+            "left": left, "top": top, "right": left + width, "bottom": top + height,
+            "width": width, "height": height
+        }, true)
     var width: float = float(_menu_button_bounding_client_rect.get("width", 0))
     var height: float = float(_menu_button_bounding_client_rect.get("height", 0))
     var ready: bool = width > 0.0 and height > 0.0
@@ -317,48 +343,165 @@ func get_window_info_sync() -> Dictionary:
     var ready := float(_window_info.get("windowWidth", 0)) > 0.0 and float(_window_info.get("windowHeight", 0)) > 0.0
     return { "ready": ready, "info": _window_info.duplicate(true) }
 
-## 将 RN/微信语义的逻辑窗口坐标转换为 Godot 设计 viewport 坐标。
-## stretch_mode: "stretch"（分别拉伸）、"contain"（完整显示）、"cover"（铺满裁切）。
-## design_size 默认使用当前 viewport 可见尺寸；也可显式传入项目的设计分辨率。
+## 拉取归一化宿主布局；正常情况下 RN 会通过 host_layout_changed 主动推送更新。
+func call_get_host_layout(on_result: Callable = Callable()) -> void:
+    call_rn(
+        "getHostLayout",
+        {},
+        func(data: Dictionary):
+            if data.get("success", false) == true:
+                var snapshot: Dictionary = data.get("payload", {})
+                _accept_host_layout(snapshot)
+                if on_result.is_valid():
+                    on_result.call(_host_layout.duplicate(true))
+            elif on_result.is_valid():
+                on_result.call(data)
+    )
+
+# 异步拉取和主动推送使用同一 revision 门禁，避免迟到响应覆盖新布局。
+func _accept_host_layout(snapshot: Dictionary) -> void:
+    if int(snapshot.get("revision", 0)) < int(_host_layout.get("revision", 0)):
+        return
+    _host_layout = snapshot.duplicate(true)
+    get_menu_button_bounding_client_rect_sync()
+    host_layout_changed.emit(_host_layout.duplicate(true))
+    _refresh_menu_rect_watchers()
+
+
+## 订阅已计算的矩形，立即回调当前状态，返回取消订阅 Callable。
+## target 为空时为根 viewport 坐标；传入 Control/Node2D 时为该节点的本地坐标。
+## 旋转、窗口缩放、CanvasLayer/父节点变换均由 SDK 跟踪，无需调用方轮询。
+func watch_menu_button_rect(on_changed: Callable, target: CanvasItem = null) -> Callable:
+    if !on_changed.is_valid():
+        return Callable()
+    _menu_watch_id += 1
+    var id := _menu_watch_id
+    var result := get_menu_button_rect_for_control(target) if target != null else get_menu_button_rect_for_viewport()
+    _menu_watchers[id] = {
+        "callback": on_changed, "target": weakref(target) if target != null else null,
+        "last": result.duplicate(true)
+    }
+    on_changed.call(result.duplicate(true))
+    return _unwatch_menu_button_rect.bind(id)
+
+
+func _unwatch_menu_button_rect(id: int) -> void:
+    _menu_watchers.erase(id)
+
+
+func _same_menu_result(a: Dictionary, b: Dictionary) -> bool:
+    return a.get("ready") == b.get("ready") and a.get("error") == b.get("error") and a.get("rect") == b.get("rect")
+
+
+func _process(_delta: float) -> void:
+    # 不发 RN 测量请求；只对有订阅的布局检查本地渲染变换。
+    if !_menu_watchers.is_empty() or menu_button_rect_changed.has_connections():
+        _refresh_menu_rect_watchers()
+
+
+func _refresh_menu_rect_watchers() -> void:
+    var viewport_result := get_menu_button_rect_for_viewport()
+    if !_same_menu_result(_last_menu_result, viewport_result):
+        _last_menu_result = viewport_result.duplicate(true)
+        menu_button_rect_changed.emit(viewport_result.duplicate(true))
+    for id in _menu_watchers.keys():
+        if !_menu_watchers.has(id):
+            continue
+        var watcher: Dictionary = _menu_watchers[id]
+        var callback: Callable = watcher.callback
+        var target: CanvasItem = watcher.target.get_ref() if watcher.target != null else null
+        if !callback.is_valid() or (watcher.target != null and target == null):
+            _menu_watchers.erase(id)
+            continue
+        var result := get_menu_button_rect_for_control(target) if target != null else viewport_result
+        if !_same_menu_result(watcher.last, result):
+            watcher.last = result.duplicate(true)
+            callback.call(result.duplicate(true))
+
+
+## 返回目标节点本地坐标中的轴对齐包围盒。旋转节点时包含胶囊的全部四角。
+## target 应传入用于放置 UI 的父 Control；不要把待移动的控件本身传入订阅。
+func get_menu_button_rect_for_control(target: CanvasItem) -> Dictionary:
+    if !is_instance_valid(target) or !target.is_inside_tree():
+        return {"ready": false, "error": "MENU_BUTTON_TARGET_UNAVAILABLE"}
+    if target.get_viewport() != get_tree().root:
+        return {"ready": false, "error": "MENU_BUTTON_ROOT_VIEWPORT_REQUIRED"}
+    var result := get_menu_button_rect_for_viewport()
+    if !result.get("ready", false):
+        return result
+    var transform := target.get_global_transform_with_canvas()
+    if is_zero_approx(transform.determinant()):
+        return {"ready": false, "error": "MENU_BUTTON_TARGET_TRANSFORM_INVALID"}
+    var rect: Dictionary = result.rect
+    var local := transform.affine_inverse() * Rect2(float(rect.left), float(rect.top), float(rect.width), float(rect.height))
+    result.rect = {"left": local.position.x, "top": local.position.y, "right": local.end.x, "bottom": local.end.y, "width": local.size.x, "height": local.size.y}
+    return result
+
+
+func get_host_layout_sync() -> Dictionary:
+    return { "ready": !_host_layout.is_empty(), "layout": _host_layout.duplicate(true) }
+
+## 获取当前 Godot viewport 中的胶囊矩形，包含实际拉伸与留黑边偏移。
+func get_host_capsule_rect() -> Rect2:
+    var result := get_menu_button_rect_for_viewport()
+    if !result.get("ready", false):
+        return Rect2()
+    var rect: Dictionary = result.rect
+    return Rect2(float(rect.left), float(rect.top), float(rect.width), float(rect.height))
+
+## RN 窗口逻辑坐标 -> Godot View 局部坐标 -> Godot viewport 坐标。
+## 默认 auto 使用引擎实际变换，支持项目的 stretch/aspect/content_scale_factor。
+## 显式 design_size 时可选 contain（默认）、cover、stretch，用于自定义设计空间。
+## RN 坐标不直接乘 pixelRatio；以实际 Godot 窗口尺寸 / RN surface 尺寸换算。
 func get_menu_button_rect_for_viewport(
     design_size: Vector2 = Vector2.ZERO,
-    stretch_mode: String = "contain"
+    stretch_mode: String = "auto"
 ) -> Dictionary:
     var source := get_menu_button_bounding_client_rect_sync()
     if !source.get("ready", false):
         return source
     var rect: Dictionary = source.get("rect", {})
-    var host_size := Vector2(
-        float(rect.get("windowWidth", 0)),
-        float(rect.get("windowHeight", 0))
-    )
+    var surface: Dictionary = _host_layout.get("surface", {})
+    var host_size := Vector2(float(surface.get("width", 0)), float(surface.get("height", 0)))
     if host_size.x <= 0.0 or host_size.y <= 0.0:
-        return { "ready": false, "error": "MENU_BUTTON_WINDOW_SIZE_UNAVAILABLE", "rect": rect }
-    if design_size.x <= 0.0 or design_size.y <= 0.0:
-        design_size = get_viewport().get_visible_rect().size
+        # 全窗口大小无法确定嵌入 View 的原点和尺寸，不再静默猜测。
+        return { "ready": false, "error": "MENU_BUTTON_SURFACE_UNAVAILABLE", "rect": rect }
+    var local_rect := Rect2(
+        Vector2(float(rect.get("left", 0)), float(rect.get("top", 0))) - Vector2(float(surface.get("left", 0)), float(surface.get("top", 0))),
+        Vector2(float(rect.get("width", 0)), float(rect.get("height", 0)))
+    )
+    var converted_rect: Rect2
+    if stretch_mode == "auto" and (design_size.x <= 0.0 or design_size.y <= 0.0):
+        var viewport := get_viewport()
+        # 宿主 surface 对应根 Window；SubViewport 没有唯一的宿主映射。
+        if viewport != get_tree().root:
+            return { "ready": false, "error": "MENU_BUTTON_ROOT_VIEWPORT_REQUIRED", "rect": rect }
+        var window_size := Vector2(get_tree().root.size)
+        if window_size.x <= 0.0 or window_size.y <= 0.0:
+            return { "ready": false, "error": "MENU_BUTTON_WINDOW_SIZE_UNAVAILABLE", "rect": rect }
+        var to_pixels := Transform2D.IDENTITY.scaled(window_size / host_size)
+        # final_transform 同时包含 viewport 拉伸和 Window 留黑边偏移。
+        converted_rect = viewport.get_final_transform().affine_inverse() * (to_pixels * local_rect)
+    else:
+        if design_size.x <= 0.0 or design_size.y <= 0.0:
+            design_size = get_viewport().get_visible_rect().size
+        if design_size.x <= 0.0 or design_size.y <= 0.0:
+            return { "ready": false, "error": "MENU_BUTTON_DESIGN_SIZE_UNAVAILABLE", "rect": rect }
+        var scale := host_size / design_size
+        var offset := Vector2.ZERO
+        if stretch_mode == "auto" or stretch_mode == "contain" or stretch_mode == "cover":
+            var uniform_scale := maxf(scale.x, scale.y) if stretch_mode == "cover" else minf(scale.x, scale.y)
+            scale = Vector2(uniform_scale, uniform_scale)
+            offset = (host_size - design_size * uniform_scale) * 0.5
+        elif stretch_mode != "stretch":
+            return { "ready": false, "error": "INVALID_STRETCH_MODE", "rect": rect }
+        converted_rect = Rect2((local_rect.position - offset) / scale, local_rect.size / scale)
 
-    var scale := Vector2(host_size.x / design_size.x, host_size.y / design_size.y)
-    var offset := Vector2.ZERO
-    if stretch_mode == "contain" or stretch_mode == "cover":
-        var uniform_scale: float
-        if stretch_mode == "cover":
-            uniform_scale = maxf(scale.x, scale.y)
-        else:
-            uniform_scale = minf(scale.x, scale.y)
-        scale = Vector2(uniform_scale, uniform_scale)
-        offset = (host_size - design_size * uniform_scale) * 0.5
-    elif stretch_mode != "stretch":
-        return { "ready": false, "error": "INVALID_STRETCH_MODE", "rect": rect }
-
-    var converted := {
-        "left": (float(rect.get("left", 0)) - offset.x) / scale.x,
-        "right": (float(rect.get("right", 0)) - offset.x) / scale.x,
-        "top": (float(rect.get("top", 0)) - offset.y) / scale.y,
-        "bottom": (float(rect.get("bottom", 0)) - offset.y) / scale.y,
-        "width": float(rect.get("width", 0)) / scale.x,
-        "height": float(rect.get("height", 0)) / scale.y
-    }
-    return { "ready": true, "rect": converted, "source": rect }
+    return { "ready": true, "rect": {
+        "left": converted_rect.position.x, "top": converted_rect.position.y,
+        "right": converted_rect.end.x, "bottom": converted_rect.end.y,
+        "width": converted_rect.size.x, "height": converted_rect.size.y
+    }, "source": rect }
 
 # 示例：设置存储
 func setStorage(options: Dictionary, on_result: Callable = Callable()):
