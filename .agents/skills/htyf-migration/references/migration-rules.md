@@ -116,14 +116,14 @@ do not apply unless the user explicitly requests a separate React Native host
 change. Inventory scenes, scripts, resources, input mappings, autoloads,
 rendering settings, save data, platform calls, and export/package settings.
 
-The Godot migration target is **Godot 4.5**. Keep the target
-`project.godot` compatible with 4.5 and verify that `config/features` contains
-`"4.5"`. Inspect and record the source Godot version before editing. When the
+The Godot migration target is **Godot 4.7**. Keep the target
+`project.godot` compatible with 4.7 and verify that `config/features` contains
+`"4.7"`. Inspect and record the source Godot version before editing. When the
 source uses another version, migrate its scenes, resources, scripts, shaders,
-project settings, and APIs to Godot 4.5 semantics; do not silently retain
+project settings, and APIs to Godot 4.7 semantics; do not silently retain
 syntax or serialized formats that only work in an older or newer engine.
 Perform project import, conversion, editor checks, PCK export, plugin checks,
-and automated tests with Godot 4.5. Do not open or resave the migrated target
+and automated tests with Godot 4.7. Do not open or resave the migrated target
 with another Godot version because that may rewrite project resources.
 
 The selected game template's `packages/cli/_game_temp_/_HTYF_SDK` directory is
@@ -144,8 +144,8 @@ package is built.
 
 ### Godot plugin compatibility limits
 
-The target host embeds Godot 4.5 and loads a PCK. Only scripts and resources
-compatible with Godot 4.5 and the target platform are supported; exporting a
+The target host embeds Godot 4.7 and loads a PCK. Only scripts and resources
+compatible with Godot 4.7 and the target platform are supported; exporting a
 PCK does not make native dependencies compatible.
 
 | Dependency type | Support rule |
@@ -172,7 +172,7 @@ integration boundary in code. Do not silently remove features, provide empty
 implementations, or declare the migration complete while these blockers remain.
 
 Compatibility acceptance must run in the target host with its embedded Godot
-4.5 engine loading the migrated PCK. Exercise affected features and record host/engine
+4.7 engine loading the migrated PCK. Exercise affected features and record host/engine
 versions, target platform, PCK identity, test steps, and results. Editor success
 or successful PCK export alone is not compatibility evidence. If the target
 host is unavailable, report acceptance as pending; do not claim compatibility
@@ -196,11 +196,11 @@ does not replace text input, accessibility actions, pointer-accurate selection,
 or every keyboard shortcut. Simplify or redesign the interaction when that
 produces a clearer mobile experience without changing game rules.
 
-Prefer a small in-project implementation with Godot 4.5 `Control`, touch input,
+Prefer a small in-project implementation with Godot 4.7 `Control`, touch input,
 and InputMap APIs when it satisfies the behavior. Before introducing an open
 source joystick, inspect all repository files and transitive dependencies and
 confirm that the selected revision contains only compatible GDScript and
-resources, has an acceptable license, supports Godot 4.5, has no
+resources, has an acceptable license, supports Godot 4.7, has no
 GDExtension/native/runtime editor dependency, and works with the target
 renderer and embedded host. Record the source URL, license, pinned commit or
 release, copied files, local changes, and compatibility evidence. Obtain user
@@ -214,7 +214,7 @@ Its public repository currently exposes GDScript, scenes, textures, and editor
 plugin configuration and supports fixed, dynamic, and following joystick
 modes, dead zones, InputMap actions, and touch visibility. Reinspect the exact
 revision at migration time; the listing or repository description alone is not
-proof of Godot 4.5 host compatibility.
+proof of Godot 4.7 host compatibility.
 
 Design virtual controls for mobile ergonomics:
 
@@ -575,13 +575,13 @@ layout tests where practical. At minimum cover:
     regression tests for the target adaptations touched while merging the
     source delta.
 12. For Godot, detection from `project.godot`, main-scene and autoload resource
-    resolution, target `config/features` value `"4.5"`, retention of the
+    resolution, target `config/features` value `"4.7"`, retention of the
     template `_HTYF_SDK`, and successful loading of the `HtyfSdk` autoload.
-    Import, test, and export using Godot 4.5. Test capsule conversion at the
+    Import, test, and export using Godot 4.7. Test capsule conversion at the
     configured design viewport/stretch mode, asynchronous readiness,
     orientation changes, invalid data fallback, overlapping controls, and
     full-width content below the capsule. Audit plugin compatibility and verify
-    the migrated PCK in the Godot 4.5 target host as required by the Godot
+    the migrated PCK in the Godot 4.7 target host as required by the Godot
     plugin compatibility limits above; packaging verification alone is
     insufficient. For keyboard- or mouse-driven gameplay, verify the mobile
     touch mapping and any virtual joystick/buttons on physical target devices,
@@ -603,8 +603,8 @@ migrated feature checklist, deliberate source-to-target differences, source
 baseline and delta applied, retained `_HTYF_SDK` revision for Godot or native
 modules used for direct React Native, Taro targets verified, and verification
 commands with their results.
-For Godot, also report the source version, Godot 4.5 conversion work, dependency
-compatibility audit, replacements, unresolved blockers, and Godot 4.5
+For Godot, also report the source version, Godot 4.7 conversion work, dependency
+compatibility audit, replacements, unresolved blockers, and Godot 4.7
 target-host acceptance evidence. Also report the source-to-mobile input map,
 virtual-control implementation or evaluated joystick candidates, third-party
 source/license/revision when used, and physical-device results. Godot migrations
