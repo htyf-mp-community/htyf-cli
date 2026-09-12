@@ -516,73 +516,96 @@ Before reporting completion, search the migrated source and its local wrappers
 for `Modal`, `FullWindowOverlay`, and equivalent native overlay APIs. Every
 match must be removed from runtime UI code or demonstrated to be unrelated.
 
-## Page header and capsule layout
+## Local capsule avoidance (mini-programs and mini-games)
 
-Use the selected target branch's SDK to obtain the capsule's occupied rectangle,
-not as a reserved full-width row. Direct React Native applications use
-`@htyf-mp/js-sdk`'s `jssdk.getMenuButtonBoundingClientRect()`. Godot games call
-`HtyfSdk.call_get_menu_button_bounding_client_rect()` and consume the cached
-result through `HtyfSdk.get_menu_button_rect_for_viewport()` after it reports
-`ready: true`. Taro targets use the capsule API exposed through Taro or the
-HTYF Taro plugin and keep the calculation in Taro component/layout code rather
-than importing a direct React Native application adapter.
+This rule applies to every migration target: direct React Native applications,
+Taro mini-programs, and Godot mini-games. The capsule rectangle identifies a
+local occlusion area, not a full-width header row or a global safe-area inset.
+Keep important text and interactive controls visible and usable around that
+rectangle. Backgrounds, maps, gameplay scenery, and nonessential decoration may
+continue underneath it.
 
-- Keep titles, back buttons, and actions in the usable area to the capsule's
-  left when their vertical ranges overlap it. Their right edge must be 8–12 pt
-  before `capsule.left`.
-- Content below `capsule.bottom` uses the full page width. Do not carry the
-  capsule's right-side inset down the page.
-- Render no empty toolbar row. A page without back/action controls places its
-  title directly in the available area left of the capsule.
-- Give every interactive control a touch target of at least 44 x 44 pt.
-- Derive all geometry from live window dimensions, safe-area insets, pixel
-  ratio, and capsule data. Recompute it after orientation or dimension changes.
-  Do not encode device models or fixed header heights.
-- If capsule data is missing or invalid, fall back to the system safe area.
+### Per-element layout
 
-For Godot, pass the actual design viewport size and the matching `stretch`,
-`contain`, or `cover` mode to `get_menu_button_rect_for_viewport()`. Use the
-returned Godot viewport coordinates for `Control` layout; do not compare raw
-host-window coordinates directly with scene coordinates and do not assume the
-template's 720 x 1280 design size equals the current host window. Recalculate
-after the asynchronous SDK result arrives and whenever viewport size,
-orientation, or stretch configuration changes. Apply the same per-element
-vertical intersection rule below: only controls vertically overlapping the
-capsule lose right-side width, while controls below it regain the full viewport
-width. Keep touch targets equivalent to at least 44 x 44 logical points after
-coordinate conversion.
+Obtain the actual capsule rectangle from the target SDK and compare it with each
+relevant UI element in the same coordinate space. A small optional safety gap
+around the capsule (for example 8–12 logical points, converted when needed) is
+allowed. Adjust only elements whose visible bounds or touch targets intersect
+that rectangle on **both axes**:
 
-### Coordinate normalization
+```text
+blocked = capsule expanded by safetyGap
+intersects = element.left < blocked.right && element.right > blocked.left
+          && element.top < blocked.bottom && element.bottom > blocked.top
+```
 
-The following raw-SDK normalization procedure applies to the direct React
-Native application branch. Godot must use `_HTYF_SDK`'s
-`get_menu_button_rect_for_viewport()` conversion described above and then apply
-the same rectangle-intersection layout rule to its converted result.
+For an intersection, use the smallest suitable local adjustment: reposition the
+control, constrain or wrap the overlapping text, or move its directly related
+UI group. Preserve touch targets equivalent to at least 44 x 44 logical points.
+A header's affected title/actions may fit to the capsule's left; this is a local
+layout choice, not a rule for every element at the same height.
 
-Normalize the SDK rectangle into logical points before layout. Validate finite,
-positive bounds and compare the raw rectangle against the current logical
-window. Values that already plausibly fit the logical window remain unchanged;
-values that only plausibly fit after division by `PixelRatio.get()` are treated
-as physical pixels. Clamp the normalized rectangle to the window and return no
-capsule for impossible geometry. Keep this logic in a pure function so it can
-be tested without rendering a screen.
+- Elements outside the intersection keep their original layout, including
+  content on the same row to the capsule's left or right and content below it.
+- Preserve available space across the page and game viewport. Do not reserve an
+  empty toolbar row, pad the entire screen by `capsule.bottom`, apply a global
+  right inset, or shrink/shift the whole scene to avoid this one rectangle.
+- System safe areas and gesture areas remain separate platform constraints;
+  the capsule does not enlarge them into a top strip or right-side region.
+- When layout is pending, hidden, missing, or invalid, use no capsule-specific
+  exclusion. Preserve normal system-safe-area handling and update when valid
+  SDK data arrives; do not invent capsule bounds or infer window size from the
+  capsule's right edge plus an assumed margin.
 
-Apply capsule avoidance per element using vertical rectangle intersection. An
-element is constrained only when `element.top < capsule.bottom` and
-`element.bottom > capsule.top`. For an overlap, its maximum right boundary is
-`capsule.left - safetyGap`; otherwise it is the full content right boundary.
+### Target SDK coordinates and updates
+
+Direct React Native applications use `@htyf-mp/js-sdk`'s
+`jssdk.getMenuButtonBoundingClientRect()`. Taro targets use the capsule API
+exposed through Taro or the HTYF Taro plugin, with adaptation kept in Taro
+component/layout code. Follow the installed API's coordinate contract: HTYF RN
+window coordinates are logical points, not physical pixels. Convert to the UI
+parent's local coordinates when needed. Only apply pixel-ratio conversion to
+an API explicitly documented to return physical pixels; do not guess units
+from whether a rectangle appears to fit the window. Validate finite, positive
+sizes and refresh from live SDK layout on orientation, window, or safe-area
+changes. Avoid device-model tables and fixed header geometry.
+
+Godot games use the template's `_HTYF_SDK` to perform the conversion. Prefer
+`HtyfSdk.watch_menu_button_rect(callback, ui_parent)` when available: it returns
+the UI parent's local rectangle, immediately reports readiness, and tracks
+host layout and parent/render transforms. Omit `ui_parent` for root viewport
+coordinates. Apply results only when `ready` is true, clear the exclusion when
+false, and call the returned unsubscribe Callable when leaving the scene. Pass
+the layout parent, not the control being moved, to avoid a feedback loop.
+
+For one-time reads use `get_menu_button_rect_for_control(ui_parent)` or
+`get_menu_button_rect_for_viewport()` with its automatic defaults. The SDK owns
+RN View offsets, physical/logical scaling, Godot stretch, and letterbox offsets;
+the migrating game owns only rectangle intersection and local UI placement.
+Do not add a second conversion, manually select contain/cover for the live
+viewport, or assume a template resolution equals the host size. Rotated parents
+receive an axis-aligned bounding box. SubViewport layouts require an explicit
+supported host mapping rather than assuming the root viewport's coordinates.
+
+Check the installed SDK's capabilities. For an older SDK without subscription,
+use its available viewport-conversion API and refresh on layout changes, or
+update through the official SDK/template workflow. Do not recreate coordinate
+inference in the game or modify generated SDK internals to patch a migration.
+Confirm that the target host provides the required measured-layout bridge.
 
 ## Required tests
 
 Add unit tests for the pure coordinate and avoidance helpers, plus component or
 layout tests where practical. At minimum cover:
 
-1. SDK coordinates already expressed in logical points.
-2. Physical-pixel coordinates on a 3x display.
+1. SDK logical coordinates remain unchanged on both 1x and 3x displays.
+2. Explicitly documented physical-pixel APIs are converted once, when used.
 3. Missing or invalid capsule data and safe-area fallback.
-4. Multiple action buttons fitting to the capsule's left with 44 pt targets.
+4. Actually overlapping controls avoid the capsule while retaining 44 pt targets.
 5. A long title truncating or wrapping without entering the capsule rectangle.
-6. Content below the capsule regaining full width.
+6. Non-overlapping UI on the same row and below the capsule keeps its layout;
+   backgrounds/maps can extend underneath it. No full-width row, global right
+   inset, or whole-scene shrinking is introduced.
 7. Dimension/orientation changes recalculating the layout.
 8. For direct React Native applications, React Navigation route parameters and
    hardware-back behavior for migrated route flows.
@@ -601,9 +624,11 @@ layout tests where practical. At minimum cover:
     resolution, target `config/features` value `"4.7"`, retention of the
     template `_HTYF_SDK`, and successful loading of the `HtyfSdk` autoload.
     Import, test, and export using Godot 4.7. Test capsule conversion at the
-    configured design viewport/stretch mode, asynchronous readiness,
-    orientation changes, invalid data fallback, overlapping controls, and
-    full-width content below the capsule. Audit plugin compatibility and verify
+    actual viewport/stretch mode, asynchronous readiness, orientation and
+    parent-transform changes, invalid data fallback, and unsubscribe cleanup.
+    Verify local avoidance for overlapping controls and unchanged layout for
+    non-overlapping controls on the same row and elsewhere. Audit plugin
+    compatibility and verify
     the migrated PCK in the Godot 4.7 target host as required by the Godot
     plugin compatibility limits above; packaging verification alone is
     insufficient. For keyboard- or mouse-driven gameplay, verify the mobile

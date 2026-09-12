@@ -28,7 +28,8 @@ assets, permissions, loading, empty and error states, and platform interaction.
 4. Implement vertical slices in the target using its existing architecture.
    Complete each slice's UI, interactions, data, permissions, error handling,
    platform SDK integration, code documentation, and tests before marking it
-   migrated.
+   migrated. Apply the shared local capsule-avoidance rule in the migration
+   rules to both mini-program and mini-game UI.
 5. Compare source and target against every inventory item. Run verification
    proportional to the changed code and resolve every relevant failure.
 6. Report the completed mapping, deliberate differences, native modules used,
