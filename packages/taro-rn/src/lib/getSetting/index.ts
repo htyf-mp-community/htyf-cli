@@ -1,1 +1,0 @@
-export { getSetting } from '../permission'

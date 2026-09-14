@@ -1,2 +1,0 @@
-require('./getApiList')
-require('./getLibList')

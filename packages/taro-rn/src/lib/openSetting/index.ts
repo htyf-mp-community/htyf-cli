@@ -1,1 +1,0 @@
-export { openSetting } from '../permission'

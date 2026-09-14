@@ -101,7 +101,11 @@ test('Godot automation options propagate; invalid executable fails without promp
   await assert.rejects(promptGodotOptions({ nonInteractive: true }), /缺少/);
 });
 
-test('init creates configured project without calling input prompts', async t => {
+for (const [kind, relativePath, repository] of [
+  ['taro', 'templates/taro', 'htyf-taro'],
+  ['app', 'packages/cli/_apps_temp_', 'htyf-cli'],
+  ['game', 'packages/cli/_game_temp_', 'htyf-cli'],
+]) test(`init creates ${kind} from its repository without prompting`, async t => {
   const dir = fixture(t);
   const { ProjectInitializer } = await import('../src/project-initializer.mjs');
   const initializer = new ProjectInitializer();
@@ -109,7 +113,8 @@ test('init creates configured project without calling input prompts', async t =>
   initializer.showSuccessInfo = () => {};
   initializer.processor.cloneRepository = async (_repo, tmp, options) => {
     assert.equal(options.nonInteractive, true);
-    const template = path.join(tmp, 'packages/cli/_taro_temp_');
+    assert.equal(_repo, `https://github.com/htyf-mp-community/${repository}.git`);
+    const template = path.join(tmp, relativePath);
     fs.mkdirSync(template, { recursive: true });
     fs.writeFileSync(path.join(template, 'app.json'), '{"other":"preserved"}');
     fs.writeFileSync(path.join(template, 'package.json'), '{}');
@@ -117,7 +122,7 @@ test('init creates configured project without calling input prompts', async t =>
   const cwd = process.cwd();
   try {
     process.chdir(dir);
-    await initializer.initialize({ nonInteractive: true, name: 'my-app', displayName: '测试', template: 'taro-template' });
+    await initializer.initialize({ nonInteractive: true, name: 'my-app', displayName: '测试', template: `${kind}-template` });
     const config = JSON.parse(fs.readFileSync(path.join(dir, 'my-app/app.json')));
     assert.equal(config.other, 'preserved');
     assert.equal(config.htyf.name, 'my-app');

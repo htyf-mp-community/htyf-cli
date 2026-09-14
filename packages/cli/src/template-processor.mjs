@@ -48,12 +48,11 @@ export class TemplateProcessor {
       path.join(tmpdir, 'README.md')
     ];
 
-    const cliTemplatesDir = path.join(tmpdir, 'packages/cli');
     const selectedTemplate = this.config.templates[templateType];
     if (selectedTemplate) {
-      const selectedPath = path.join(cliTemplatesDir, selectedTemplate.tempPath);
+      const selectedPath = path.join(tmpdir, selectedTemplate.tempPath);
       Object.values(this.config.templates).forEach((template) => {
-        const templatePath = path.join(cliTemplatesDir, template.tempPath);
+        const templatePath = path.join(tmpdir, template.tempPath);
         if (templatePath !== selectedPath) {
           pathsToRemove.push(templatePath);
         }

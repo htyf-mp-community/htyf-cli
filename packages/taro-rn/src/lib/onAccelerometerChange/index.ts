@@ -1,1 +1,0 @@
-export { onAccelerometerChange } from '../accelerometer'

@@ -1,1 +1,0 @@
-export { offAccelerometerChange } from '../accelerometer'

@@ -179,11 +179,12 @@ export class ProjectInitializer {
     try {
       // 克隆仓库
       spinner.text = '正在克隆模板仓库...';
-      await this.processor.cloneRepository(repoType, tmpdir, { nonInteractive: userInputs.nonInteractive });
+      const template = this.config.templates[templateType];
+      await this.processor.cloneRepository(template.repository || repoType, tmpdir, { nonInteractive: userInputs.nonInteractive });
 
       // 确定应用根路径
-      const template = this.config.templates[templateType];
-      const appRootPath = path.join(tmpdir, 'packages/cli', template.tempPath);
+      const appRootPath = path.join(tmpdir, template.tempPath);
+      if (!fs.existsSync(appRootPath)) throw new Error(`模板目录不存在: ${template.tempPath}`);
 
       // 清理不需要的文件
       spinner.text = '正在清理模板文件...';
@@ -294,7 +295,9 @@ export class ProjectInitializer {
         return commands.join('\n');
       })() + '\n\n' +
       chalk.blue('常用命令:') + '\n' +
-      chalk.white('  npm run htyf  # 构建红糖云服小程序') + '\n' +
+      chalk.white(templateType === CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE
+        ? '  npm run build:htyf  # 进入 Taro 平台菜单，选择打包或调试'
+        : '  npx @htyf-mp/cli  # 打开构建与调试菜单') + '\n' +
       chalk.gray('💡 提示: 使用 --debug 参数可以查看详细的调试信息'),
       {
         padding: 1,

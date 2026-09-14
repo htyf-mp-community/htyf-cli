@@ -1,1 +1,0 @@
-export { getFileInfo } from '../file'

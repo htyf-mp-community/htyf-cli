@@ -1,1 +1,0 @@
-export { createSelectorQuery } from '../unsupportedApi'

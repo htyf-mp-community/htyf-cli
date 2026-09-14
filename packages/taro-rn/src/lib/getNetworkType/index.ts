@@ -1,1 +1,0 @@
-export { getNetworkType } from '../network'

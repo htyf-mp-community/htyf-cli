@@ -1,1 +1,0 @@
-export { offUserCaptureScreen } from '../unsupportedApi'

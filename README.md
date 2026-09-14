@@ -1,239 +1,53 @@
-# htyf-cli
+# HTYF CLI
 
-让 **Taro 项目支持编译到红糖云服小程序**。
+红糖云服项目的初始化、资源打包、真机调试、清理和依赖同步工具。
 
-本仓库提供 Taro 4 平台插件、React Native 0.86+ 编译工具链和项目脚手架。开发者可以继续使用熟悉的 Taro + React + TypeScript 开发方式，在保留微信小程序、H5 等目标端的同时，新增 `htyf` 构建目标；也可以将同一项目自行构建为独立的 React Native App。
+## 创建项目
 
-- 官网：[https://mp.dagouzhi.com/](https://mp.dagouzhi.com/)
-- GitHub：[htyf-mp-community](https://github.com/htyf-mp-community)
-- npm：[`@htyf-mp`](https://www.npmjs.com/org/htyf-mp)
-
-## Taro 小程序快速开始
-
-使用 CLI 创建项目：
-
-```bash
-npx @htyf-mp/cli
-```
-
-在交互菜单中选择“初始化新小程序项目”和 `taro-template`，然后启动红糖云服端开发构建：
-
-```bash
-cd <项目目录>
+```sh
+npx --yes @htyf-mp/cli --help
+npx --yes @htyf-mp/cli init --non-interactive --name my-app --display-name 我的应用 --template app
+cd my-app
 npm install
-npm run dev:htyf
+npx --yes @htyf-mp/cli build --non-interactive --version 1.0.0 --platform ios
+npx --yes @htyf-mp/cli debug --non-interactive --platform ios
 ```
 
-模板基于 Taro 4、React 和 TypeScript，已预置 `@htyf-mp/taro-plugin-platform` 及完整的 RN 编译依赖，无需手动组装工具链。
+先检查所用版本的 `--help`。源码功能未发布时，可用 `node /absolute/path/to/htyf-cli/packages/cli/src/index.mjs` 替代命令入口。直接运行 `htyf` 可打开交互菜单。
 
-常用构建命令：
+## 仓库分工
 
-```bash
-npm run dev:htyf     # 红糖云服小程序监听构建
-npm run build:htyf   # 红糖云服小程序生产构建
-npm run dev:weapp    # 微信小程序监听构建
-npm run build:weapp  # 微信小程序生产构建
-npm run dev:h5       # H5 监听构建
-npm run build:h5     # H5 生产构建
-```
+| 仓库 | 内容 |
+| --- | --- |
+| [htyf-cli](https://github.com/htyf-mp-community/htyf-cli) | CLI；`packages/cli/_apps_temp_` RN 模板；`packages/cli/_game_temp_` Godot 模板 |
+| [htyf-taro](https://github.com/htyf-mp-community/htyf-taro) | Taro 平台插件、组件、运行时、样式工具、`templates/taro` 模板与示例 |
+| [htyf-skills](https://github.com/htyf-mp-community/htyf-skills) | AI 全量／增量迁移规则与安装器 |
 
-红糖云服端使用 React Native 和 Metro，其他小程序及 H5 使用 Taro Webpack。模板已经处理两套构建链的 React 版本差异，业务代码应优先使用 React 18 和 React 19 共有的 API。
+`--template app` 创建 RN 项目；`--template game` 创建 Godot 游戏；`--template taro` 从独立 Taro 仓库创建跨端项目。已有 Web 项目的构建流程仍保留，但当前初始化菜单不提供 Web 模板。
 
-完整的模板配置、真机调试、发布流程和常见问题见 [Taro 模板文档](packages/cli/_taro_temp_/README.md)。
+## 自动化命令
 
-## React Native 0.86+ 与独立 App
+| 命令 | 用途 |
+| --- | --- |
+| `init --name my-app --display-name 我的应用 --template app` | 在当前目录下生成新项目 |
+| `build --version 1.0.0 --platform ios` | 构建并输出资源包 |
+| `debug --platform ios` | 启动真机调试服务，需持续运行 |
+| `sync-deps` | 将项目已有依赖同步到 CLI 配套版本；之后重新安装 |
+| `clean build` | 删除当前目标的构建产物 |
 
-Taro 模板当前基于 React Native 0.86，并保留完整的 `ios`、`android` 原生工程。项目既可以构建为红糖云服小程序资源，也可以按标准 React Native 流程调试和打包成独立 App：
+自动化附加 `--non-interactive`；使用 `--project /absolute/project` 指定目标。构建首次需提供版本，已有有效版本时可省略 `--version`。Godot 支持 `--godot-bin`、`--godot-project` 和 `--godot-preset`，具体以 `--help` 为准。Taro 先使用模板内的 `build:htyf` 构建命令。
 
-```bash
-npm run ios      # 运行 iOS App
-npm run android  # 运行 Android App
-```
+## AI 迁移
 
-发布独立 App 时，可分别通过 Xcode 和 Gradle 完成签名、归档与发布。升级到 React Native 0.86 以上版本时，需要同步检查 Expo、Re.Pack、Metro、原生依赖及 `@htyf-mp/*` 的兼容版本。
+安装 [htyf-skills](https://github.com/htyf-mp-community/htyf-skills) 后，在源项目调用 `$htyf-migration`。AI 会盘点功能、生成对应模板、迁移并核对功能清单；后续可按源代码基线增量同步。技能与 CLI 独立维护，安装 CLI 不会自动安装技能。
 
-## 在现有 Taro 项目中接入
+## 开发与验证
 
-安装平台插件和所需的 `@htyf-mp/*` 运行时后，在 Taro 项目配置中注册插件：
-
-```ts
-export default defineConfig({
-  plugins: [
-    '@htyf-mp/taro-plugin-platform'
-  ],
-  htyf: {
-    appName: 'apps',
-    entry: 'app',
-    output: {}
-  }
-})
-```
-
-随后可以使用 Taro CLI 编译红糖云服端：
-
-```bash
-taro build --type htyf
-taro build --type htyf --watch
-```
-
-平台专属代码可通过 `process.env.TARO_ENV === 'htyf'` 判断；红糖云服扩展 API 通过 `Taro.htyf` 调用。
-
-推荐从 `taro-template` 创建项目，以确保 React、React Native、Metro 和 `@htyf-mp/*` 的版本配套。现有项目接入细节见 [`@htyf-mp/taro-plugin-platform`](packages/taro-plugin-platform/README.md)。
-
-## 其他项目模板
-
-CLI 同时提供：
-
-- `app-template`：React Native + Expo + Re.Pack 应用
-- `game-template`：Godot 游戏
-
-## CLI 命令
-
-可以直接通过 npx 运行，也可以全局安装后使用 `htyf`：
-
-```bash
-npx @htyf-mp/cli
-
-npm install --global @htyf-mp/cli
-htyf
-```
-
-常用参数：
-
-```bash
-htyf --sync-deps    # 同步项目依赖版本
-htyf --clean all    # 清理全部生成文件
-htyf --clean build  # 清理 dist 构建产物
-htyf --clean temp   # 清理 .htyf 临时目录
-htyf --clean logs   # 清理日志
-htyf --clean cache  # 清理缓存
-htyf --debug        # 输出调试日志
-htyf --help         # 查看帮助
-```
-
-更完整的 CLI、构建和真机调试说明见 [`packages/cli/README.md`](packages/cli/README.md)。
-
-## 项目配置
-
-CLI 从项目根目录的 `app.json` 读取 `htyf` 配置。常用字段包括：
-
-- `type`：项目类型，可选 `app`、`game`、`web` 或 `plugin`
-- `appid`：小程序唯一标识
-- `name`：应用名称
-- `version`：应用版本号
-- `zipUrl`：构建产物地址
-- `appUrlConfig`：线上配置地址
-
-执行打包时，CLI 会提示确认新版本号、更新 `app.json`，并将资源输出到 `dist` 目录。
-
-## AI Agent 辅助迁移
-
-仓库提供 `$htyf-migration` Codex Skill。Codex 可以根据 HTYF 迁移任务自动
-调用，也可以由用户显式调用，并读取项目类型与模板选择、用户指定的 Taro
-模板与官方 RN 开发注意事项、Godot 游戏模板及 `_HTYF_SDK` 红糖云服 SDK、
-迁移流程、纯 RN 项目的 React Navigation 与 MMKV 约束、源代码增量再迁移、
-完整代码注释、原生依赖与原生源码修改边界、
-`@gorhom/bottom-sheet`、页面树内覆盖层、胶囊与 Safe Area 适配要求以及测试
-验收标准。Godot 项目只有在本地缺少游戏模板且用户确认后，才会从官方仓库
-[`htyf-mp-community/htyf-cli`](https://github.com/htyf-mp-community/htyf-cli)
-下载 `packages/cli/_game_temp_` 模板目录。Godot 迁移目标版本固定为 4.5，导入、
-转换、测试、PCK 导出和目标宿主验收均以 Godot 4.5 为准。游戏交互以移动端
-触控为主；键盘操作需设计触控映射，连续移动可评估兼容 Godot 4.5 的纯
-GDScript 虚拟摇杆，并通过目标宿主真机验收。
-
-非 Godot 项目若由用户明确指定 Taro，则使用该仓库的
-`packages/cli/_taro_temp_`，并遵循
-[Taro React Native 端开发前注意](https://docs.taro.zone/docs/react-native-remind)。
-纯 React Native 应用的路由、存储、依赖和覆盖层规则不直接套用到 Taro
-模板。Taro 迁移生成的 HTYF 专属业务文件使用 `.htyf.*` 后缀，应用和页面的
-平台适配使用 `htyf` 字段；模板底层要求的 RN 转换器兼容参数保持不变。
-
-使用时向 AI 提供源项目路径、目标 `htyf` 路径和迁移范围，例如：
-
-```text
-使用 $htyf-migration，将 /path/to/source 的全部功能迁移到
-/path/to/htyf。先生成迁移清单，再逐项实现并运行测试。
-```
-
-详细说明和更多提示词见 [HTYF AI Agent 使用说明](agents/README.md)。
-
-## 本地开发
-
-### 环境要求
-
-- Node.js 18 或更高版本
-- pnpm 9 或更高版本
-
-### 安装依赖
-
-```bash
-git clone https://github.com/htyf-mp-community/htyf-cli.git
-cd htyf-cli
+```sh
 pnpm install
+pnpm --filter @htyf-mp/cli test
+pnpm test:packages
+pnpm verify:packages
 ```
 
-### 常用脚本
-
-```bash
-pnpm build            # 构建所有包含 build 脚本的包
-pnpm test             # 运行所有包的测试
-pnpm clean            # 清理所有包的构建产物
-pnpm sync-deps        # 预览依赖版本同步结果
-pnpm sync-deps:write  # 写入依赖版本同步结果
-pnpm sync-deps:watch  # 监听并同步依赖版本
-```
-
-## 仓库结构
-
-```text
-packages/
-├── cli/                         # 项目脚手架和管理 CLI
-├── taro-plugin-platform/        # Taro 的 htyf 平台插件
-├── taro-rn-runner/              # React Native 编译入口
-├── taro-rn-supporter/           # Metro、入口文件和构建支撑
-├── taro-rn-transformer/         # Taro RN 入口转换器
-├── taro-rn-style-transformer/   # RN 样式转换器
-├── taro-rn/                     # Taro RN API
-├── taro-runtime-rn/             # RN 运行时
-├── taro-router-rn/              # RN 路由
-├── taro-components-rn/          # RN 基础组件
-├── css-to-react-native/         # CSS 到 RN 样式转换
-├── stylelint-taro-rn/           # RN 样式检查规则
-└── stylelint-config-taro-rn/    # RN Stylelint 共享配置
-```
-
-各包的详细用法请查看对应目录中的 README：
-
-- [`@htyf-mp/taro-plugin-platform`](packages/taro-plugin-platform/README.md)
-- [`@htyf-mp/taro-rn-runner`](packages/taro-rn-runner/README.md)
-- [`@htyf-mp/taro-rn-transformer`](packages/taro-rn-transformer/README.md)
-- [`@htyf-mp/taro-rn-style-transformer`](packages/taro-rn-style-transformer/README.md)
-- [`@htyf-mp/taro-rn`](packages/taro-rn/README.md)
-- [`@htyf-mp/taro-router-rn`](packages/taro-router-rn/README.md)
-- [`@htyf-mp/taro-components-rn`](packages/taro-components-rn/README.md)
-- [`@htyf-mp/taro-rn-supporter`](packages/taro-rn-supporter/README.md)
-- [`@htyf-mp/taro-css-to-react-native`](packages/css-to-react-native/README.md)
-- [`@htyf-mp/stylelint-taro-rn`](packages/stylelint-taro-rn/README.md)
-- [`@htyf-mp/stylelint-config-taro-rn`](packages/stylelint-config-taro-rn/README.md)
-
-## 版本与发布
-
-根包为私有包，不会发布到 npm。维护者可使用以下命令统一管理 `packages/*` 中的公开包：
-
-```bash
-pnpm version:patch
-pnpm version:minor
-pnpm version:major
-pnpm publish:changed   # 查看发生变化的包
-pnpm publish:dev       # 使用 alpha 标签发布
-pnpm publish:packages  # 构建并正式发布
-```
-
-在父级 pnpm 工作区中使用本仓库时，通过 `pnpm run lerna -- <命令>`
-或以上脚本调用 Lerna。入口 `scripts/lerna.mjs` 固定当前仓库的工作目录和
-`NX_WORKSPACE_ROOT_PATH`，避免 Nx 将 `packages/*` 解析为父仓库中的包。
-可运行 `node --test scripts/lerna.test.mjs` 验证发布包范围。
-
-## License
-
-各公开包遵循 [MIT License](https://opensource.org/license/mit)。
+Taro 包已移至独立仓库，不再参与本仓库的 Lerna 版本和发布流程。

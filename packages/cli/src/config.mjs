@@ -15,15 +15,16 @@ export class ProjectConfig {
     this.templates = {
       [CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE]: {
         name: 'taro-template',
-        tempPath: '_taro_temp_'
+        tempPath: 'templates/taro',
+        repository: 'https://github.com/htyf-mp-community/htyf-taro.git'
       },
       [CONSTANTS.TEMPLATE_TYPES.APP_TEMPLATE]: {
         name: 'app-template',
-        tempPath: '_apps_temp_'
+        tempPath: 'packages/cli/_apps_temp_'
       },
       [CONSTANTS.TEMPLATE_TYPES.GAME_TEMPLATE]: {
         name: 'game-template',
-        tempPath: '_game_temp_'
+        tempPath: 'packages/cli/_game_temp_'
       },
     };
   }

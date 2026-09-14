@@ -1,1 +1,0 @@
-export { setScreenBrightness } from '../screen'

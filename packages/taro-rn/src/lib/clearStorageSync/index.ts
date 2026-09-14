@@ -1,1 +1,0 @@
-export { clearStorageSync } from '../unsupportedApi'

@@ -1,1 +1,0 @@
-export { onGyroscopeChange } from '../gyroscope'
