@@ -15,8 +15,7 @@ export class ProjectConfig {
     this.templates = {
       [CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE]: {
         name: 'taro-template',
-        tempPath: 'templates/taro',
-        repository: 'https://github.com/htyf-mp-community/htyf-taro.git'
+        tempPath: 'packages/cli/_taro_temp_'
       },
       [CONSTANTS.TEMPLATE_TYPES.APP_TEMPLATE]: {
         name: 'app-template',

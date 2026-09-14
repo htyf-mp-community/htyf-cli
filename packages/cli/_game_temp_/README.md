@@ -19,6 +19,7 @@ yarn
 用于安装构建 / 工具相关依赖。
 
 - **Godot 开发**
+  - 使用 Godot 4.7.2 编辑和导出本模板。
   - 使用 Godot 编辑器打开 `_game_temp_` 对应项目：
     - 修改场景、脚本（如 `demo.gd`、`godot-sdk.gd` 等）。
   - 所有游戏逻辑、UI 开发流程与普通 Godot 项目一致。

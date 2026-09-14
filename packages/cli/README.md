@@ -35,7 +35,7 @@ CLI 会自动：
 - 生成 `app.json` 中的 `htyf` 配置（包含 `appid`、`name`、`zipUrl`、`appUrlConfig` 等）。
 - 将模板拷贝到你指定的项目目录中。
 
-> 各模板的具体用法，请参考生成项目根目录的 `README.md`。RN/Godot 模板在 htyf-cli 中维护；Taro 模板已移至 [htyf-taro/templates/taro](https://github.com/htyf-mp-community/htyf-taro/tree/main/templates/taro)。
+> 各模板的具体用法，请参考生成项目根目录的 `README.md`。RN/Godot 模板在 htyf-cli 中维护；。
 
 AI 全量／增量迁移规则单独安装：[htyf-skills](https://github.com/htyf-mp-community/htyf-skills)。当前 CLI 的非交互命令和版本说明见 [仓库指南](https://github.com/htyf-mp-community/htyf-cli)。
 

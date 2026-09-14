@@ -20,7 +20,7 @@ npx --yes @htyf-mp/cli debug --non-interactive --platform ios
 | 仓库 | 内容 |
 | --- | --- |
 | [htyf-cli](https://github.com/htyf-mp-community/htyf-cli) | CLI；`packages/cli/_apps_temp_` RN 模板；`packages/cli/_game_temp_` Godot 模板 |
-| [htyf-taro](https://github.com/htyf-mp-community/htyf-taro) | Taro 平台插件、组件、运行时、样式工具、`templates/taro` 模板与示例 |
+| [htyf-taro](https://github.com/htyf-mp-community/htyf-taro) | Taro 平台插件、组件、运行时、样式工具与示例 |
 | [htyf-skills](https://github.com/htyf-mp-community/htyf-skills) | AI 全量／增量迁移规则与安装器 |
 
 `--template app` 创建 RN 项目；`--template game` 创建 Godot 游戏；`--template taro` 从独立 Taro 仓库创建跨端项目。已有 Web 项目的构建流程仍保留，但当前初始化菜单不提供 Web 模板。

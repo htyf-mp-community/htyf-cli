@@ -102,7 +102,7 @@ test('Godot automation options propagate; invalid executable fails without promp
 });
 
 for (const [kind, relativePath, repository] of [
-  ['taro', 'templates/taro', 'htyf-taro'],
+  ['taro', 'packages/cli/_taro_temp_', 'htyf-cli'],
   ['app', 'packages/cli/_apps_temp_', 'htyf-cli'],
   ['game', 'packages/cli/_game_temp_', 'htyf-cli'],
 ]) test(`init creates ${kind} from its repository without prompting`, async t => {
