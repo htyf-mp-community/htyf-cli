@@ -83,6 +83,7 @@ async function syncWebH5Output(projectDistRoot, zipInputDir) {
     'build', // RN bundle 输出目录
     'app.json',
     'manifest.json',
+    'share-qrcode.png', // 分享图片不属于 H5 应用资源
   ]);
 
   for (const entry of entries) {
@@ -115,6 +116,16 @@ async function generateBuildQrCode(outputPath, appJson) {
     margin: 2
   });
   Logger.success(`二维码已生成: ${qrFilePath}`);
+}
+
+/** 在压缩包旁生成分享二维码，使用与 App 分享页一致的应用信息协议。 */
+async function generateShareQrCode(outputPath, appJson) {
+  const shareUrl = `https://mp.dagouzhi.com/share?data=${encodeURIComponent(JSON.stringify(appJson))}`;
+  const qrFilePath = path.join(outputPath, 'share-qrcode.png');
+  await QRCode.toFile(qrFilePath, shareUrl, { scale: 6, margin: 4 });
+  Logger.success(`分享二维码已生成: ${qrFilePath}`);
+  Logger.info(`分享链接: ${shareUrl}`);
+  console.log(await QRCode.toString(shareUrl, { type: 'terminal', small: true }));
 }
 
 /**
@@ -411,10 +422,10 @@ export async function mpBuildShell(newAppInfo, isGodot = false, buildOptions = {
     // 压缩输出目录为最终包
     const zipPath = await handleZip(outputPath, distPackagePath);
     Logger.success(`压缩包已创建: ${zipPath}`);
+    await generateShareQrCode(mpOutputPath, appJson);
     return zipPath;
   } catch (error) {
     Logger.error(`小程序构建失败: ${error.message}`);
     throw error;
   }
 }
-

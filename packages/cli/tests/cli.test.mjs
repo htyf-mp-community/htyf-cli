@@ -144,6 +144,14 @@ test('build produces a package and preserves version unless explicitly provided'
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /构建产物:/);
   assert.ok(fs.statSync(path.join(dir, 'dist/dist.dgz')).size > 0);
+  const shareQrPath = path.join(dir, 'dist/share-qrcode.png');
+  const firstShareQr = fs.readFileSync(shareQrPath);
+  assert.equal(firstShareQr.subarray(1, 4).toString(), 'PNG');
+  const shareUrl = result.stdout.match(/https:\/\/mp\.dagouzhi\.com\/share\?data=\S+/)?.[0];
+  assert.ok(shareUrl, result.stdout);
+  assert.deepEqual(JSON.parse(new URL(shareUrl).searchParams.get('data')),
+    JSON.parse(fs.readFileSync(path.join(dir, 'dist/app.json'))));
+  assert.ok(result.stdout.indexOf('分享二维码已生成:') > result.stdout.indexOf('压缩包已创建:'));
   assert.equal(JSON.parse(fs.readFileSync(configPath)).htyf.version, '1.0.0');
   result = run(['build', '--version', '1.2.3', '--platform', 'android'], dir);
   assert.equal(result.status, 0, result.stderr);
@@ -151,4 +159,8 @@ test('build produces a package and preserves version unless explicitly provided'
   assert.equal(updated.htyf.version, '1.2.3');
   assert.equal(updated.other, true);
   assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'dist/dist/app.json'))).version, '1.2.3');
+  assert.notDeepEqual(fs.readFileSync(shareQrPath), firstShareQr);
+  const updatedShareUrl = result.stdout.match(/https:\/\/mp\.dagouzhi\.com\/share\?data=\S+/)?.[0];
+  assert.equal(JSON.parse(new URL(updatedShareUrl).searchParams.get('data')).version, '1.2.3');
+  assert.equal(fs.existsSync(path.join(dir, 'dist/dist/share-qrcode.png')), false);
 });
