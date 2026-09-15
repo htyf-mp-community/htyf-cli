@@ -10,26 +10,16 @@
 
 1. 从 [红糖云服官网](https://mp.dagouzhi.com/#download) 下载并安装 **红糖云服 App**。
 2. 执行 `npm run build:htyf`，选择“打包小程序”，生成 `dist_htyf/app.json` 和 `dist_htyf/dist.dgz`。
-3. 在项目根目录执行下方命令，根据本次打包的配置生成分享二维码。
-4. 将 `dist_htyf/app.json` 和 `dist_htyf/dist.dgz` 上传到生成配置中的 `appUrlConfig`、`zipUrl` 地址，确保手机可以访问。
-5. 打开红糖云服 App，使用扫码功能扫描下方分享二维码，即可加载并运行。也可以把二维码图片或分享链接发给他人体验。
+3. 将 `dist_htyf/app.json` 和 `dist_htyf/dist.dgz` 上传到生成配置中的 `appUrlConfig`、`zipUrl` 地址，确保手机可以访问。
+4. 打开红糖云服 App，使用扫码功能扫描下方分享二维码，即可加载并运行。也可以把二维码图片或终端显示的分享链接发给他人体验。
 
-Taro 平台插件使用独立打包流程，当前生成的 `dist_htyf/qrcode.png` 是资源下载二维码。分享二维码可使用以下命令生成（macOS / Linux 终端）：
+打包成功后，平台插件自动生成 `dist_htyf/qrcode.png`，并在终端显示分享链接和二维码。
 
-```bash
-# 从本次构建的 app.json 生成分享页链接
-SHARE_URL=$(node -e 'const fs = require("node:fs"); const app = JSON.parse(fs.readFileSync("dist_htyf/app.json", "utf8")); console.log("https://mp.dagouzhi.com/share?data=" + encodeURIComponent(JSON.stringify(app)))')
+**应用分享二维码（打包后显示）：**
 
-# 生成可分享的二维码图片（首次运行按提示安装 qrcode 工具）
-npx qrcode -o dist_htyf/share-qrcode.png "$SHARE_URL"
-printf '%s\n' "$SHARE_URL"
-```
+![使用红糖云服 App 扫码体验](dist_htyf/qrcode.png)
 
-**应用分享二维码（执行上述命令后显示）：**
-
-![使用红糖云服 App 扫码体验](dist_htyf/share-qrcode.png)
-
-首次生成前图片尚不存在。若需在仓库或文档网站中展示，请一并提交或发布 `dist_htyf/share-qrcode.png`，并保留相对路径。每次发布新版本后，请重新生成分享二维码，并同步更新线上资源和配置。
+首次打包前图片尚未生成。若需在仓库或文档网站中展示，请一并提交或发布 `dist_htyf/qrcode.png`，并保留相对路径。每次发布新版本后，请同步更新展示的分享二维码、线上资源和配置。
 
 ## 快速开始
 
@@ -183,7 +173,7 @@ npm run build:htyf
 
 1. 读取 `htyf.config.json` 中的应用信息和 `assetsHost`，以及 `package.json` 中的版本号。
 2. 执行生产构建，将应用资源写入 `dist`。
-3. 在 `dist_htyf` 中生成 `app.json`、`dist.dgz` 和资源下载二维码 `qrcode.png`。
+3. 在 `dist_htyf` 中生成 `app.json`、`dist.dgz` 和分享二维码 `qrcode.png`。
 
 发布前请更新 `package.json` 中的版本号。构建完成后，按上方“分享二维码 · 使用红糖云服体验”生成分享码，将配置及资源上传到 `appUrlConfig`、`zipUrl` 对应的位置，再通过红糖云服 App 扫码验证发布结果。
 

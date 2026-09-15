@@ -10,15 +10,15 @@
 ### 分享二维码 · 使用红糖云服体验
 
 1. 从 [红糖云服官网](https://mp.dagouzhi.com/#download) 下载并安装 **红糖云服 App**。
-2. 执行 `npm run htyf`，在菜单中选择“打包小程序”。打包成功后，CLI 会在终端显示分享链接和二维码，并生成 `dist/share-qrcode.png`。
+2. 执行 `npm run htyf`，在菜单中选择“打包小程序”。打包成功后，CLI 会在终端显示分享链接和二维码，并生成 `dist/qrcode.png`。
 3. 将资源包 `dist/dist.dgz` 上传到 `zipUrl` 对应地址，将生成的 `dist/app.json` 上传到 `appUrlConfig` 对应地址，确保手机可以访问。
 4. 打开红糖云服 App，使用扫码功能扫描下方分享二维码，即可加载并运行。也可以把二维码图片或终端中的分享链接发给他人体验。
 
 **应用分享二维码（打包后显示）：**
 
-![使用红糖云服 App 扫码体验](dist/share-qrcode.png)
+![使用红糖云服 App 扫码体验](dist/qrcode.png)
 
-首次打包前图片尚未生成。若需在仓库或文档网站中展示，请一并提交或发布 `dist/share-qrcode.png`，并保留相对路径。
+首次打包前图片尚未生成。若需在仓库或文档网站中展示，请一并提交或发布 `dist/qrcode.png`，并保留相对路径。
 
 分享二维码指向应用分享页；`dist/dist/qrcode.png` 是资源下载二维码。每次发布新版本后，请同步更新线上资源、配置和展示的分享二维码。
 

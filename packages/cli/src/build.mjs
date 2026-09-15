@@ -83,7 +83,7 @@ async function syncWebH5Output(projectDistRoot, zipInputDir) {
     'build', // RN bundle 输出目录
     'app.json',
     'manifest.json',
-    'share-qrcode.png', // 分享图片不属于 H5 应用资源
+    'qrcode.png', // 分享图片不属于 H5 应用资源
   ]);
 
   for (const entry of entries) {
@@ -121,7 +121,7 @@ async function generateBuildQrCode(outputPath, appJson) {
 /** 在压缩包旁生成分享二维码，使用与 App 分享页一致的应用信息协议。 */
 async function generateShareQrCode(outputPath, appJson) {
   const shareUrl = `https://mp.dagouzhi.com/share?data=${encodeURIComponent(JSON.stringify(appJson))}`;
-  const qrFilePath = path.join(outputPath, 'share-qrcode.png');
+  const qrFilePath = path.join(outputPath, 'qrcode.png');
   await QRCode.toFile(qrFilePath, shareUrl, { scale: 6, margin: 4 });
   Logger.success(`分享二维码已生成: ${qrFilePath}`);
   Logger.info(`分享链接: ${shareUrl}`);

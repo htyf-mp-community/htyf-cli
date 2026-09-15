@@ -1,6 +1,6 @@
 {
   "name": "_taro_temp_",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "private": true,
   "description": "htyf",
   "templateInfo": {
@@ -116,7 +116,7 @@
     "@callstack/repack-plugin-reanimated": "5.2.5",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
-    "@htyf-mp/cli": "0.7.2",
+    "@htyf-mp/cli": "0.7.3",
     "@htyf-mp/stylelint-config-taro-rn": "0.7.2",
     "@htyf-mp/stylelint-taro-rn": "0.7.2",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.5",

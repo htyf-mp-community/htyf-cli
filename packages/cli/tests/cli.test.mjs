@@ -144,7 +144,7 @@ test('build produces a package and preserves version unless explicitly provided'
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /构建产物:/);
   assert.ok(fs.statSync(path.join(dir, 'dist/dist.dgz')).size > 0);
-  const shareQrPath = path.join(dir, 'dist/share-qrcode.png');
+  const shareQrPath = path.join(dir, 'dist/qrcode.png');
   const firstShareQr = fs.readFileSync(shareQrPath);
   assert.equal(firstShareQr.subarray(1, 4).toString(), 'PNG');
   const shareUrl = result.stdout.match(/https:\/\/mp\.dagouzhi\.com\/share\?data=\S+/)?.[0];
@@ -162,5 +162,5 @@ test('build produces a package and preserves version unless explicitly provided'
   assert.notDeepEqual(fs.readFileSync(shareQrPath), firstShareQr);
   const updatedShareUrl = result.stdout.match(/https:\/\/mp\.dagouzhi\.com\/share\?data=\S+/)?.[0];
   assert.equal(JSON.parse(new URL(updatedShareUrl).searchParams.get('data')).version, '1.2.3');
-  assert.equal(fs.existsSync(path.join(dir, 'dist/dist/share-qrcode.png')), false);
+  assert.notDeepEqual(fs.readFileSync(path.join(dir, 'dist/dist/qrcode.png')), fs.readFileSync(shareQrPath));
 });
