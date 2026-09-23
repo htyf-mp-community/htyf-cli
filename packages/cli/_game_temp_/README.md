@@ -38,6 +38,8 @@ yarn
   - 使用 Godot 编辑器打开 `_game_temp_` 对应项目：
     - 修改场景、脚本（如 `demo.gd`、`godot-sdk.gd` 等）。
   - 所有游戏逻辑、UI 开发流程与普通 Godot 项目一致。
+  - 模板已内置并启用 Godot AI v4.2.1，可让 Codex 等 MCP 客户端连接正在运行的 Godot 编辑器。首次使用前安装 `uv`，然后在 Godot AI Dock 中配置客户端。完整版本、校验、隐私和导出边界见 [`GODOT_AI.md`](GODOT_AI.md)。
+  - Godot AI 仅用于编辑器开发；Android/iOS 导出预设会排除 `addons/godot_ai/**`，游戏运行时代码不得依赖该目录。
 
 ### 资源地址配置（app.json）
 
@@ -127,4 +129,3 @@ npm run htyf
 2. 修改 `appUrlConfig`、`zipUrl`，约定好给其他人使用和更新的地址。
 3. 需要在 App 上体验或对外发版时，执行 `npm run htyf` 完成打包。
 4. 上传生成的 zip 资源到 `zipUrl` 对应位置，他人即可通过该地址获取或更新游戏资源。
-

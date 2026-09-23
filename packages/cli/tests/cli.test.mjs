@@ -101,6 +101,28 @@ test('Godot automation options propagate; invalid executable fails without promp
   await assert.rejects(promptGodotOptions({ nonInteractive: true }), /缺少/);
 });
 
+test('game template includes pinned Godot AI editor tooling and excludes it from exports', () => {
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  const gameTemplate = path.join(packageRoot, '_game_temp_');
+  const project = fs.readFileSync(path.join(gameTemplate, 'project.godot'), 'utf8');
+  const plugin = fs.readFileSync(path.join(gameTemplate, 'addons/godot_ai/plugin.cfg'), 'utf8');
+  const integration = fs.readFileSync(path.join(gameTemplate, 'GODOT_AI.md'), 'utf8');
+
+  assert.match(project, /enabled=PackedStringArray\("res:\/\/addons\/godot_ai\/plugin\.cfg"\)/);
+  assert.match(plugin, /version="4\.2\.1"/);
+  assert.match(integration, /dec0d18f381e6769bd4befee856572ee1ac0d77f189e9ceb41d3d1949ed7cf97/);
+  assert.ok(fs.existsSync(path.join(gameTemplate, 'addons/godot_ai/LICENSE')));
+  assert.ok(fs.existsSync(path.join(gameTemplate, 'addons/godot_ai/utils/release_verifier.gd')));
+
+  for (const presetsPath of [
+    path.join(gameTemplate, 'export_presets.cfg'),
+    path.join(packageRoot, 'src/export_presets.cfg'),
+  ]) {
+    const presets = fs.readFileSync(presetsPath, 'utf8');
+    assert.equal(presets.match(/exclude_filter="addons\/godot_ai\/\*\*"/g)?.length, 2);
+  }
+});
+
 for (const [kind, relativePath, repository] of [
   ['taro', 'packages/cli/_taro_temp_', 'htyf-cli'],
   ['app', 'packages/cli/_apps_temp_', 'htyf-cli'],
