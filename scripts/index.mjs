@@ -53,7 +53,7 @@ function collectPackageJsonPaths() {
     }
   }
 
-  const templateDirs = ['_apps_temp_', '_web_temp_', '_game_temp_'];
+  const templateDirs = ['_apps_temp_', '_web_temp_', '_game_temp_', '_taro_temp_'];
   for (const templateDir of templateDirs) {
     const packageJsonPath = path.join(rootDir, 'packages/cli', templateDir, 'package.json');
     if (fs.existsSync(packageJsonPath)) {
