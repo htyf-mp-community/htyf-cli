@@ -1,15 +1,16 @@
 {
- "name": "helloworld",
- "version": "1.0.0",
- "main": "index.js",
- "scripts": {
-  "htyf": "htyf",
-  "test": "echo \"Error: no test specified\" && exit 1"
- },
- "author": "",
- "license": "ISC",
- "description": "",
- "dependencies": {
+  "name": "helloworld",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "htyf": "htyf",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "export:wechat": "node tools/export-wechat.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
     "@htyf-mp/cli": "0.7.6",
     "@htyf-mp/js-sdk": "0.2.26"
   }

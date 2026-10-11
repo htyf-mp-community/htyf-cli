@@ -1,0 +1,7 @@
+{
+  "platform": "wechat",
+  "appid": "wxab94ea1a1126b468",
+  "orientation": "portrait",
+  "preset": "微信小游戏",
+  "output": "dist/wechat-anrans"
+}

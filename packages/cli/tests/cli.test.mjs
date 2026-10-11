@@ -108,7 +108,7 @@ test('game template includes pinned Godot AI editor tooling and excludes it from
   const plugin = fs.readFileSync(path.join(gameTemplate, 'addons/godot_ai/plugin.cfg'), 'utf8');
   const integration = fs.readFileSync(path.join(gameTemplate, 'GODOT_AI.md'), 'utf8');
 
-  assert.match(project, /enabled=PackedStringArray\("res:\/\/addons\/godot_ai\/plugin\.cfg"\)/);
+  assert.match(project, /enabled=PackedStringArray\([^\n]*"res:\/\/addons\/godot_ai\/plugin\.cfg"/);
   assert.match(plugin, /version="4\.2\.1"/);
   assert.match(integration, /dec0d18f381e6769bd4befee856572ee1ac0d77f189e9ceb41d3d1949ed7cf97/);
   assert.ok(fs.existsSync(path.join(gameTemplate, 'addons/godot_ai/LICENSE')));
@@ -119,7 +119,12 @@ test('game template includes pinned Godot AI editor tooling and excludes it from
     path.join(packageRoot, 'src/export_presets.cfg'),
   ]) {
     const presets = fs.readFileSync(presetsPath, 'utf8');
-    assert.equal(presets.match(/exclude_filter="addons\/godot_ai\/\*\*"/g)?.length, 2);
+    const platformPresets = presets.split(/(?=\[preset\.\d+\]\s)/)
+      .filter(section => /platform="(?:Android|iOS)"/.test(section));
+    assert.equal(platformPresets.length, 2);
+    for (const preset of platformPresets) {
+      assert.match(preset, /exclude_filter="addons\/godot_ai\/\*\*"/);
+    }
   }
 });
 

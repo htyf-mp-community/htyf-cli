@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 HtyfSdk="*res://_HTYF_SDK/htyf_sdk.tscn"
+MiniGameSDK="*res://addons/godot_mini_game/MiniGameSDK.gd"
+_mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]
 
@@ -28,7 +30,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg", "res://addons/godot_mini_game/plugin.cfg")
 
 [gui]
 

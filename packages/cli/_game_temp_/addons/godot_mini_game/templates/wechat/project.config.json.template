@@ -1,0 +1,20 @@
+{
+  "description": "{{NAME}}",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "babelSetting": { "ignore": [], "disablePlugins": [], "outputPath": "" },
+    "swc": true,
+    "enhance": true
+  },
+  "compileType": "game",
+  "libVersion": "latest",
+  "appid": "{{APPID}}",
+  "projectname": "{{NAME}}",
+  "condition": {},
+  "packOptions": { "ignore": [], "include": [] },
+  "editorSetting": { "tabIndent": "insertSpaces", "tabSize": 2 }
+}

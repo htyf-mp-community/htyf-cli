@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "godot": {
+    "version": "4.6.1.stable",
+    "commit": "14d19694e0c88a3f9e82d899a0400f27a24c176e"
+  },
+  "emscriptenVersion": "4.0.3",
+  "profile": "2d_full",
+  "target": "release",
+  "revision": 1,
+  "bridgeAbi": 1,
+  "features": {
+    "simd": false,
+    "threads": false,
+    "wasmExceptions": false
+  },
+  "artifacts": {
+    "godot.js": {
+      "sha256": "fd8265eed945d669189eb6960f9ebca40863a7d00e87c5d9bdd5868e55b1203b"
+    },
+    "godot.wasm.br": {
+      "sha256": "f81067a1d30125b161c26097bf4976c20064a1543d2c56b1c7cdcce10ae764cd"
+    }
+  }
+}

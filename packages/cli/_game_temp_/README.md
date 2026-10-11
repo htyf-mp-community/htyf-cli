@@ -41,6 +41,12 @@ yarn
   - 模板已内置并启用 Godot AI v4.2.1，可让 Codex 等 MCP 客户端连接正在运行的 Godot 编辑器。首次使用前安装 `uv`，然后在 Godot AI Dock 中配置客户端。完整版本、校验、隐私和导出边界见 [`GODOT_AI.md`](GODOT_AI.md)。
   - Godot AI 仅用于编辑器开发；Android/iOS 导出预设会排除 `addons/godot_ai/**`，游戏运行时代码不得依赖该目录。
 
+### 导出微信小游戏
+
+已集成 [AnranS Godot Mini Game](https://github.com/AnranS/godot_for_minigame) v0.2.1，配套官方 Godot 4.6.1。填写 `wechat-export.json` 中的微信 AppID，设置 `GODOT_WECHAT_BIN` 后执行 `npm run export:wechat`，将生成的 `dist/wechat-anrans` 目录导入微信开发者工具。命令在临时副本导出原游戏，不改写原工程的 4.7 导入缓存。
+
+模板附带 macOS 通用原生插件；Windows/Linux 的构建安装、模板下载源、渲染兼容性和 HTYF 宿主接口边界见 [`WECHAT_EXPORT.md`](WECHAT_EXPORT.md)。
+
 ### 资源地址配置（app.json）
 
 通过修改 `app.json` 中的字段，让别人可以拉取和更新你的游戏资源：

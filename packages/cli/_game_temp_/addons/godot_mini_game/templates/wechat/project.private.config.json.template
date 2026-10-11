@@ -1,0 +1,6 @@
+{
+  "projectname": "{{NAME}}",
+  "description": "",
+  "appid": "{{APPID}}",
+  "setting": { "compileHotReLoad": true }
+}

@@ -1,0 +1,14 @@
+{
+  "deviceOrientation": "{{ORIENTATION}}",
+  "iOSHighPerformance": true,
+  "iOSHighPerformance+": true,
+  "subpackages": [
+    { "root": "engine/", "name": "engine" },
+    { "root": "subpacks/", "name": "subpacks" }
+  ],
+  "plugins": {},
+  "workers": {
+    "path": "js/worker",
+    "isSubpackage": false
+  }
+}
