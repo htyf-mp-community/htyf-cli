@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/cli",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "description": "红糖云服app小程序模板-cli",
   "type": "module",
   "bin": {
@@ -81,5 +81,6 @@
   "devDependencies": {},
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "0067e6e3177368dd7d4bd4dd4552f164e4ee20fa"
 }
