@@ -28,6 +28,12 @@ function normalizeVersion(version) {
   return String(version || '').replace(/^[~^>=<]+/, '');
 }
 
+const SKIP_VERSION_PREFIXES = ['workspace:', 'file:', 'link:', 'npm:', 'catalog:'];
+
+function shouldSkipVersion(version) {
+  return SKIP_VERSION_PREFIXES.some(prefix => String(version).startsWith(prefix));
+}
+
 /**
  * 收集 package.json 中与 shared-output.json 匹配的待同步项
  * @param {Record<string, string>} packageJson
@@ -45,6 +51,10 @@ function collectSyncChanges(packageJson, sharedVersions) {
 
     for (const [name, version] of Object.entries(deps)) {
       if (!Object.hasOwn(sharedVersions, name)) {
+        continue;
+      }
+
+      if (shouldSkipVersion(version)) {
         continue;
       }
 

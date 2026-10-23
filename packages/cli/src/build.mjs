@@ -281,6 +281,8 @@ export async function mpBuildShell(newAppInfo, isGodot = false, buildOptions = {
     outputPath: path.join(mpOutputPath, 'build'),  // webpack 构建输出目录
     extraChunksPath: outputPath,
     manifest: path.join(mpOutputPath, 'manifest.json'),
+    appid,
+    version,
   };
   Logger.info('mpOptions', mpOptions);
 

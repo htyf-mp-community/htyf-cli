@@ -1,6 +1,6 @@
 {
   "name": "htyf-cli",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "private": true,
   "engines": {
     "node": ">=18.0.0",

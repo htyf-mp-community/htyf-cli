@@ -19,11 +19,13 @@ if (!['ios', 'android'].includes(platform) || !bundleOutput || !assetsDest) {
 }
 
 const projectRoot = path.resolve(__dirname, '..')
+const bundlePath = path.resolve(bundleOutput)
+fs.rmSync(bundlePath, { force: true })
 const result = spawnSync(process.execPath, [
   require.resolve('@tarojs/cli/bin/taro'),
   'build', '--type', 'htyf',
   '--platform', platform,
-  '--bundle-output', path.resolve(bundleOutput),
+  '--bundle-output', bundlePath,
   '--assets-dest', path.resolve(assetsDest),
 ], {
   cwd: projectRoot,
@@ -32,7 +34,7 @@ const result = spawnSync(process.execPath, [
 })
 if (result.error) throw result.error
 if (result.status !== 0) process.exit(result.status || 1)
-if (!fs.existsSync(bundleOutput) || fs.statSync(bundleOutput).size === 0) {
-  console.error(`HTYF native bundle missing or empty: ${bundleOutput}`)
+if (!fs.existsSync(bundlePath) || fs.statSync(bundlePath).size === 0) {
+  console.error(`HTYF native bundle missing or empty: ${bundlePath}`)
   process.exit(1)
 }

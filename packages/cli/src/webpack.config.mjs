@@ -7,7 +7,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 import * as Repack from '@callstack/repack';
 import { ExpoModulesPlugin } from '@callstack/repack-plugin-expo-modules';
 import { ReanimatedPlugin } from '@callstack/repack-plugin-reanimated';
-import { HtyfModulesPlugin } from '@htyf-mp/cli/HtyfImportsPlugin.mjs';
+import { HtyfModulesPlugin } from './HtyfImportsPlugin.mjs';
 import { getProjectRoot } from './utils.mjs';
 
 // 获取当前文件和目录路径
@@ -30,13 +30,13 @@ const appid = process.env.APP_ID;
 // 构建Module Federation共享依赖对象
 const sharedObj = {};
 for (const key in dependencies) {
-  const p = dependencies[key];
+  const version = dependencies[key];
   sharedObj[key] = {
     /** 是否运行为单例 */
     singleton: true,
     /** host模式下必须为true，微应用为false */
     eager: true,
-    version: p.version,
+    version,
   };
 }
 
@@ -53,7 +53,7 @@ export default (env = {}) => {
   const { entry = appRootIndexPath, platform = 'ios' } = env;
   const context = env.context || __dirname;
   // 获取Repack的resolve配置
-  const _options = Repack.getResolveOptions();
+  const _options = Repack.getResolveOptions(platform);
 
   // 解析微前端相关配置
   let mpOptions = {};

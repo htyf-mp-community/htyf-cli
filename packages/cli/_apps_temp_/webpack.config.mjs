@@ -1,6 +1,7 @@
 // 导入Node.js和第三方依赖
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import fse from 'fs-extra';
 import webpack from 'webpack';
 import TerserPlugin from 'terser-webpack-plugin';
@@ -13,6 +14,7 @@ import { HtyfModulesPlugin } from '@htyf-mp/cli/src/HtyfImportsPlugin.mjs';
 // 获取当前文件和目录路径
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
 
 // 微前端暴露配置，通常为JSON字符串
 const appExposesOptions = process.env.APP_EXPOSES_OPTIONS;
@@ -20,7 +22,7 @@ const appExposesOptions = process.env.APP_EXPOSES_OPTIONS;
 // 读取package.json，获取应用基本信息
 const pkg = fse.readJsonSync(path.join(__dirname, './package.json'));
 // 读取依赖共享配置
-const dependencies = fse.readJsonSync(path.join(__dirname, 'node_modules/@htyf-mp/cli/src/shared-output.json'));
+const dependencies = fse.readJsonSync(require.resolve('@htyf-mp/cli/src/shared-output.json'));
 
 // 记录构建时间戳
 const time = Date.now();
@@ -53,7 +55,7 @@ export default (env = {}) => {
   const { entry = './index.js', platform = 'ios' } = env;
   const context = env.context || __dirname;
   // 获取Repack的resolve配置
-  const _options = Repack.getResolveOptions();
+  const _options = Repack.getResolveOptions(platform);
 
   // 解析微前端相关配置
   let mpOptions = {};

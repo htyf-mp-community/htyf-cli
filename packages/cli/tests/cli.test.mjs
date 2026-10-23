@@ -64,11 +64,12 @@ test('clean respects --project and preserves unrelated files', t => {
 test('sync-deps runs without stdin and fails on missing package.json', t => {
   const dir = fixture(t);
   assert.equal(run(['sync-deps'], dir).status, 1);
-  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ dependencies: { '@callstack/repack': '0.0.0', unrelated: '1.2.3' } }));
+  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ dependencies: { '@callstack/repack': '0.0.0', 'react-native-worklets': 'workspace:*', unrelated: '1.2.3' } }));
   const result = run(['sync-deps'], dir);
   assert.equal(result.status, 0, result.stderr);
   const deps = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'))).dependencies;
   assert.notEqual(deps['@callstack/repack'], '0.0.0');
+  assert.equal(deps['react-native-worklets'], 'workspace:*');
   assert.equal(deps.unrelated, '1.2.3');
 });
 
@@ -125,6 +126,36 @@ test('game template includes pinned Godot AI editor tooling and excludes it from
     for (const preset of platformPresets) {
       assert.match(preset, /exclude_filter="addons\/godot_ai\/\*\*"/);
     }
+  }
+});
+
+test('app and Taro templates use the CLI shared native versions', () => {
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  const shared = JSON.parse(fs.readFileSync(path.join(packageRoot, 'src/shared-output.json')));
+  for (const template of ['_apps_temp_', '_taro_temp_']) {
+    const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, template, 'package.json')));
+    for (const dependency of ['@callstack/repack', 'react-native-reanimated', 'react-native-worklets']) {
+      assert.equal(pkg.dependencies[dependency], shared[dependency], `${template}: ${dependency}`);
+    }
+  }
+});
+
+test('CLI webpack configuration passes shared versions to Module Federation', async () => {
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  const shared = JSON.parse(fs.readFileSync(path.join(packageRoot, 'src/shared-output.json')));
+  const { default: makeConfig } = await import('../src/webpack.config.mjs');
+  const previousLog = console.log;
+  let config;
+  try {
+    console.log = () => {};
+    config = makeConfig({ platform: 'ios' });
+  } finally {
+    console.log = previousLog;
+  }
+  const federation = config.plugins.find(plugin => plugin.constructor.name === 'ModuleFederationPluginV2');
+  assert.ok(federation);
+  for (const dependency of ['@callstack/repack', 'react-native-reanimated', 'react-native-worklets']) {
+    assert.equal(federation.config.shared[dependency].version, shared[dependency]);
   }
 });
 
