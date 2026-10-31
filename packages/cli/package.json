@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/cli",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "description": "红糖云服app小程序模板-cli",
   "type": "module",
   "bin": {
@@ -34,12 +34,12 @@
     "directory": "packages/cli"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=22.13.0",
     "pnpm": ">=9.0.0"
   },
   "peerDependencies": {
     "react-native-reanimated": "4.7.1",
-    "react-native-worklets": "0.13.0"
+    "react-native-worklets": "0.13.1"
   },
   "dependencies": {
     "@babel/core": "7.29.0",
@@ -48,33 +48,33 @@
     "@babel/preset-env": "7.29.2",
     "@babel/runtime": "7.29.2",
     "@callstack/repack": "5.4.0",
-    "@callstack/repack-plugin-expo-modules": "5.4.0",
-    "@callstack/repack-plugin-reanimated": "5.4.0",
+    "@callstack/repack-plugin-expo-modules": "5.4.2",
+    "@callstack/repack-plugin-reanimated": "5.4.2",
     "@inquirer/prompts": "7.8.0",
     "@inquirer/select": "4.3.1",
     "@module-federation/dts-plugin": "0.21.6",
     "@module-federation/enhanced": "0.19.1",
     "adm-zip": "0.5.17",
-    "boxen": "8.0.1",
+    "boxen": "9.0.0",
     "chalk": "5.6.2",
     "execa": "9.6.0",
     "fs-extra": "11.3.0",
     "gradient-string": "3.0.0",
-    "inquirer": "12.9.0",
+    "inquirer": "14.2.5",
     "loader-utils": "3.3.1",
     "lodash": "4.18.1",
     "md5": "2.3.0",
-    "ora": "9.3.0",
+    "ora": "10.0.0",
     "portfinder": "1.0.38",
     "qrcode": "1.5.4",
     "react-native-reanimated": "4.7.1",
-    "react-native-worklets": "0.13.0",
+    "react-native-worklets": "0.13.1",
     "shelljs": "0.10.0",
     "superstatic": "10.0.0",
-    "systeminformation": "5.31.5",
+    "systeminformation": "5.33.19",
     "terser-webpack-plugin": "5.4.0",
     "typescript": "5.7.3",
-    "uuid": "9.0.1",
+    "uuid": "14.0.3",
     "webpack": "5.105.4",
     "webpack-cli": "7.0.2"
   },

@@ -11,7 +11,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@htyf-mp/cli": "0.7.10",
-    "@htyf-mp/js-sdk": "0.2.27"
+    "@htyf-mp/cli": "0.7.11",
+    "@htyf-mp/js-sdk": "0.2.28"
+  },
+  "engines": {
+    "node": ">=22.13.0"
   }
 }
