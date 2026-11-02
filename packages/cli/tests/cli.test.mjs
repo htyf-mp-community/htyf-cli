@@ -129,6 +129,21 @@ test('game template includes pinned Godot AI editor tooling and excludes it from
   }
 });
 
+test('app and Taro templates target the RN 0.86 production host', () => {
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  const shared = JSON.parse(fs.readFileSync(path.join(packageRoot, 'src/shared-output.json')));
+  assert.equal(shared['react-native'], '0.86.3');
+  assert.equal(shared.expo, '57.0.26');
+  assert.equal(shared['react-native-worklets'], '0.13.0');
+  for (const template of ['_apps_temp_', '_taro_temp_']) {
+    const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, template, 'package.json')));
+    assert.equal(pkg.dependencies.react, '19.2.8', `${template}: react`);
+    for (const [name, version] of Object.entries(pkg.dependencies)) {
+      if (shared[name]) assert.equal(version, shared[name], `${template}: ${name}`);
+    }
+  }
+});
+
 test('app and Taro templates use the CLI shared native versions', () => {
   const packageRoot = fileURLToPath(new URL('..', import.meta.url));
   const shared = JSON.parse(fs.readFileSync(path.join(packageRoot, 'src/shared-output.json')));

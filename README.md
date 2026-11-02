@@ -15,6 +15,12 @@ npx --yes @htyf-mp/cli debug --non-interactive --platform ios
 
 先检查所用版本的 `--help`。源码功能未发布时，可用 `node /absolute/path/to/htyf-cli/packages/cli/src/index.mjs` 替代命令入口。直接运行 `htyf` 可打开交互菜单。
 
+## 宿主兼容版本
+
+当前主分支和模板适配线上 RN-0.86-2.2.9 宿主：React Native 0.86.3、React 19.2.8、Expo 57。CLI 的共享依赖清单、RN 模板及 Taro 模板应一同更新，避免构建出的资源与宿主不兼容。Taro 模板使用适配该宿主的 `@htyf-mp/taro-*` 0.7.8。
+
+RN-0.86-2.3.0 的开发状态保留在 `RN-0.86-2.3.0` 分支；新宿主上线并验证后，再将对应升级合入主分支并发布新版 CLI。
+
 ## 仓库分工
 
 | 仓库 | 内容 |
@@ -23,7 +29,7 @@ npx --yes @htyf-mp/cli debug --non-interactive --platform ios
 | [htyf-taro](https://github.com/htyf-mp-community/htyf-taro) | Taro 平台插件、组件、运行时、样式工具与示例 |
 | [htyf-skills](https://github.com/htyf-mp-community/htyf-skills) | AI 全量／增量迁移规则与安装器 |
 
-`--template app` 创建 RN 项目；`--template game` 创建 Godot 游戏；`--template taro` 从独立 Taro 仓库创建跨端项目。已有 Web 项目的构建流程仍保留，但当前初始化菜单不提供 Web 模板。
+`--template app` 创建 RN 项目；`--template game` 创建 Godot 游戏；`--template taro` 使用本仓库的 Taro 模板创建跨端项目。已有 Web 项目的构建流程仍保留，但当前初始化菜单不提供 Web 模板。
 
 ## 自动化命令
 
