@@ -154,6 +154,12 @@ test('Taro template pins the platform release matching the 2.3.0 host', () => {
   }
 });
 
+test('RN template uses a renderer matching its React version', () => {
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, '_apps_temp_/package.json')));
+  assert.equal(pkg.devDependencies['react-test-renderer'], pkg.dependencies.react);
+});
+
 test('app and Taro templates use the CLI shared native versions', () => {
   const packageRoot = fileURLToPath(new URL('..', import.meta.url));
   const shared = JSON.parse(fs.readFileSync(path.join(packageRoot, 'src/shared-output.json')));
