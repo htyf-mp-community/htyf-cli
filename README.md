@@ -17,9 +17,7 @@ npx --yes @htyf-mp/cli debug --non-interactive --platform ios
 
 ## 宿主兼容版本
 
-本分支适配待上线的 RN-0.86-2.3.0 宿主：React Native 0.88.1、React 19.3.1、Expo 58。CLI 的共享依赖清单、RN 模板及 Taro 模板应一同更新，避免构建出的资源与宿主不兼容。
-
-此分支的升级应在 RN-0.86-2.3.0 宿主上线并验证后合入主分支，再发布新版 CLI。
+当前主分支和模板适配 RN-0.86-2.3.0 宿主：React Native 0.88.1、React 19.3.1、Expo 58。CLI 的共享依赖清单、RN 模板及 Taro 模板应一同更新，避免构建出的资源与宿主不兼容。
 
 ## 仓库分工
 
