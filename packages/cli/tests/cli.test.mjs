@@ -144,6 +144,16 @@ test('app and Taro templates target the RN 0.88 next host', () => {
   }
 });
 
+test('Taro template pins the platform release matching the 2.3.0 host', () => {
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, '_taro_temp_/package.json')));
+  for (const [name, version] of Object.entries({ ...pkg.dependencies, ...pkg.devDependencies })) {
+    if (name.startsWith('@htyf-mp/taro-') || name.startsWith('@htyf-mp/stylelint-')) {
+      assert.equal(version, '0.7.11', name);
+    }
+  }
+});
+
 test('app and Taro templates use the CLI shared native versions', () => {
   const packageRoot = fileURLToPath(new URL('..', import.meta.url));
   const shared = JSON.parse(fs.readFileSync(path.join(packageRoot, 'src/shared-output.json')));
