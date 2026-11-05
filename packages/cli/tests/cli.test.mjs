@@ -133,7 +133,7 @@ test('app and Taro templates target the RN 0.88 next host', () => {
   const packageRoot = fileURLToPath(new URL('..', import.meta.url));
   const shared = JSON.parse(fs.readFileSync(path.join(packageRoot, 'src/shared-output.json')));
   assert.equal(shared['react-native'], '0.88.1');
-  assert.equal(shared.expo, '58.0.22');
+  assert.equal(shared.expo, '58.0.23');
   assert.equal(shared['react-native-worklets'], '0.13.1');
   for (const template of ['_apps_temp_', '_taro_temp_']) {
     const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, template, 'package.json')));
