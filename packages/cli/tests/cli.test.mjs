@@ -154,6 +154,18 @@ test('Taro template pins the platform release matching the 2.3.0 host', () => {
   }
 });
 
+test('Taro template keeps official Taro packages on the same release', () => {
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, '_taro_temp_/package.json')));
+  const dependencies = { ...pkg.dependencies, ...pkg.devDependencies };
+  assert.equal(dependencies['@tarojs/cli'], '4.3.2');
+  for (const [name, version] of Object.entries(dependencies)) {
+    if (name.startsWith('@tarojs/') || name === 'babel-preset-taro' || name === 'eslint-config-taro') {
+      assert.equal(version, dependencies['@tarojs/cli'], name);
+    }
+  }
+});
+
 test('RN template uses a renderer matching its React version', () => {
   const packageRoot = fileURLToPath(new URL('..', import.meta.url));
   const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, '_apps_temp_/package.json')));

@@ -87,6 +87,7 @@ export default async (env = {}) => {
       alias: {
         ...(aliasOptions || {}),
         ...(_options.alias || {}),
+        '@react-native/asset-utils$': require.resolve('@react-native/asset-utils'),
         "react-native": path.join(__dirname, 'node_modules/react-native'),
       },
     },
