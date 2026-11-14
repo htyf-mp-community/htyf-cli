@@ -9,6 +9,7 @@
 
 - 官网：[`https://mp.dagouzhi.com/`](https://mp.dagouzhi.com/)
 - GitHub：[`https://github.com/htyf-mp-community`](https://github.com/htyf-mp-community)
+- 支持项目：[爱发电](https://ifdian.net/a/hongtangyunfu)，自愿赞助项目的持续维护与完善。
 
 ## 安装与快速开始
 
