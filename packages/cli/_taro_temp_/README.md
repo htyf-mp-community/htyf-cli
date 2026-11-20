@@ -23,14 +23,14 @@
 
 ## 快速开始
 
-建议使用 Node.js 18 或更高版本。
+使用 Node.js 22.13.0 或更高版本以及 pnpm 9 或更高版本。
 
 ```bash
 # 安装依赖
-npm install
+pnpm install
 
 # 启动红糖云服端开发构建
-npm run dev:htyf
+pnpm run dev:htyf
 ```
 
 执行红糖云服端命令后，根据菜单选择：

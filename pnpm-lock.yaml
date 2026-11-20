@@ -54,14 +54,14 @@ importers:
         specifier: 7.29.2
         version: 7.29.2
       '@callstack/repack':
-        specifier: 5.4.0
-        version: 5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)
+        specifier: 5.4.3
+        version: 5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)
       '@callstack/repack-plugin-expo-modules':
         specifier: 5.4.2
-        version: 5.4.2(@callstack/repack@5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))
+        version: 5.4.2(@callstack/repack@5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))
       '@callstack/repack-plugin-reanimated':
         specifier: 5.4.2
-        version: 5.4.2(@babel/core@7.29.0)(@callstack/repack@5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))
+        version: 5.4.2(@babel/core@7.29.0)(@callstack/repack@5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))
       '@inquirer/prompts':
         specifier: 7.8.0
         version: 7.8.0(@types/node@26.1.1)
@@ -114,8 +114,8 @@ importers:
         specifier: 1.5.4
         version: 1.5.4
       react-native-reanimated:
-        specifier: 4.7.1
-        version: 4.7.1(react-native-worklets@0.13.1(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
+        specifier: 4.7.2
+        version: 4.7.2(react-native-worklets@0.13.1(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
       react-native-worklets:
         specifier: 0.13.1
         version: 0.13.1(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
@@ -818,8 +818,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@callstack/repack-dev-server@5.4.0':
-    resolution: {integrity: sha512-sSpTavkIkQmE7EnOzNeNCXmrPsHlNRBX9UYP+VtdKBltULzRqiPDeee3pkrTvLvZTs/DW/M9cktZ/EK4QWt9BQ==}
+  '@callstack/repack-dev-server@5.4.3':
+    resolution: {integrity: sha512-ANJ3TS7RVfdjpSTYeAhMTmaepfnEL0Fnq7KxLtFKxgj4sxAyva3y0BWOsFvudm/MSuhUi1cMAl1WUhnLBkKXWw==}
     engines: {node: '>=18'}
 
   '@callstack/repack-plugin-expo-modules@5.4.2':
@@ -835,10 +835,11 @@ packages:
       '@babel/core': ^7.20
       '@callstack/repack': ^5.4.2
 
-  '@callstack/repack@5.4.0':
-    resolution: {integrity: sha512-xoG5EQ/7oS1ehduXZLbkQiofQKjWB31joxbmgQDXwrfl6zsv/5iVMkk34iexu7dLKZR4elfdW4pJl3MKDG+yPg==}
+  '@callstack/repack@5.4.3':
+    resolution: {integrity: sha512-rhYHElWjX16Kj6sRkH4VfM+Kqb2s+MyXlb9D15KrcAdKfo+2znK7I1XI4nvm13j2K3yUg88rLKLBUiwQ2AENTg==}
     engines: {node: '>=18'}
     peerDependencies:
+      '@babel/core': ^7.20.0
       '@module-federation/enhanced': '>=0.6.10'
       '@rspack/core': '>=1'
       react-native: '>=0.74'
@@ -4106,8 +4107,8 @@ packages:
   fastify-plugin@6.0.0:
     resolution: {integrity: sha512-fZOty7z3O7vOliF6d8bHE3wiEh1KcNnKEQensSgTk9C1DvN6nRLS++XVd86v33Hw/8u9Un8A1zDrQ8ujcQDHEg==}
 
-  fastify@5.10.0:
-    resolution: {integrity: sha512-A9L0ziuWGQHgEEVgF3davQ9vbD93IuX+lo2IsxapQmu5b/Y/ynn9m9K5JHt9dvyJXOFc5iN0Zk5GHEOqnzhWjg==}
+  fastify@5.12.8:
+    resolution: {integrity: sha512-moP8exb2sCHLUbJkwp+I6C0padhy4D8lp0SdmzY7HhSdZuqm7O/u3o2aq7u8okaQ//33QDzj3G/u+FsSdB8Qzw==}
 
   fastq@1.20.1:
     resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}
@@ -4156,6 +4157,10 @@ packages:
   find-file-up@2.0.1:
     resolution: {integrity: sha512-qVdaUhYO39zmh28/JLQM5CoYN9byEOKEH4qfa8K1eNV17W0UUMJ9WgbR/hHFH+t5rcl+6RTb5UC7ck/I+uRkpQ==}
     engines: {node: '>=8'}
+
+  find-my-way@9.10.2:
+    resolution: {integrity: sha512-gbLMuTm2FV5QiRh/eM0uhL4nyOvbSqqa2K3mASAtkIqxvY8ZmoLOCLMd2syLWT/SyhrvOR7GPxOKj/kcV6o8bg==}
+    engines: {node: '>=20'}
 
   find-my-way@9.6.0:
     resolution: {integrity: sha512-Zf4Xve4RymLl7NgaavNebZ01joJ8MfVerOG43wy7SHLO+r+K0C6d/SE0BiR7AV5V1VOCFlOP7ecdo+I4qmiHrQ==}
@@ -4551,11 +4556,12 @@ packages:
   image-size@0.5.5:
     resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
+    deprecated: Please migrate to image-size@2.x
     hasBin: true
 
-  image-size@1.2.1:
-    resolution: {integrity: sha512-rH+46sQJ2dlwfjfhCyNx5thzrv+dtmBIhPHk0zgRUukHzZ/kRueTJXoYYsclBaKcSMBWuGbOFXtioLpzTb5euw==}
-    engines: {node: '>=16.x'}
+  image-size@2.1.0:
+    resolution: {integrity: sha512-6Dbisa46RsgeAh3TMSFL2i8+uIFG+/LRmz6Q2oscSJJvXo1sOw3EgNO4M8jPl1P+gR1atJLDPrpclX4IHz63sA==}
+    engines: {node: '>=18'}
     hasBin: true
 
   immutable@5.1.9:
@@ -6167,8 +6173,8 @@ packages:
   process-warning@4.0.1:
     resolution: {integrity: sha512-3c2LzQ3rY9d0hc1emcsHhfT9Jwz0cChib/QN89oME2R451w5fy3f0afAhERFZAwrbDU43wk12d0ORBpDVME50Q==}
 
-  process-warning@5.0.0:
-    resolution: {integrity: sha512-a39t9ApHNx2L4+HBnQKqxxHNs1r7KF+Intd8Q/g1bUh6q0WIp9voPXJ/x0j+ZL45KF1pJd9+q2jLIRMfvEshkA==}
+  process-warning@5.1.1:
+    resolution: {integrity: sha512-oCkNVj4OKnKEcocVBcDfiIugN1/cE6rgfT3nCtzeqZPA8+rIxMaQ0xXzIkGP8Gj2qUaP1UR7uhJ1VD8lUCpzCg==}
 
   proggy@3.0.0:
     resolution: {integrity: sha512-QE8RApCM3IaRRxVzxrjbgNMpQEX6Wu0p0KBeoSiSEw5/bsGwZHsshF4LCxH2jp/r6BU+bqA3LrMDEYNfJnpD8Q==}
@@ -6237,9 +6243,6 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  queue@6.0.2:
-    resolution: {integrity: sha512-iHZWu+q3IdFZFX36ro/lKBkSvfkztY5Y7HMiPlOUjhupPcG2JMfst2KKEpu5XndviX/3UhFbRngUPNKtgvtZiA==}
-
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
 
@@ -6289,8 +6292,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-reanimated@4.7.1:
-    resolution: {integrity: sha512-HviDFSZ6V4KTRsrLS6hRbBJ4j63l/L8a5az0EoWdJwaMLYnBNyYISTDxwXpEYkMbAbLzCMCviIdiOxXHYQWcNA==}
+  react-native-reanimated@4.7.2:
+    resolution: {integrity: sha512-dlPMG+dKKbcumR8k2C8wApqVsrCevINxEki3I6t0S/6LPqa639unbwRn85yu1yhtC9oJI94xk+ycdGuEGdH4Gw==}
     peerDependencies:
       react: '*'
       react-native: 0.86 - 0.88
@@ -8459,12 +8462,12 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@callstack/repack-dev-server@5.4.0':
+  '@callstack/repack-dev-server@5.4.3':
     dependencies:
       '@babel/code-frame': 7.29.7
       '@fastify/middie': 9.3.3
       '@fastify/sensible': 6.0.4
-      fastify: 5.10.0
+      fastify: 5.12.8
       fastify-favicon: 5.0.0
       fastify-plugin: 5.1.0
       http-proxy-middleware: 3.0.7
@@ -8478,19 +8481,21 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@callstack/repack-plugin-expo-modules@5.4.2(@callstack/repack@5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))':
+  '@callstack/repack-plugin-expo-modules@5.4.2(@callstack/repack@5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))':
     dependencies:
-      '@callstack/repack': 5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)
+      '@callstack/repack': 5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)
 
-  '@callstack/repack-plugin-reanimated@5.4.2(@babel/core@7.29.0)(@callstack/repack@5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))':
+  '@callstack/repack-plugin-reanimated@5.4.2(@babel/core@7.29.0)(@callstack/repack@5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4))':
     dependencies:
       '@babel/core': 7.29.0
-      '@callstack/repack': 5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)
+      '@callstack/repack': 5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)
       semver: 7.8.5
 
-  '@callstack/repack@5.4.0(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)':
+  '@callstack/repack@5.4.3(@babel/core@7.29.0)(@module-federation/enhanced@0.19.1(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.7.3)(webpack@5.105.4))(@rspack/core@2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(tslib@2.8.1)(webpack@5.105.4)':
     dependencies:
-      '@callstack/repack-dev-server': 5.4.0
+      '@babel/core': 7.29.0
+      '@babel/plugin-syntax-typescript': 7.29.7(@babel/core@7.29.0)
+      '@callstack/repack-dev-server': 5.4.3
       '@discoveryjs/json-ext': 0.5.7
       '@rspack/plugin-react-refresh': 1.0.0(react-refresh@0.14.2)
       babel-loader: 9.2.1(@babel/core@7.29.0)(webpack@5.105.4)
@@ -8502,7 +8507,7 @@ snapshots:
       exit-hook: 4.0.0
       flow-remove-types: 2.322.0
       gradient-string: 2.0.2
-      image-size: 1.2.1
+      image-size: 2.1.0
       jsonwebtoken: 9.0.3
       memfs: 4.64.0(tslib@2.8.1)
       mime-types: 2.1.35
@@ -8521,7 +8526,6 @@ snapshots:
       '@rspack/core': 2.1.4(@module-federation/runtime-tools@0.19.1)(@swc/helpers@0.5.23)
       webpack: 5.105.4(webpack-cli@7.0.2)
     transitivePeerDependencies:
-      - '@babel/core'
       - '@swc/core'
       - bufferutil
       - esbuild
@@ -12204,7 +12208,7 @@ snapshots:
 
   fastify-plugin@6.0.0: {}
 
-  fastify@5.10.0:
+  fastify@5.12.8:
     dependencies:
       '@fastify/ajv-compiler': 4.0.5
       '@fastify/error': 4.2.0
@@ -12213,10 +12217,10 @@ snapshots:
       abstract-logging: 2.0.1
       avvio: 9.3.0
       fast-json-stringify: 7.0.1
-      find-my-way: 9.6.0
+      find-my-way: 9.10.2
       light-my-request: 6.6.0
       pino: 10.3.1
-      process-warning: 5.0.0
+      process-warning: 5.1.1
       rfdc: 1.4.1
       secure-json-parse: 4.1.0
       semver: 7.8.5
@@ -12272,6 +12276,12 @@ snapshots:
   find-file-up@2.0.1:
     dependencies:
       resolve-dir: 1.0.1
+
+  find-my-way@9.10.2:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      fast-querystring: 1.1.2
+      safe-regex2: 5.1.1
 
   find-my-way@9.6.0:
     dependencies:
@@ -12696,9 +12706,7 @@ snapshots:
   image-size@0.5.5:
     optional: true
 
-  image-size@1.2.1:
-    dependencies:
-      queue: 6.0.2
+  image-size@2.1.0: {}
 
   immutable@5.1.9:
     optional: true
@@ -14803,7 +14811,7 @@ snapshots:
       on-exit-leak-free: 2.1.2
       pino-abstract-transport: 3.0.0
       pino-std-serializers: 7.1.0
-      process-warning: 5.0.0
+      process-warning: 5.1.1
       quick-format-unescaped: 4.0.4
       real-require: 0.2.0
       safe-stable-stringify: 2.5.0
@@ -14888,7 +14896,7 @@ snapshots:
 
   process-warning@4.0.1: {}
 
-  process-warning@5.0.0: {}
+  process-warning@5.1.1: {}
 
   proggy@3.0.0: {}
 
@@ -14953,10 +14961,6 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  queue@6.0.2:
-    dependencies:
-      inherits: 2.0.4
-
   quick-format-unescaped@4.0.4: {}
 
   quick-lru@4.0.1: {}
@@ -15011,7 +15015,7 @@ snapshots:
       react: 19.2.7
       react-native: 0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7)
 
-  react-native-reanimated@4.7.1(react-native-worklets@0.13.1(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7):
+  react-native-reanimated@4.7.2(react-native-worklets@0.13.1(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7))(react-native@0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7))(react@19.2.7):
     dependencies:
       react: 19.2.7
       react-native: 0.86.3(@babel/core@7.29.0)(@react-native-community/cli@20.2.0(typescript@5.7.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.17)(react@19.2.7)

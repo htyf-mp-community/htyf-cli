@@ -28,7 +28,7 @@
   在仓库根目录或本目录（视项目脚本而定）执行：
 
 ```bash
-yarn
+pnpm install
 ```
 
 用于安装 React Native 工程及相关工具依赖。

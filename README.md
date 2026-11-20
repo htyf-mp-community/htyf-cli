@@ -10,7 +10,7 @@
 npx --yes @htyf-mp/cli --help
 npx --yes @htyf-mp/cli init --non-interactive --name my-app --display-name 我的应用 --template app
 cd my-app
-npm install
+pnpm install
 npx --yes @htyf-mp/cli build --non-interactive --version 1.0.0 --platform ios
 npx --yes @htyf-mp/cli debug --non-interactive --platform ios
 ```
@@ -19,7 +19,7 @@ npx --yes @htyf-mp/cli debug --non-interactive --platform ios
 
 ## 宿主兼容版本
 
-当前主分支和模板适配 RN-0.86-2.3.0 宿主：React Native 0.88.1、React 19.3.1、Expo 58。CLI 的共享依赖清单、RN 模板及 Taro 模板应一同更新，避免构建出的资源与宿主不兼容。
+当前主分支和模板适配 RN-0.86-2.3.2 宿主：React Native 0.88.1、React 19.3.1、Expo 58。CLI 的共享依赖清单、RN 模板及 Taro 模板应一同更新，避免构建出的资源与宿主不兼容。
 
 ## 仓库分工
 

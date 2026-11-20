@@ -1,6 +1,6 @@
 {
   "name": "@htyf-mp/cli",
-  "version": "0.7.15",
+  "version": "0.7.16",
   "description": "红糖云服app小程序模板-cli",
   "type": "module",
   "bin": {
@@ -38,7 +38,7 @@
     "pnpm": ">=9.0.0"
   },
   "peerDependencies": {
-    "react-native-reanimated": "4.7.1",
+    "react-native-reanimated": "4.7.2",
     "react-native-worklets": "0.13.1"
   },
   "dependencies": {
@@ -67,7 +67,7 @@
     "ora": "10.0.0",
     "portfinder": "1.0.38",
     "qrcode": "1.5.4",
-    "react-native-reanimated": "4.7.1",
+    "react-native-reanimated": "4.7.2",
     "react-native-worklets": "0.13.1",
     "shelljs": "0.10.0",
     "superstatic": "10.0.0",
@@ -81,6 +81,5 @@
   "devDependencies": {},
   "publishConfig": {
     "access": "public"
-  },
-  "gitHead": "0067e6e3177368dd7d4bd4dd4552f164e4ee20fa"
+  }
 }

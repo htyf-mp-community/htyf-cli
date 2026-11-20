@@ -281,14 +281,14 @@ export class ProjectInitializer {
           commands.push(chalk.white('  npm install'));
         } else if (templateType === CONSTANTS.TEMPLATE_TYPES.TARO_TEMPLATE) {
           commands.push(
-            chalk.white('  npm install'),
-            chalk.white('  npm run dev:htyf')
+            chalk.white('  pnpm install'),
+            chalk.white('  pnpm run dev:htyf')
           );
         } else {
           commands.push(
-            chalk.white('  npm install'),
-            chalk.white('  npm run ios'),
-            chalk.white('  npm run android')
+            chalk.white('  pnpm install'),
+            chalk.white('  pnpm run ios'),
+            chalk.white('  pnpm run android')
           );
         }
 
